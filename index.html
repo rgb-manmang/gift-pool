@@ -488,7 +488,8 @@ window.addEventListener('error', function(e){ __showFatal(e.message || 'Script e
       <div class="img-sync-box">
         <b>🖼 图片同步说明</b>
         <p>你在 <b>VIP礼物池 / 员工礼物池</b> 里给礼物加的图片，会自动出现在 <b>1-12 月各年份</b> 的推荐卡片上（同一个礼物共用一张图，改一处全处生效）。</p>
-        <p>需要注意：图片保存在你自己的浏览器里，<b>分享链接时对方看不到</b>。要让对方也看到图，请先「导出备份」再发给对方导入，或者把图片单独发给对方。</p>
+        <p><b>跨设备同步</b>：图片先存在你本机的浏览器里（加完立即可见）。如果想在手机、平板或者分享给领导时也能看到图，告诉 WorkBuddy 一声"上传图片"，WorkBuddy 会把图传到 GitHub 仓库并重新部署。</p>
+        <p>注意：图片数据比较大（每张 30~100 KB），建议每周或加完几张就同步一次。</p>
         <p id="img-stat"></p>
       </div>
       <p style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line)" id="data-stats"></p>
@@ -677,6 +678,16 @@ function norm(s){
 function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; } }
 function seededShuffle(arr, seed){ const rnd = mulberry32(seed); const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// 图片 src 解析：优先用 GitHub Pages URL（多设备可见），回退到 base64（旧的本地图）
+const GH_PAGES_BASE = 'https://rgb-manmang.github.io/gift-pool/';
+function imgSrc(g){
+  if (!g) return '';
+  if (g.imgUrl) return GH_PAGES_BASE + g.imgUrl;
+  if (g.img) return g.img;
+  return '';
+}
+// 是否「已有图」（无论本地还是远端）
+function hasImg(g){ return !!(g && (g.imgUrl || g.img)); }
 function priceText(p){
   if (p.price) return '<span class="yen">¥</span>' + p.price.toLocaleString();
   return esc(p.priceRaw || '价格待询');
@@ -714,7 +725,7 @@ function refreshCard(pid){
   const p = findPerson(pid);
   if (!p) return;
   const y = window.scrollY || document.documentElement.scrollTop || 0;
-  // 只重绘这张卡片的推荐区 + 顶部已选提示
+  // 顶部已选提示
   const head = card.querySelector('.person-pick');
   if (head){
     const pg = pickedGiftFor(pid);
@@ -723,6 +734,7 @@ function refreshCard(pid){
       ? `已选 <b>${esc(pg.name)}</b>${pg.price ? ' <span class="pp-price">¥'+pg.price+'</span>' : ''}`
       : `请从下面选 <b>1</b> 个`;
   }
+  // 推荐区
   const grid = card.querySelector('.reco-grid');
   if (grid){
     grid.innerHTML = recommendFor(p, p.excluded || [])
@@ -989,22 +1001,25 @@ function personCardHTML(p, past){
 }
 
 function imgSlotHTML(g, ctx){
-  const has = g.img ? `<img src="${esc(g.img)}" alt="" onerror="this.parentElement.classList.remove('has-img');this.remove()">` : '';
-  return `<div class="img-slot ${g.img?'has-img':''}${ctx&&ctx.sm?' sm':''}" onclick="pickImage('${g.tier}','${g.id}','${ctx?ctx.pid:''}')" title="${g.img?'点击更换图片（也可粘贴）':'点击添加图片 / 也可直接粘贴'}">
+  const src = imgSrc(g);
+  const has = src ? `<img src="${esc(src)}" alt="" onerror="this.parentElement.classList.remove('has-img');this.remove()">` : '';
+  const hasP = hasImg(g);
+  return `<div class="img-slot ${hasP?'has-img':''}${ctx&&ctx.sm?' sm':''}" onclick="pickImage('${g.tier}','${g.id}','${ctx?ctx.pid:''}')" title="${hasP?'点击更换图片（也可粘贴）':'点击添加图片 / 也可直接粘贴'}">
     ${has || '<span class="is-hint"><span class="is-ico">🖼</span>点击或粘贴加图</span>'}
     <button class="is-del" title="移除图片" onclick="event.stopPropagation();removeImage('${g.tier}','${g.id}','${ctx?ctx.pid:''}')">✕</button>
   </div>`;
 }
 function giftCardHTML(g, pid, isPinned){
-  const hasImg = !!g.img;
+  const hasP = hasImg(g);
+  const src = imgSrc(g);
   // —— 观阅模式（分享给领导/寿星）：只读 + 勾选，不出现「换一个」——
   if (VIEWER){
     const picked = isPicked(pid, g.id);
-    const imgHTML = hasImg
-      ? `<img src="${esc(g.img)}" alt="" onerror="this.parentElement.classList.remove('has-img');this.remove()">`
+    const imgHTML = src
+      ? `<img src="${esc(src)}" alt="" onerror="this.parentElement.classList.remove('has-img');this.remove()">`
       : '<span class="is-hint"><span class="is-ico">🖼</span>礼物图片</span>';
     return `<div class="gift-card${picked?' is-picked':''}">
-      <div class="img-slot ${hasImg?'has-img':''}">${imgHTML}</div>
+      <div class="img-slot ${hasP?'has-img':''}">${imgHTML}</div>
       <div class="gift-info">
         <span class="gc-cat">${esc(g.category||'其他')}</span>
         <div class="gift-name">${esc(g.name)}</div>
@@ -1033,26 +1048,45 @@ function giftCardHTML(g, pid, isPinned){
 function findPerson(id){ return state.people.find(p => p.id === id); }
 // 送出方式：4 个状态都摆出来供选择
 const STATUS_FLOW = ['寄送','亲自送','DJ自备','提醒'];
+// —— 通用：保存滚动位置 + 只就地重绘这张卡片的礼物推荐区 ——
+// 任何"换礼物"的操作都走这个，不动其他卡片，浏览器就不会丢滚动
+function rerenderCardReco(pid){
+  const y = window.scrollY || document.documentElement.scrollTop || 0;
+  const card = document.querySelector('.person-card[data-pid="' + pid + '"]');
+  if (!card){ renderMonth(); try{ window.scrollTo(0, y); }catch(_){ } return; }
+  const p = findPerson(pid);
+  if (!p) return;
+  const grid = card.querySelector('.reco-grid');
+  if (grid){
+    grid.innerHTML = recommendFor(p, p.excluded || []).map(g => giftCardHTML(g, pid)).join('');
+  }
+  try { window.scrollTo(0, y); } catch(e){}
+}
+
 function refreshReco(pid){
   const p = findPerson(pid);
   p.recoSeed = (p.recoSeed || 0) + 1;
   p.candidates = [];           // 换一批：清掉候选清单，回归自动推荐
   p.excluded = [];
-  saveState(); renderMonth(); toast('已换一批推荐');
+  saveState();
+  rerenderCardReco(pid);
+  toast('已换一批推荐');
 }
 function excludeGift(pid, gid){
   const p = findPerson(pid);
   p.excluded = p.excluded || [];
   p.excluded.push(gid);
   p.candidates = (p.candidates || []).filter(x => x !== gid);
-  saveState(); renderMonth();
+  saveState();
+  rerenderCardReco(pid);
 }
 function replaceOne(pid, gid){
   const p = findPerson(pid);
   p.excluded = p.excluded || [];
   p.excluded.push(gid);
   p.candidates = (p.candidates || []).filter(x => x !== gid);
-  saveState(); renderMonth();
+  saveState();
+  rerenderCardReco(pid);
 }
 // 点状态标签：选中即亮，再点一次取消（回到未设定）
 // 关键：不做整页重渲染（会丢失滚动位置），只就地更新这张卡片的 4 个按钮
@@ -1062,7 +1096,6 @@ function setStatus(pid, s){
   p.status = (p.status === s) ? '' : s;
   saveState();
   const y = window.scrollY || document.documentElement.scrollTop || 0;
-  // 就地更新：只改这一个人员卡片里的按钮样式
   const card = document.querySelector('.person-card[data-pid="' + pid + '"]');
   if (card){
     const opts = card.querySelectorAll('.status-opt');
@@ -1071,9 +1104,8 @@ function setStatus(pid, s){
       opts[i].classList.toggle('on', on);
     }
   } else {
-    renderMonth();   // 万不得已的兜底
+    renderMonth();
   }
-  // 恢复滚动位置（保险起见）
   try { window.scrollTo(0, y); } catch(e){}
   toast(p.status ? `${p.name} → ${p.status}` : `${p.name} 的送出方式已清除`);
 }
@@ -1237,18 +1269,20 @@ function storeImage(dataUrl){
   const g = state[_imgCtx.tier].find(x => x.id === _imgCtx.gid);
   if (!g){ toast('礼物不存在'); return; }
   if (dataUrl.length > 900000){ toast('图片过大（超过约 650KB），请换一张小一点的'); return; }
-  const backup = g.img;
+  const backupImg = g.img;
+  const backupUrl = g.imgUrl;
   g.img = dataUrl;
+  g.imgKey = _imgCtx.tier + '-' + _imgCtx.gid;   // 用于批量上传到 GitHub 的稳定文件名
   try { saveState(); }
   catch(e){
-    g.img = backup;
+    g.img = backupImg; g.imgUrl = backupUrl;
     toast('存储空间不足，图片未保存。可到「数据」页清理或导出备份');
     return;
   }
   refreshAfterImage(_imgCtx);
   closeModal('img-modal');
   armPaste(false);
-  toast('✅ 图片已添加');
+  toast('✅ 图片已添加（本机即时可见，可告诉 WorkBuddy 同步到 GitHub 仓库）');
 }
 
 // —— 方式二：粘贴 ——
@@ -1368,7 +1402,11 @@ function refreshAfterImage(ctx){
 function removeImage(tier, gid, pid){
   const g = state[tier].find(x => x.id === gid);
   if (!g) return;
-  g.img = null; saveState();
+  // 兼容旧的 imgUrl 和新的本机 base64 都一并清掉
+  g.img = null;
+  g.imgUrl = null;
+  // 注意：imgKey 保留，下次再加图时复用同一个文件名，远程图片自然被覆盖
+  saveState();
   refreshAfterImage({tier, gid, pid});
   toast('图片已移除');
 }
@@ -1460,18 +1498,21 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
 }));
 function renderStats(){
   $('#data-stats').textContent = `当前数据：${state.people.length} 位成员 · VIP礼物 ${state.vip.length} 件 · 员工礼物 ${state.staff.length} 件`;
-  // 图片统计：让用户一眼知道哪些礼物已经有图
+  // 图片统计：分「已上传到 GitHub（多设备可见）」和「仅本机」
   const all = (state.vip || []).concat(state.staff || []);
-  const withImg = all.filter(g => !!g.img);
-  const sizeKB = Math.round(withImg.reduce((s,g) => s + (g.img ? g.img.length : 0), 0) / 1024);
+  const remote = all.filter(g => !!g.imgUrl);
+  const local = all.filter(g => !!g.img);
   let bytes = 0;
   try { bytes = JSON.stringify(state).length; } catch(e){}
   const storeKB = Math.round(bytes / 1024);
   const el = document.getElementById('img-stat');
   if (el){
-    el.textContent = withImg.length
-      ? `已有图片：${withImg.length} / ${all.length} 件礼物（约 ${sizeKB} KB） · 当前占用存储约 ${storeKB} KB / 上限约 5000 KB`
-      : `还没有任何礼物图片。去 VIP礼物池 / 员工礼物池 点卡片上方的图片区，可以选图上传，也可以直接粘贴图片。`;
+    const total = all.length;
+    if (remote.length + local.length === 0){
+      el.textContent = `还没有任何礼物图片。去 VIP礼物池 / 员工礼物池 点卡片上方的图片区，可以选图上传，也可以直接粘贴图片。`;
+    } else {
+      el.innerHTML = `🟢 已同步 GitHub（多设备可见）：<b>${remote.length}</b> 件 · 🟡 仅本机（建议同步）：<b>${local.length}</b> 件 · 共 ${total} 件礼物 · 当前占用存储约 ${storeKB} KB / 上限约 5000 KB`;
+    }
   }
 }
 
