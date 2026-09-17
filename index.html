@@ -130,10 +130,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .reco-actions{display:flex;gap:8px}
 .mini-btn{font-size:12.5px;padding:6px 13px;border-radius:99px;border:1px solid var(--line2);background:#fff;cursor:pointer;color:var(--ink2);transition:.16s;font-family:inherit;font-weight:500}
 .mini-btn:hover{border-color:var(--ink);color:var(--ink)}
-.reco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px;padding:0 24px 24px}
+/* 礼物卡横向一排：左右滑动浏览，不再竖着折成 3 行 */
+.reco-grid{display:flex;flex-wrap:nowrap;gap:14px;padding:2px 24px 24px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.reco-grid::-webkit-scrollbar{height:8px}
+.reco-grid::-webkit-scrollbar-track{background:#f2f2f2;border-radius:99px;margin:0 24px}
+.reco-grid::-webkit-scrollbar-thumb{background:#cfcfcf;border-radius:99px}
+.reco-grid::-webkit-scrollbar-thumb:hover{background:#a8a8a8}
 
 /* ===== 礼物卡片 ===== */
-.gift-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;position:relative;transition:.22s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column}
+.gift-card{flex:0 0 172px;width:172px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;position:relative;transition:.22s cubic-bezier(.32,.72,0,1);display:flex;flex-direction:column;scroll-snap-align:start}
 .gift-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--line2)}
 .gift-card .gc-cat{display:inline-block;font-size:10.5px;font-weight:600;color:#8a6a2f;background:var(--gold-bg);padding:3px 9px;border-radius:99px;letter-spacing:0}
 .gift-card .gc-x{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.9);border:none;color:var(--ink3);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:.16s;line-height:1;backdrop-filter:blur(6px);z-index:3}
@@ -341,7 +346,9 @@ tr:hover td{background:#fafafa}
   .year-tab{padding:6px 14px;font-size:12.5px}
   .ms-item{min-width:52px;padding:8px 8px 7px}
   .reco-head{padding:14px 16px 12px}
-  .reco-grid{grid-template-columns:repeat(2,1fr);gap:10px;padding:0 16px 18px}
+  .reco-grid{gap:10px;padding:2px 16px 18px}
+  .reco-grid::-webkit-scrollbar-track{margin:0 16px}
+  .gift-card{flex:0 0 150px;width:150px}
   .img-slot{height:104px}
   .img-slot.sm{height:96px}
   .pool-grid{grid-template-columns:repeat(2,1fr);gap:11px}
@@ -659,6 +666,29 @@ function pickedGiftFor(pid){
   return g || null;
 }
 function isPicked(pid, gid){ return pickedIdFor(pid) === gid; }
+// 观阅模式勾选：就地刷新该卡片（不整页重建，避免跳回顶部）
+function refreshCard(pid){
+  const card = document.querySelector('.person-card[data-pid="' + pid + '"]');
+  if (!card) return;
+  const p = findPerson(pid);
+  if (!p) return;
+  const y = window.scrollY || document.documentElement.scrollTop || 0;
+  // 只重绘这张卡片的推荐区 + 顶部已选提示
+  const head = card.querySelector('.person-pick');
+  if (head){
+    const pg = pickedGiftFor(pid);
+    head.className = 'person-pick' + (pg ? ' picked' : '');
+    head.innerHTML = pg
+      ? `已选 <b>${esc(pg.name)}</b>${pg.price ? ' <span class="pp-price">¥'+pg.price+'</span>' : ''}`
+      : `请从下面选 <b>1</b> 个`;
+  }
+  const grid = card.querySelector('.reco-grid');
+  if (grid){
+    grid.innerHTML = recommendFor(p, p.excluded || [])
+      .map(g => giftCardHTML(g, pid)).join('');
+  }
+  try { window.scrollTo(0, y); } catch(e){}
+}
 function togglePick(pid, gid){
   if (!VIEWER) return;
   const p = findPerson(pid);
@@ -667,13 +697,13 @@ function togglePick(pid, gid){
     // 再点一次 → 取消
     delete picks[pid];
     if (p) p.selected = null;
-    savePicks(); renderMonth();
+    savePicks(); refreshCard(pid);
     toast('已取消选择');
   } else {
     // 单选：直接覆盖该人原来的选择
     picks[pid] = { name: p ? p.name : '', gid: gid, gift: g ? g.name : '', price: g ? g.price : null, at: Date.now() };
     if (p) p.selected = gid;
-    savePicks(); renderMonth();
+    savePicks(); refreshCard(pid);
     toast('✅ 已选：' + (g ? g.name : ''));
   }
   updatePickBar();
@@ -681,7 +711,11 @@ function togglePick(pid, gid){
 function clearPicks(){
   picks = {};
   state.people.forEach(p => { p.selected = null; });
-  savePicks(); renderMonth(); updatePickBar();
+  savePicks();
+  const y = window.scrollY || document.documentElement.scrollTop || 0;
+  renderMonth();
+  try { window.scrollTo(0, y); } catch(e){}
+  updatePickBar();
   toast('已清空选择');
 }
 function updatePickBar(){
@@ -980,11 +1014,26 @@ function replaceOne(pid, gid){
   saveState(); renderMonth();
 }
 // 点状态标签：选中即亮，再点一次取消（回到未设定）
+// 关键：不做整页重渲染（会丢失滚动位置），只就地更新这张卡片的 4 个按钮
 function setStatus(pid, s){
   const p = findPerson(pid);
   if (!p) return;
   p.status = (p.status === s) ? '' : s;
-  saveState(); renderMonth();
+  saveState();
+  const y = window.scrollY || document.documentElement.scrollTop || 0;
+  // 就地更新：只改这一个人员卡片里的按钮样式
+  const card = document.querySelector('.person-card[data-pid="' + pid + '"]');
+  if (card){
+    const opts = card.querySelectorAll('.status-opt');
+    for (let i = 0; i < opts.length; i++){
+      const on = opts[i].getAttribute('data-s') === p.status;
+      opts[i].classList.toggle('on', on);
+    }
+  } else {
+    renderMonth();   // 万不得已的兜底
+  }
+  // 恢复滚动位置（保险起见）
+  try { window.scrollTo(0, y); } catch(e){}
   toast(p.status ? `${p.name} → ${p.status}` : `${p.name} 的送出方式已清除`);
 }
 function toggleHistory(btn){
