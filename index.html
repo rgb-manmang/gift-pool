@@ -139,13 +139,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .gift-card .gc-x{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.9);border:none;color:var(--ink3);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:.16s;line-height:1;backdrop-filter:blur(6px);z-index:3}
 .gift-card:hover .gc-x{opacity:1}
 .gift-card .gc-x:hover{background:var(--red);color:#fff}
-.gift-card.is-pinned{border-color:#e6c777;box-shadow:0 0 0 1px #f0dda6 inset}
-.gift-card .gc-pin{position:absolute;top:8px;left:8px;z-index:3;font-size:10.5px;font-weight:700;font-family:inherit;color:#8a6a2f;background:rgba(255,249,235,.95);border:1px solid #eddcae;border-radius:99px;padding:3px 9px;cursor:pointer;letter-spacing:.2px;line-height:1.3;backdrop-filter:blur(6px);transition:.16s}
-.gift-card .gc-pin:hover{background:#fff;border-color:#d9c284}
 
-/* —— 观阅模式（分享给领导）：只读 + 勾选 —— */
+/* —— 观阅模式（分享给领导）：只读 + 单选 —— */
 body.viewer-mode .gift-card .gc-x,
-body.viewer-mode .gift-card .gc-pin,body.viewer-mode .gift-card .gift-actions,
+body.viewer-mode .gift-card .gift-actions,
 body.viewer-mode .reco-actions,
 body.viewer-mode .history-toggle,
 body.viewer-mode .status-chip,
