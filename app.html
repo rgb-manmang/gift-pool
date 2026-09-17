@@ -1075,10 +1075,38 @@ function excludeGift(pid, gid){
   rerenderCardReco(pid);
 }
 function replaceOne(pid, gid){
+  // 只换这一个礼物，其他 5 个位置严格不动
   const p = findPerson(pid);
+  p.candidates = p.candidates || [];
   p.excluded = p.excluded || [];
-  p.excluded.push(gid);
-  p.candidates = (p.candidates || []).filter(x => x !== gid);
+
+  // 找到要替换的那个在 candidates 里的位置
+  const idx = p.candidates.indexOf(gid);
+  if (idx < 0){
+    // 没在候选列表里（理论上不会出现），降级为"加入 excluded 后重渲染"
+    p.excluded.push(gid);
+  } else {
+    // 1) 把这个 gid 加入 excluded，下一次自动推荐不会再推这个
+    p.excluded.push(gid);
+    // 2) 从池里抽 1 个"不在其他 5 个候选、不在 excluded、不在历史送出、被替换的这个也算用过"
+    //    的礼物顶上去（otherSlots 已经排除了 candidates[idx]，但 gid 这个值也得排除）
+    const tier = p.tier === 'vip' ? 'vip' : 'staff';
+    const pool = (state[tier] && state[tier].length) ? state[tier] : [...state.vip, ...state.staff];
+    const blocked = p.blocked || [];
+    const otherSlots = p.candidates.filter((_, i) => i !== idx);  // 其它 5 个位置
+    const used = new Set([].concat(otherSlots, p.excluded, blocked, [gid]));
+    const cands = pool.filter(g => !used.has(g.id) && !wasSent(p, g));
+    // 用稳定的随机数选一个（基于 recoSeed + gid 做种子），避免每次点同一个按钮选到同一个备选
+    const seed = (p.recoSeed || 0) * 31 + (idx + 1) * 7919 + (gid.charCodeAt(0) || 0);
+    if (cands.length){
+      const pick = cands[seed % cands.length];
+      p.candidates[idx] = pick.id;
+    } else {
+      // 池里所有都排除光了，就保留位置不改（用户看到的是"没法换了"）
+      // 把 excluded 退回去，否则这个 gid 再也回不来
+      p.excluded.pop();
+    }
+  }
   saveState();
   rerenderCardReco(pid);
 }
