@@ -329,6 +329,17 @@ tr:hover td{background:#fafafa}
 .img-sync-box p{font-size:12.5px;color:var(--ink2);line-height:1.7;margin-bottom:8px}
 .img-sync-box p:last-child{margin-bottom:0}
 #img-stat{font-weight:600;color:var(--ink)!important}
+/* —— 图片添加面板 —— */
+.img-opt{display:flex;gap:13px;padding:15px 16px;border:1px solid var(--line2);border-radius:13px;margin-bottom:12px;background:#fbfbfb}
+.img-opt .io-num{flex:none;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.img-opt .io-body{flex:1;min-width:0}
+.img-opt .io-body>b{display:block;font-size:13.5px;font-weight:700;margin-bottom:5px}
+.img-opt .io-body>p{font-size:12px;color:var(--ink3);line-height:1.65;margin-bottom:9px}
+.img-opt .io-body kbd{display:inline-block;padding:1px 5px;border-radius:4px;border:1px solid var(--line2);background:#fff;font-family:inherit;font-size:11px;font-weight:600;color:var(--ink2)}
+.paste-zone{padding:16px 14px;border:1.5px dashed #cfcfcf;border-radius:10px;background:#fff;font-size:12.5px;color:var(--ink3);text-align:center;cursor:text;outline:none;transition:.16s;line-height:1.6}
+.paste-zone:hover,.paste-zone:focus{border-color:var(--ink3);background:#fafafa;color:var(--ink2)}
+.img-note{font-size:11.5px;color:var(--ink3);line-height:1.7;margin-top:4px}
+.img-note b{color:var(--ink2);font-weight:600}
 
 @media (max-width:640px){
   .topbar-inner{padding:0 14px;height:auto;padding-top:10px;padding-bottom:10px;gap:6px}
@@ -506,6 +517,36 @@ window.addEventListener('error', function(e){ __showFatal(e.message || 'Script e
       <button class="btn danger" id="pf-delete" onclick="deletePerson()" style="margin-right:auto">删除</button>
       <button class="btn ghost" onclick="closeModal('person-modal')">取消</button>
       <button class="btn primary" onclick="savePerson()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 图片添加面板：支持「选择本地图片」和「直接粘贴」两种方式 -->
+<div class="modal-mask" id="img-modal">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-head"><h3 id="img-modal-title">添加图片</h3><button class="modal-close" onclick="closeImgModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="img-opt">
+        <div class="io-num">①</div>
+        <div class="io-body">
+          <b>选择本地图片</b>
+          <p>从相册或电脑里挑一张</p>
+          <button class="btn primary" onclick="chooseImageFile()">📁 选择图片</button>
+        </div>
+      </div>
+      <div class="img-opt">
+        <div class="io-num">②</div>
+        <div class="io-body">
+          <b>直接粘贴图片</b>
+          <p id="img-paste-hint">电脑按 <kbd>Ctrl</kbd>+<kbd>V</kbd>（Mac 用 <kbd>⌘</kbd>+<kbd>V</kbd>）；手机上长按下方框选「粘贴」。微信/网页里复制的图片都能用。</p>
+          <div id="img-paste-target" class="paste-zone" contenteditable="true"
+               onclick="triggerPaste()">点这里，然后按 Ctrl+V 粘贴图片</div>
+        </div>
+      </div>
+      <p class="img-note">图片会自动压缩后保存。加好的图会同时出现在 <b>VIP礼物池 / 员工礼物池</b> 和 <b>1-12月各年份</b> 的推荐卡片上。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeImgModal()">关闭</button>
     </div>
   </div>
 </div>
@@ -949,8 +990,8 @@ function personCardHTML(p, past){
 
 function imgSlotHTML(g, ctx){
   const has = g.img ? `<img src="${esc(g.img)}" alt="" onerror="this.parentElement.classList.remove('has-img');this.remove()">` : '';
-  return `<div class="img-slot ${g.img?'has-img':''}${ctx&&ctx.sm?' sm':''}" onclick="pickImage('${g.tier}','${g.id}','${ctx?ctx.pid:''}')" title="${g.img?'点击更换图片':'点击添加图片'}">
-    ${has || '<span class="is-hint"><span class="is-ico">🖼</span>点击添加图片</span>'}
+  return `<div class="img-slot ${g.img?'has-img':''}${ctx&&ctx.sm?' sm':''}" onclick="pickImage('${g.tier}','${g.id}','${ctx?ctx.pid:''}')" title="${g.img?'点击更换图片（也可粘贴）':'点击添加图片 / 也可直接粘贴'}">
+    ${has || '<span class="is-hint"><span class="is-ico">🖼</span>点击或粘贴加图</span>'}
     <button class="is-del" title="移除图片" onclick="event.stopPropagation();removeImage('${g.tier}','${g.id}','${ctx?ctx.pid:''}')">✕</button>
   </div>`;
 }
@@ -1140,38 +1181,168 @@ function parseDateRaw(s){
   return {month, day, lunar};
 }
 
-/* ================= 图片管理 ================= */
-let _imgCtx = null;
+/* ================= 图片管理 =================
+   两种添加方式：① 点击选择本地图片 ② 直接粘贴（Ctrl+V / 长按粘贴，微信里复制的图也能用）
+   图片存在礼物对象上，全站共用 → 池子里加的图会自动出现在 1-12 月各年份的推荐卡片上
+*/
+let _imgCtx = null;          // 当前正在给哪个礼物加图
+let _pasteArmed = false;     // 是否处于「等待粘贴」状态
+
+// —— 入口：打开图片添加面板 ——
 function pickImage(tier, gid, pid){
   _imgCtx = {tier, gid, pid};
+  const g = state[tier].find(x => x.id === gid);
+  const box = document.getElementById('img-modal-title');
+  if (box) box.textContent = g ? g.name : '添加图片';
+  // 打开面板后立刻进入「等待粘贴」状态，用户直接 Ctrl+V 即可
+  armPaste(true);
+  openModal('img-modal');
+}
+
+// —— 方式一：选择本地文件 ——
+function chooseImageFile(){
   let inp = document.getElementById('img-file-input');
   if (!inp){
     inp = document.createElement('input');
     inp.type = 'file'; inp.accept = 'image/*'; inp.id = 'img-file-input';
     inp.style.display = 'none';
-    inp.addEventListener('change', handleImageFile);
+    inp.addEventListener('change', ev => {
+      const f = ev.target.files[0];
+      if (f) applyImageFile(f);
+      ev.target.value = '';
+    });
     document.body.appendChild(inp);
   }
   inp.value = '';
   inp.click();
 }
-function handleImageFile(ev){
-  const f = ev.target.files[0];
-  if (!f || !_imgCtx) return;
-  if (!f.type.startsWith('image/')){ toast('请选择图片文件'); return; }
+
+// 统一的「拿到一张图片文件」处理：校验 → 压缩 → 存到礼物对象
+function applyImageFile(f){
+  if (!f) return;
+  if (!_imgCtx){ toast('请先选择要添加图片的礼物'); return; }
+  if (!f.type || f.type.indexOf('image/') !== 0){ toast('这不是图片文件，请换一张'); return; }
   const r = new FileReader();
-  r.onload = () => compressImage(r.result, 460, 0.72, dataUrl => {
-    const g = state[_imgCtx.tier].find(x => x.id === _imgCtx.gid);
-    if (!g){ toast('礼物不存在'); return; }
-    if (dataUrl.length > 900000){ toast('图片过大，请换一张'); return; }
-    g.img = dataUrl;
-    try { saveState(); }
-    catch(e){ g.img = null; toast('存储空间不足，图片未保存'); return; }
-    refreshAfterImage(_imgCtx);
-    toast('图片已添加');
-  });
+  r.onload = () => {
+    compressImage(r.result, 460, 0.72, dataUrl => {
+      storeImage(dataUrl);
+    });
+  };
+  r.onerror = () => toast('图片读取失败，请重试');
   r.readAsDataURL(f);
 }
+
+function storeImage(dataUrl){
+  if (!_imgCtx) return;
+  const g = state[_imgCtx.tier].find(x => x.id === _imgCtx.gid);
+  if (!g){ toast('礼物不存在'); return; }
+  if (dataUrl.length > 900000){ toast('图片过大（超过约 650KB），请换一张小一点的'); return; }
+  const backup = g.img;
+  g.img = dataUrl;
+  try { saveState(); }
+  catch(e){
+    g.img = backup;
+    toast('存储空间不足，图片未保存。可到「数据」页清理或导出备份');
+    return;
+  }
+  refreshAfterImage(_imgCtx);
+  closeModal('img-modal');
+  armPaste(false);
+  toast('✅ 图片已添加');
+}
+
+// —— 方式二：粘贴 ——
+// 打开图片面板即开始监听，用户按 Ctrl+V 或长按粘贴即可
+function armPaste(on){
+  _pasteArmed = !!on;
+  const hint = document.getElementById('img-paste-hint');
+  if (hint) hint.style.display = _pasteArmed ? 'block' : 'none';
+}
+function extractImageFromClipboard(dt){
+  if (!dt) return null;
+  // 1) 剪贴板里的图片文件（截图、微信复制的图）
+  const items = dt.items || [];
+  for (let i = 0; i < items.length; i++){
+    if (items[i].kind === 'file' && (items[i].type || '').indexOf('image/') === 0){
+      const f = items[i].getAsFile();
+      if (f) return { file: f };
+    }
+  }
+  const files = dt.files || [];
+  for (let i = 0; i < files.length; i++){
+    if ((files[i].type || '').indexOf('image/') === 0) return { file: files[i] };
+  }
+  // 2) 剪贴板里的 HTML（网页上复制的图，含 <img src="http...">）
+  const html = dt.getData ? (dt.getData('text/html') || '') : '';
+  if (html){
+    const m = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+    if (m && m[1]) return { url: m[1] };
+  }
+  // 3) 图片直链文本
+  const txt = dt.getData ? (dt.getData('text/plain') || '').trim() : '';
+  if (txt && /^https?:\/\/\S+$/i.test(txt) && /\.(png|jpe?g|gif|webp|bmp|avif)(\?|#|$)/i.test(txt)){
+    return { url: txt };
+  }
+  return null;
+}
+// 从 URL 取图（可能是跨域，尽量转成 dataURL 以便一起存进备份）
+function loadImageFromUrl(url){
+  const im = new Image();
+  im.crossOrigin = 'anonymous';
+  let done = false;
+  const fallback = () => {
+    if (done) return; done = true;
+    // 取不到像素就直接把外链存起来（能显示，但导出备份不含图）
+    storeImage(url);
+    toast('已用图片链接（该图未压缩，导出备份时不含此图）');
+  };
+  im.onload = () => {
+    if (done) return; done = true;
+    try {
+      let w = im.naturalWidth, h = im.naturalHeight;
+      const maxW = 460;
+      if (w > maxW){ h = Math.round(h * maxW / w); w = maxW; }
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      const cx = cv.getContext('2d');
+      cx.fillStyle = '#fff'; cx.fillRect(0, 0, w, h);
+      cx.drawImage(im, 0, 0, w, h);
+      storeImage(cv.toDataURL('image/jpeg', 0.72));
+    } catch(e){ fallback(); }
+  };
+  im.onerror = () => { toast('图片链接无法访问，请先保存到本地再上传'); armPaste(true); };
+  im.src = url;
+}
+
+// 触发粘贴（把剪贴板内容交给上面的处理函数）
+function triggerPaste(){
+  if (!_imgCtx){ toast('请先选择要添加图片的礼物'); return; }
+  // 浏览器出于安全不会允许脚本直接读剪贴板，真正的读取靠上面的全局 paste 监听。
+  // 这里把焦点放到粘贴区，用户直接 Ctrl+V 即可
+  const ta = document.getElementById('img-paste-target');
+  if (ta){
+    try { ta.focus(); } catch(e){}
+    const sel = window.getSelection && window.getSelection();
+    if (sel){ const r = document.createRange(); r.selectNodeContents(ta); sel.removeAllRanges(); sel.addRange(r); }
+  }
+  toast('请按 Ctrl+V 粘贴（手机长按选「粘贴」）');
+}
+
+// 全局粘贴监听：面板打开时生效
+function bindPaste(){
+  document.addEventListener('paste', function(ev){
+    if (!_pasteArmed || !_imgCtx) return;
+    const t = ev.target;
+    // 在别的输入框里正常打字时不要拦截
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+    const found = extractImageFromClipboard(ev.clipboardData);
+    if (!found) return;
+    ev.preventDefault();
+    if (found.file) applyImageFile(found.file);
+    else if (found.url) loadImageFromUrl(found.url);
+  });
+}
+
 function compressImage(src, maxW, quality, cb){
   const im = new Image();
   im.onload = () => {
@@ -1187,8 +1358,8 @@ function compressImage(src, maxW, quality, cb){
   im.onerror = () => toast('图片读取失败');
   im.src = src;
 }
-// 图片变更后：礼物流是全站共用的同一对象，改一处即全站生效
-// 这里把「月份推荐」和「礼物池」都重渲染，保证 1-12 月各年份同步显示
+// 图片变更后：礼物是全站共用的同一对象，改一处即全站生效
+// 把「月份推荐」和「礼物池」都重渲染，保证 1-12 月各年份同步显示
 function refreshAfterImage(ctx){
   try { renderMonth(); } catch(e){}
   try { renderPool('vip'); renderPool('staff'); } catch(e){}
@@ -1278,7 +1449,9 @@ function deleteGift(){ if (editingGift && editingGift.id){ removeGift(editingGif
 /* ================= 通用 ================= */
 function openModal(id){ $('#'+id).classList.add('open'); }
 function closeModal(id){ $('#'+id).classList.remove('open'); }
-document.querySelectorAll('.modal-mask').forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+function closeImgModal(){ armPaste(false); closeModal('img-modal'); }
+document.querySelectorAll('.modal-mask').forEach(m => m.addEventListener('click', e => { if (e.target === m){ m.classList.remove('open'); if (m.id === 'img-modal') armPaste(false); } }));
+bindPaste();
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
   document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
@@ -1298,7 +1471,7 @@ function renderStats(){
   if (el){
     el.textContent = withImg.length
       ? `已有图片：${withImg.length} / ${all.length} 件礼物（约 ${sizeKB} KB） · 当前占用存储约 ${storeKB} KB / 上限约 5000 KB`
-      : `还没有任何礼物图片。去 VIP礼物池 / 员工礼物池 点卡片上方的图片区即可上传。`;
+      : `还没有任何礼物图片。去 VIP礼物池 / 员工礼物池 点卡片上方的图片区，可以选图上传，也可以直接粘贴图片。`;
   }
 }
 
