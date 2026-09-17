@@ -1015,7 +1015,6 @@ function giftCardHTML(g, pid, isPinned){
     return `<div class="gift-card${picked?' is-picked':''}">
       <div class="img-slot ${hasP?'has-img':''}">${imgHTML}</div>
       <div class="gift-info">
-        <span class="gc-cat">${esc(g.category||'其他')}</span>
         <div class="gift-name">${esc(g.name)}</div>
         <div class="gift-price">${priceText(g)}</div>
         <button class="pick-btn${picked?' on':''}" onclick="togglePick('${pid}','${g.id}')">
@@ -1029,7 +1028,6 @@ function giftCardHTML(g, pid, isPinned){
     ${imgSlotHTML(g, {pid})}
     <button class="gc-x" title="不推荐这个" onclick="excludeGift('${pid}','${g.id}')">✕</button>
     <div class="gift-info">
-      <span class="gc-cat">${esc(g.category||'其他')}</span>
       <div class="gift-name editable" title="点击编辑名称" onclick="inlineEdit(event,'${g.tier}','${g.id}','name',this)">${esc(g.name)}</div>
       <div class="gift-price editable" title="点击编辑价格" onclick="inlineEdit(event,'${g.tier}','${g.id}','price',this)">${priceText(g)}</div>
       <div class="gift-actions">
