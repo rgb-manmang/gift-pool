@@ -124,6 +124,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .gift-card.is-pinned{border-color:#e6c777;box-shadow:0 0 0 1px #f0dda6 inset}
 .gift-card .gc-pin{position:absolute;top:8px;left:8px;z-index:3;font-size:10.5px;font-weight:700;font-family:inherit;color:#8a6a2f;background:rgba(255,249,235,.95);border:1px solid #eddcae;border-radius:99px;padding:3px 9px;cursor:pointer;letter-spacing:.2px;line-height:1.3;backdrop-filter:blur(6px);transition:.16s}
 .gift-card .gc-pin:hover{background:#fff;border-color:#d9c284}
+
+/* —— 观阅模式（分享给领导）：只读 + 勾选 —— */
+body.viewer-mode .gift-card .gc-x,
+body.viewer-mode .gift-card .gc-pin,
+body.viewer-mode .gift-card .gift-actions,
+body.viewer-mode .reco-actions,
+body.viewer-mode .history-toggle,
+body.viewer-mode .status-chip,
+body.viewer-mode .share-one-btn{display:none!important}
+body.viewer-mode .gift-name,
+body.viewer-mode .gift-price{cursor:default!important}
+body.viewer-mode .gift-name.editable:hover,
+body.viewer-mode .gift-price.editable:hover{background:transparent!important;box-shadow:none!important}
+body.viewer-mode .editable::after{display:none!important}
+.gift-card .pick-btn{width:100%;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:7px;font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 0;border-radius:10px;border:1px solid var(--line2);background:#fff;color:var(--ink2);cursor:pointer;transition:.18s cubic-bezier(.32,.72,0,1)}
+.gift-card .pick-btn:hover{border-color:var(--ink);color:var(--ink);background:#fafafa}
+.gift-card .pick-btn .pk-box{width:15px;height:15px;border-radius:4px;border:1.5px solid #cfcfcf;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;background:#fff;transition:.18s;flex:none;line-height:1}
+.gift-card .pick-btn.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.gift-card .pick-btn.on .pk-box{background:#3ec46d;border-color:#3ec46d;color:#fff}
+.gift-card.is-picked{border-color:#3ec46d;box-shadow:0 0 0 1px #b9ecce inset}
+.gift-card.is-picked .gift-name{color:var(--ink)}
+/* 观阅模式：每人已选计数 */
+.person-pick{margin-left:auto;font-size:12.5px;color:var(--ink3);padding:7px 14px;border-radius:99px;background:#f6f6f6;border:1px solid var(--line2);white-space:nowrap;flex:none}
+.person-pick b{color:#2fa85a;font-weight:700;font-size:13.5px}
+body.viewer-mode .person-card .history-panel{display:none!important}
+body.viewer-mode .avatar{cursor:default}
+#pick-bar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(140%);z-index:120;display:flex;align-items:center;gap:12px;padding:11px 13px 11px 17px;border-radius:99px;background:rgba(24,24,26,.94);color:#fff;box-shadow:0 12px 34px rgba(0,0,0,.3);backdrop-filter:blur(14px);transition:transform .32s cubic-bezier(.32,.72,0,1);max-width:calc(100vw - 28px)}
+#pick-bar.show{transform:translateX(-50%) translateY(0)}
+#pick-bar .pb-txt{font-size:13px;white-space:nowrap}
+#pick-bar .pb-txt b{color:#7ee2a3;font-weight:700}
+#pick-bar button{font-family:inherit;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:99px;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;white-space:nowrap;transition:.16s}
+#pick-bar button:hover{background:rgba(255,255,255,.2)}
+#pick-bar button.pb-main{background:#fff;color:#18181a;border-color:#fff}
+#pick-bar button.pb-main:hover{background:#f0f0f0}
+#viewer-tip{display:none;align-items:center;gap:8px;margin:0 24px 14px;padding:11px 16px;border-radius:12px;background:#f0f7ff;border:1px solid #d3e3fb;color:#1d64d8;font-size:13px;line-height:1.5}
+#viewer-tip b{font-weight:700}
+.viewer-empty{display:none;text-align:center;padding:44px 24px;color:var(--ink3);font-size:14px}
+body.viewer-mode.pick-empty .viewer-empty{display:block}
 .gift-info{padding:12px 13px 13px;display:flex;flex-direction:column;flex:1}
 .gift-name{font-size:12.5px;line-height:1.5;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:56px;margin-top:8px;font-weight:500}
 .gift-price{margin-top:auto;padding-top:9px;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.02em}
@@ -225,6 +263,14 @@ tr:hover td{background:#fafafa}
 .share-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
 .share-current{font-size:14px;color:var(--ink);margin-bottom:14px;padding:10px 14px;background:var(--gold-bg);border-radius:10px;border:1px solid #f5e6c8}
 .share-current b{color:var(--gold);font-weight:700;font-size:15px}
+.share-mode-row{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;margin-bottom:13px;border-radius:12px;border:1px solid var(--line2);background:#fbfbfb;cursor:pointer;transition:.16s}
+.share-mode-row:hover{border-color:var(--ink3);background:#f7f7f7}
+.sm-sw{flex:none;width:42px;height:24px;border-radius:99px;background:#d8d8d8;position:relative;transition:.22s cubic-bezier(.32,.72,0,1);margin-top:1px}
+.sm-sw .sm-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.22);transition:.22s cubic-bezier(.32,.72,0,1)}
+.sm-sw.on{background:#3ec46d}
+.sm-sw.on .sm-knob{transform:translateX(18px)}
+.sm-txt{font-size:12.5px;line-height:1.6;color:var(--ink3)}
+.sm-txt b{color:var(--ink);font-weight:600}
 .share-url-box{display:flex;gap:8px;margin-bottom:12px}
 .share-url-box input{flex:1;padding:10px 13px;border:1px solid var(--line2);border-radius:11px;font-size:12.5px;outline:none;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;background:#fafafa;color:var(--ink2)}
 .share-tip{font-size:12px;color:var(--ink2);line-height:1.7;margin:8px 0 16px}
@@ -344,6 +390,10 @@ window.addEventListener('error', function(e){ __showFatal(e.message || 'Script e
       <span class="sub" id="month-sub"></span>
     </div>
     <div class="month-strip" id="month-strip"></div>
+    <div id="viewer-tip">
+      <span>👀</span>
+      <span>你正在<b>查看礼物推荐</b>。觉得哪个合适，点卡片下方的 <b>「选这个」</b> 打勾即可，可多选；底部会实时汇总，点「复制我选的」就能把结果发回去。</span>
+    </div>
     <div id="month-list"></div>
   </div>
 
@@ -450,11 +500,15 @@ window.addEventListener('error', function(e){ __showFatal(e.message || 'Script e
     <div class="modal-head"><h3>🔗 分享本月寿星</h3><button class="modal-close" onclick="closeModal('share-modal')">✕</button></div>
     <div class="modal-body">
       <div class="share-current" id="share-current"></div>
+      <div class="share-mode-row" onclick="setShareMode(!shareViewOnly)">
+        <span class="sm-sw" id="share-mode"><span class="sm-knob"></span></span>
+        <span class="sm-txt"><b>观阅模式（推荐）</b><br>对方只能看和<b>勾选</b>，看不到「换一个」「换一批」，也不会误改你的数据</span>
+      </div>
       <div class="share-url-box">
         <input id="share-url" readonly>
         <button class="btn primary" id="copy-url-btn" onclick="copyShareUrl()">📋 复制链接</button>
       </div>
-      <p class="share-tip">复制后把链接发给微信好友/微信群即可打开，对方看到的是同一个月的寿星和礼物推荐。微信内可直接打开浏览。</p>
+      <p class="share-tip">复制后把链接发给微信好友/微信群即可打开，对方看到的是同一个月的寿星和礼物推荐。微信内可直接打开浏览。<br>领导勾选后，底部「复制我选的」可把结果一键复制回来给你。</p>
       <div class="share-quick">
         <div class="share-quick-title">快捷切换：</div>
         <select id="share-year-sel"></select>
@@ -472,6 +526,12 @@ window.addEventListener('error', function(e){ __showFatal(e.message || 'Script e
 </div>
 
 <div id="toast"></div>
+
+<div id="pick-bar">
+  <span class="pb-txt">已选 <b id="pick-count">0</b> 件</span>
+  <button class="pb-main" onclick="copyPicks()">复制我选的</button>
+  <button onclick="clearPicks()">清空</button>
+</div>
 
 <script id="builtin-data" type="application/json">{"people":[{"id":"p2","name":"曾磊","dateRaw":"1月1日","month":1,"day":1,"lunar":false,"gifts":{"2026":"戴森风扇","2025":"戴森台灯","2024":"戴森空气净化器","2023":"B&o音响","2022":"戴森风扇","2021":"戴森V10","2020":"BOSE 700","2019":"VANS布艺音箱"},"tier":"staff"},{"id":"p3","name":"胡泽民","dateRaw":"1月19日","month":1,"day":19,"lunar":false,"gifts":{"2026":"大厦音响","2024":"伊姆斯躺椅","2023":"帝瓦雷Phantom I+树台*2","2022":"陈岚设计电动升降桌","2021":"DJ自己准备","2020":"红酒机和大拉菲小拉菲","2019":"**************","2018":"BOSE 卡拉OK系统","2017":"钛合金盾牌+蓝牙音箱","2016":"大号的钢琴灯"},"tier":"vip"},{"id":"p4","name":"陈宇辉","dateRaw":"1月20日","month":1,"day":20,"lunar":false,"gifts":{"2026":"三星s26ultra","2025":"三星s24ultra","2024":"华为     Mate60Pro+  16+1TB","2023":"HUAWEIMae 50Pro 256G","2022":"华为p50pro","2021":"戴森V10","2020":"苹果手表","2019":"飞利浦电动牙刷","2018":"900S相机","2017":"mini PAD（4G）","2016":"LEGO 9393"},"tier":"staff"},{"id":"p5","name":"黄菲","dateRaw":"1月23日","month":1,"day":23,"lunar":false,"gifts":{"2025":"戴森台灯","2024":"戴森空气净化器","2023":"B&o音响","2022":"iPad Pro12.9 512G","2021":"戴森风扇","2019":"戴森卷发棒","2018":"BOSE耳机","2017":"戴森电吹风"},"tier":"staff"},{"id":"p6","name":"黄凌","dateRaw":"1月29日","month":1,"day":29,"lunar":false,"gifts":{"2026":"lvMONOGRAM定位图案束腰夹克","2025":"imac电脑","2024":"黄金圣斗士十二宫一套","2023":"精工(SEIKO)手表","2022":"B&O A9","2021":"卡西欧太阳能手表","2019":"戴森V10","2018":"跑步机","2017":"苹果一体机"},"tier":"staff"},{"id":"p7","name":"黄荣怀","dateRaw":"农历二月初一","month":2,"day":null,"lunar":true,"gifts":{"2026":"BO H100耳机","2025":"imac电脑","2023":"赫曼米勒Aeron椅子","2022":"冥想打坐垫","2021":"戴森落地灯","2019":"DEVIALET音箱"},"tier":"staff"},{"id":"p8","name":"屈琪","dateRaw":"2月3日","month":2,"day":3,"lunar":false,"gifts":{"2025":"乐器 口琴","2024":"lv包","2023":"按摩椅","2022":"戴森风扇","2021":"iPad Pro12.9+笔"},"tier":"staff"},{"id":"p9","name":"刘强","dateRaw":"2月6日","month":2,"day":6,"lunar":false,"gifts":{"2025":"LG笔记本","2024":"梵尼诗 国家图书馆联名观象黑胶唱片机"},"tier":"staff"},{"id":"p10","name":"黄亮","dateRaw":"正月初一","month":1,"day":null,"lunar":true,"gifts":{"2026":"绿联NAS云盘","2025":"LG笔记本","2024":"HUAWEI MatePad Pro 16+1TB 笔+键盘","2023":"芝华士 休闲单椅","2022":"戴森风扇","2021":"华为手表"},"tier":"staff"},{"id":"p11","name":"陈若嫣","dateRaw":"2月14日","month":2,"day":14,"lunar":false,"gifts":{"2024":"iPhone 15 ProMAX  1TB","2023":"dj自己准备"},"tier":"staff"},{"id":"p12","name":"提醒DJ","dateRaw":"3月20日","month":3,"day":20,"lunar":false,"gifts":{"2026":"提醒DJ","2025":"提醒DJ","2024":"提醒DJ","2023":"提醒DJ"},"tier":"staff"},{"id":"p13","name":"石林","dateRaw":"3月20日","month":3,"day":20,"lunar":false,"gifts":{"2026":"B&O A9音响","2025":"ipad air 13寸 1TB","2024":"戴森空气净化器"},"tier":"staff"},{"id":"p14","name":"周鹰","dateRaw":"3月30日","month":3,"day":30,"lunar":false,"gifts":{"2026":"小度添添4K ProMAX移动电视","2025":"雀巢咖啡机","2023":"戴森台灯","2021":"戴森风扇","2019":"戴森V10","2018":"小米投影","2017":"戴森电吹风","2016":"DJ使用的枕头"},"tier":"staff"},{"id":"p15","name":"从容","dateRaw":"4月7日","month":4,"day":7,"lunar":false,"gifts":{"2026":"大疆pocket3","2025":"apple 头戴耳机","2024":"AppleWatch s9  45毫米","2023":"提醒DJ","2022":"略","2017":"IPAD PRO+笔"},"tier":"staff"},{"id":"p16","name":"陈光巨","dateRaw":"4.11农（5.27）","month":5,"day":27,"lunar":true,"gifts":{"2026":"气球狗氛围灯","2025":"imc 电脑","2024":"戴森空气净化器"},"tier":"staff"},{"id":"p17","name":"misa","dateRaw":"4月23日","month":4,"day":23,"lunar":false,"gifts":{"2026":"梵尼诗Donut留声机","2025":"B&O H100","2024":"戴森空气净化器"},"tier":"staff"},{"id":"p18","name":"郑毅铖","dateRaw":"5月1日","month":5,"day":1,"lunar":false,"gifts":{"2026":"DJ自己准备","2025":"5090夜神","2024":"Apple  Vision Pro","2023":"PC主机","2022":"PC主机","2021":"华为mate40 pro+","2020":"华为P40","2019":"华为P30"},"tier":"staff"},{"id":"p19","name":"王雪滢","dateRaw":"5月2日","month":5,"day":2,"lunar":false,"gifts":{"2026":"戴森（DYSON）HP12空气净化器","2025":"富士相机"},"tier":"staff"},{"id":"p20","name":"许松松","dateRaw":"5月11日","month":5,"day":11,"lunar":false,"gifts":{"2026":"黑白调X7智能人体工学按摩椅","2025":"戴森空气净化器","2024":"华为Pura 70   12+1TB","2023":"iphone 14 256G","2022":"戴森吸尘器","2021":"戴森风扇","2020":"小米平衡车","2019":"戴森吹风机","2018":"VANS音响","2017":"JBL音响"},"tier":"staff"},{"id":"p21","name":"陈若云","dateRaw":"5月14日","month":5,"day":14,"lunar":false,"gifts":{"2026":"车贴膜","2025":"CHANEL 小羊皮漆皮迷你山茶花翻盖 黑色","2017":"运动鞋+iPhone7","2016":"佳能 700D"},"tier":"staff"},{"id":"p22","name":"叶艳","dateRaw":"5月16日","month":5,"day":16,"lunar":false,"gifts":{"2026":"iPhone 17 Pro MAX1T","2025":"iphone16 pro max 1T","2024":"飞利浦冰块净水器","2023":"Dreame追觅 Bot 20 Pro Plus 扫地机","2022":"1000% Molly手办","2021":"APPLEWATCH","2020":"戴森V10","2018":"银币","2017":"飞利浦电动牙刷（粉）","2016":"DJ枕头"},"tier":"staff"},{"id":"p23","name":"肖艺芳","dateRaw":"5月18日","month":5,"day":18,"lunar":false,"gifts":{"2026":"三星55LS01DB 55英寸移动电视","2025":"iphone16 pro  1T","2024":"尼康 z5","2023":"IPHONE 14PRO 512g","2022":"戴森吸尘器","2021":"小米平衡车1+","2020":"bose 30","2019":"华为p30"},"tier":"staff"},{"id":"p24","name":"隋明宏","dateRaw":"6月13日","month":6,"day":13,"lunar":false,"gifts":{"2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"b&o音响","2022":"戴森台灯","2021":"戴森风扇","2020":"卡地亚笔","2019":"戴森coolme","2017":"bose耳机"},"tier":"vip"},{"id":"p25","name":"曾海军","dateRaw":"6月21日","month":6,"day":21,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"b&o音响","2022":"戴森台灯","2021":"戴森风扇","2020":"DJ枕头","2019":"BOSE降噪耳机"},"tier":"staff"},{"id":"p26","name":"张定文","dateRaw":"6月21日","month":6,"day":21,"lunar":false,"gifts":{"2026":"apple头戴式耳机","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"b&o音响","2022":"戴森台灯","2021":"戴森风扇","2020":"DJ枕头","2019":"BOSE降噪耳机"},"tier":"staff"},{"id":"p27","name":"汪嘉颖","dateRaw":"6月27日","month":6,"day":27,"lunar":false,"gifts":{"2026":"香奈儿包包"},"tier":"staff"},{"id":"p28","name":"陈政文","dateRaw":"7月8日","month":7,"day":8,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"b&o音响","2022":"戴森台灯+银币","2021":"戴森风扇","2019":"飞利浦电动牙刷","2017":"bose耳机"},"tier":"staff"},{"id":"p29","name":"张晓英","dateRaw":"7月10日","month":7,"day":10,"lunar":false,"gifts":{"2026":"iPhone 17 Pro MAX1T","2025":"iPhone 16 Pro MAX1T","2024":"LGgram2024 笔记本电脑","2023":"ipad pro 512g","2022":"雅萌美容仪","2021":"扫地机器人","2020":"JBL4炫光蓝牙音箱"},"tier":"staff"},{"id":"p30","name":"童燕","dateRaw":"7月15日","month":7,"day":15,"lunar":false,"gifts":{"2024":"戴森空气净化器","2023":"lv折叠椅","2022":"戴森台灯+银币","2021":"DJ准备礼物寄出","2020":"DJ准备礼物寄出","2019":"DJ法国八音盒"},"tier":"staff"},{"id":"p31","name":"方东兴","dateRaw":"7月21日","month":7,"day":21,"lunar":false,"gifts":{"2026":"B&O耳机","2025":"ipad 13寸 套装","2024":"戴森空气净化器","2023":"询问dj","2022":"戴森台灯+银币","2021":"DJ准备礼物","2019":"戴森coolme","2018":"DJ枕头"},"tier":"staff"},{"id":"p32","name":"陈星","dateRaw":"7月22日","month":7,"day":22,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"b&o音响","2022":"戴森台灯+银币","2021":"戴森风扇","2020":"JBL4炫光蓝牙音箱","2019":"戴森coolme","2018":"戴森吹风机"},"tier":"staff"},{"id":"p33","name":"Jerry","dateRaw":"7月29日","month":7,"day":29,"lunar":false,"gifts":{"2023":"apple awtch ultra2"},"tier":"staff"},{"id":"p34","name":"蔡威明ray","dateRaw":"7月31日","month":7,"day":31,"lunar":false,"gifts":{"2026":"徕卡D-LUX8相机","2025":"LV pulse 迷你手袋","2024":"金手链","2023":"lv手拿包","2022":"尼康数码微单","2021":"apple 耳机max","2020":"BOSE 700","2018":"iPhone X"},"tier":"staff"},{"id":"p35","name":"林航","dateRaw":"8月4日","month":8,"day":4,"lunar":false,"gifts":{"2025":"DJ自己准备","2024":"提醒"},"tier":"staff"},{"id":"p36","name":"林琛","dateRaw":"8月7日","month":8,"day":7,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"B7O音响","2022":"戴森台灯+银币","2021":"戴森风扇","2020":"卡地亚笔","2019":"戴森coolme","2018":"DJ枕头","2017":"bose耳机"},"tier":"vip"},{"id":"p37","name":"杜建强","dateRaw":"8月7日","month":8,"day":7,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器"},"tier":"staff"},{"id":"p38","name":"任晓楠","dateRaw":"8月17日","month":8,"day":17,"lunar":false,"gifts":{"2026":"爱马仕戒指","2025":"Sinomax赛诺床垫","2024":"斯维诗营养品套装","2023":"戴森g5","2022":"戴森台灯+银币","2021":"华为椭圆机","2020":"华为sondx","2019":"BOSE700","2018":"DJ枕头","2017":"小雅音箱","2016":"小米自行车"},"tier":"staff"},{"id":"p39","name":"魏申","dateRaw":"8月18日","month":8,"day":18,"lunar":false,"gifts":{"2026":"华硕265KF+5070Ti台式电脑主机","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"戴森g5","2022":"戴森台灯+银币"},"tier":"staff"},{"id":"p40","name":"黄忠杰","dateRaw":"8月18日","month":8,"day":18,"lunar":false,"gifts":{"2025":"dj直接在欧洲买","2024":"戴森台灯","2023":"b&o音响"},"tier":"staff"},{"id":"p41","name":"霍建宁","dateRaw":"8月22日","month":8,"day":22,"lunar":false,"gifts":{},"tier":"staff"},{"id":"p42","name":"谭咏麟","dateRaw":"8月23日","month":8,"day":23,"lunar":false,"gifts":{},"tier":"staff"},{"id":"p43","name":"汪嘉辉","dateRaw":"8月27日","month":8,"day":27,"lunar":false,"gifts":{"2026":"玩具车","2025":"乐森大黄蜂"},"tier":"staff"},{"id":"p44","name":"唐老师","dateRaw":"8月29日","month":8,"day":29,"lunar":false,"gifts":{"2026":"Apple Watch Ultra 3","2025":"HS7音响"},"tier":"staff"},{"id":"p45","name":"叶清流","dateRaw":"8月29日","month":8,"day":29,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"morrorart音响","2022":"戴森台灯","2021":"华为p50","2020":"华为sondx","2019":"小米平衡车plus","2018":"IPAD","2017":"iPhone X"},"tier":"staff"},{"id":"p46","name":"林通","dateRaw":"8月29日","month":8,"day":29,"lunar":false,"gifts":{"2025":"DJ自己准备","2024":"提醒","2023":"50克金米","2022":"休闲躺椅","2021":"华为p50","2018":"B&O A9音箱","2017":"LV手表","2016":"小米车+ipad PRO"},"tier":"staff"},{"id":"p47","name":"林芸","dateRaw":"8月29日","month":8,"day":29,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"b&o音响","2022":"戴森台灯","2021":"iPad Pro12.9","2020":"戴森风扇","2019":"戴森coolme","2018":"戴森V10","2017":"戴森电吹风","2016":"DJ使用的枕头"},"tier":"staff"},{"id":"p48","name":"俞飚","dateRaw":"9月1日","month":9,"day":1,"lunar":false,"gifts":{"2025":"黑白调X7智能人体工学按摩椅","2024":"b&o音响","2023":"dyson bp04","2022":"戴森台灯","2021":"健身器材","2020":"冥想打坐垫","2019":"戴森coolme","2018":"平板支持器+香薰","2017":"bose耳机","2016":"DJ使用的枕头+NOTE7"},"tier":"staff"},{"id":"p49","name":"陈伟胜","dateRaw":"9月9日","month":9,"day":9,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器"},"tier":"staff"},{"id":"p50","name":"陈明宇","dateRaw":"9月11日","month":9,"day":11,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"b&o音响","2023":"dyson bp05","2022":"戴森台灯","2021":"戴森风扇","2020":"BOSE 700"},"tier":"staff"},{"id":"p51","name":"王雪蒂","dateRaw":"9月12日","month":9,"day":12,"lunar":false,"gifts":{"2026":"气球狗氛围灯","2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"b&o音响","2022":"戴森台灯","2021":"戴森风扇","2020":"BOSE 700"},"tier":"staff"},{"id":"p52","name":"陈宏","dateRaw":"8.3农（9.13）","month":9,"day":13,"lunar":true,"gifts":{"2025":"b&o h100","2023":"小米机器狗","2022":"B&O A9","2020":"戴森风扇","2018":"IPD PRO12.9"},"tier":"staff"},{"id":"p53","name":"薛良","dateRaw":"9月19日","month":9,"day":19,"lunar":false,"gifts":{"2024":"戴森空气净化器","2023":"b&o音响","2022":"戴森台灯","2021":"戴森风扇","2020":"华为sondx","2019":"戴森coolme","2018":"DJ枕头","2017":"小雅","2016":"博士降噪耳机"},"tier":"staff"},{"id":"p54","name":"林嘉泉","dateRaw":"9月23日","month":9,"day":23,"lunar":false,"gifts":{"2025":"LV包","2024":"衣服","2023":"lv双肩包","2022":"B&O A9","2021":"健身器材","2020":"DJ自己准备","2019":"LV手表盒","2018":"雅马哈电子钢琴","2017":"LV手表","2016":"IPHONE 7S 256G"},"tier":"vip"},{"id":"p55","name":"刘薇","dateRaw":"9月24日","month":9,"day":24,"lunar":false,"gifts":{"2025":"梵尼诗DONUT i5PRO","2024":"b&o a9","2023":"戴森空气净化器","2022":"戴森台灯","2021":"戴森风扇","2020":"华为sondx","2019":"戴森coolme","2018":"DJ枕头","2017":"小雅音箱"},"tier":"staff"},{"id":"p56","name":"武坤芳","dateRaw":"10月1日","month":10,"day":1,"lunar":false,"gifts":{"2025":"iphone 17 pm 银色 2tb","2024":"b&o音响","2023":"戴森空气净化器","2022":"戴森台灯","2021":"戴森风扇"},"tier":"staff"},{"id":"p57","name":"书记","dateRaw":"10月10日","month":10,"day":10,"lunar":false,"gifts":{"2024":"提醒","2023":"提醒","2022":"提醒"},"tier":"staff"},{"id":"p58","name":"曾思美","dateRaw":"10月11日","month":10,"day":11,"lunar":false,"gifts":{"2025":"delonghi德龙银骑士 咖啡机","2024":"富士xs20微单照相机+","2023":"CUCKOO电饭煲","2022":"Bose音箱","2021":"DYSON 风扇","2020":"Apple Watch+lego生日","2018":"戴森V10","2017":"戴森电吹风","2016":"LEGO 71040"},"tier":"staff","pinned":["V111_2","V28_1","V95_5","V22_6","V22_3","V95_1"],"status":"DJ自备"},{"id":"p59","name":"陈锐","dateRaw":"10月11日","month":10,"day":11,"lunar":false,"gifts":{"2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"B&O音响","2022":"DYSON 台灯","2021":"DYSON 风扇"},"tier":"staff","pinned":["V111_2","V28_1","V66_2","V98_6","V22_6","V22_3"],"status":"寄送"},{"id":"p60","name":"林栋梁","dateRaw":"2023/10/18？？？","month":10,"day":18,"lunar":false,"gifts":{"2023":"叉号","2016":"？？？？？？？？？？？？？"},"tier":"staff"},{"id":"p61","name":"林凡","dateRaw":"10月19日","month":10,"day":19,"lunar":false,"gifts":{"2025":"ipad 套装","2024":"iPhone 16 Pro MAX1T","2023":"apple awtch ultra2","2022":"DYSON 台灯","2021":"DYSON 风扇","2020":"卡地亚笔","2018":"戴森V10","2017":"戴森电吹风","2016":"飞利浦电动牙刷"},"tier":"staff","pinned":["V1_2","V111_2","V28_1","V22_6","V98_6","V22_3"],"status":"亲自送"},{"id":"p62","name":"陈卓丰","dateRaw":"10月21日","month":10,"day":21,"lunar":false,"gifts":{"2025":"iphone 17 pm 橙色 2tb","2024":"apple awtch ultra2","2023":"macbook air 15寸"},"tier":"staff"},{"id":"p63","name":"古天乐","dateRaw":"10月21日","month":10,"day":21,"lunar":false,"gifts":{"2025":"熨斗大厦音响","2024":"三折叠+25周年金色飞船","2023":"梵尼诗唱片机+大拉菲","2022":"rokid airpro*2+大拉非*2","2021":"帝瓦雷+底座","2020":"大拉菲3","2019":"普米V7白板","2018":"弹子机","2017":"拉菲+蓝牙音箱"},"tier":"vip"},{"id":"p64","name":"刘佳文","dateRaw":"10月24日","month":10,"day":24,"lunar":false,"gifts":{"2025":"黑白调X7智能人体工学按摩椅","2024":"戴森空气净化器","2023":"B&O音响","2022":"DYSON 台灯","2021":"DYSON 风扇","2020":"小米平衡车","2018":"led组合灯"},"tier":"staff","pinned":["V111_2","V28_1","V66_2","V98_6","V22_3","V22_6"],"status":"寄送"},{"id":"p65","name":"刘路远","dateRaw":"10月25日","month":10,"day":25,"lunar":false,"gifts":{"2025":"iphone 17 pro max","2024":"提醒","2023":"无","2022":"无","2019":"BOSE 700","2016":"银币"},"tier":"staff","pinned":["V1_1","V16_4","V16_1","V43_4","V11_3","nx1"],"status":"亲自送"},{"id":"p66","name":"梁念坚","dateRaw":"10月28日","month":10,"day":28,"lunar":false,"gifts":{"2025":"熨斗大厦音响","2024":"卡地亚手表","2023":"帝瓦雷Phantom I+树台*2","2022":"徕卡相机套装","2021":"健身器材","2020":"高保真耳机","2019":"1KG网龙银猪+bose700","2018":"B&O A9音箱白","2017":"尼康D850","2016":"银币+小号钢琴灯"},"tier":"vip"},{"id":"p67","name":"陈宏展","dateRaw":"11月3日","month":11,"day":3,"lunar":false,"gifts":{"2025":"vision pro","2023":"小米机器狗2代","2022":"电动摩托车","2021":"健身器材","2019":"筋膜枪+苹果耳机+手表","2018":"B&O A9音箱白","2017":"12斤装限量茅台","2016":"美国队长盾牌","2015":"徕卡q相机"},"tier":"staff"},{"id":"p68","name":"刘明","dateRaw":"11月9日","month":11,"day":9,"lunar":false,"gifts":{"2022":"已提醒郑总","2021":"已提醒郑总","2020":"已提醒郑总","2019":"已提醒郑总","2018":"已提醒郑总","2016":"琉璃工房"},"tier":"staff"},{"id":"p69","name":"柳彦","dateRaw":"11月10日","month":11,"day":10,"lunar":false,"gifts":{"2025":"iphone 17 pro max 橙色","2023":"大疆DJI AVATA 无人机","2022":"戴森台灯","2021":"戴森风扇","2020":"虹马高尔夫球杆一套","2018":"IPHONE new","2017":"IPHONE X","2016":"IPHONE 7S+蓝牙音箱"},"tier":"staff"},{"id":"p70","name":"陈岚","dateRaw":"11月10日","month":11,"day":10,"lunar":false,"gifts":{"2025":"ipad 13寸 套装","2024":"华为x6","2023":"apple15promax 蓝色","2022":"戴森台灯","2021":"戴森风扇","2020":"戴森吹风机"},"tier":"staff"},{"id":"p71","name":"James","dateRaw":"11月12日","month":11,"day":12,"lunar":false,"gifts":{},"tier":"staff"},{"id":"p72","name":"林叶","dateRaw":"11月12日","month":11,"day":12,"lunar":false,"gifts":{"2025":"DJ自己准备"},"tier":"staff"},{"id":"p73","name":"陈骊幸","dateRaw":"11月22日","month":11,"day":22,"lunar":false,"gifts":{"2025":"黑白调X7智能人体工学按摩椅","2024":"小米15pro 白色","2023":"戴森吹风机"},"tier":"staff"},{"id":"p74","name":"葛岩","dateRaw":"11月28日","month":11,"day":28,"lunar":false,"gifts":{"2025":"黑白调X7智能人体工学按摩椅","2024":"空气净化器","2023":"b&o音响","2021":"戴森风扇","2020":"华为mate40pro","2019":"bose700+lego生日","2017":"IPHONE X","2016":"博士降噪耳机 大"},"tier":"staff"},{"id":"p75","name":"林玉坤","dateRaw":"11月28日","month":11,"day":28,"lunar":false,"gifts":{"2025":"华为mate 80promax（溢价未送）","2024":"荣耀magic7pro 1t","2023":"小米14pro钛金属","2021":"华为平板5000","2020":"华为sondx"},"tier":"staff"},{"id":"p76","name":"云飞","dateRaw":"11月30日","month":11,"day":30,"lunar":false,"gifts":{"2025":"DJ自己准备","2024":"DJ自己准备","2023":"金米50g","2016":"金条"},"tier":"staff"},{"id":"p77","name":"黄振辉","dateRaw":"12月11日","month":12,"day":11,"lunar":false,"gifts":{"2025":"黑白调X7智能人体工学按摩椅","2024":"空气净化器","2023":"b&o音响","2022":"戴森台灯","2021":"冥想打坐垫","2020":"戴森冷暖风扇","2019":"华为VR","2018":"DJ枕头","2017":"IPHONE X","2015":"三星VR"},"tier":"staff"},{"id":"p78","name":"邓舒仁","dateRaw":"12月12日","month":12,"day":12,"lunar":false,"gifts":{"2025":"黄金项链","2024":"ipad air+配件","2023":"华为 mate60pro+ 16+1TB","2022":"问","2021":"Macbook Pro14寸512","2020":"戴森冷暖风扇","2019":"小号钢琴灯","2017":"ipad pro 512G","2016":"戴森电吹风"},"tier":"staff"},{"id":"p79","name":"林伟","dateRaw":"12月14日","month":12,"day":14,"lunar":false,"gifts":{"2025":"宝华韦健","2024":"大疆自行车","2023":"宝华韦健 Formation Duo 无线蓝牙书架音箱","2021":"健身设备","2020":"DJ自己准备","2019":"DJ自己准备","2018":"DEVIALET音箱","2017":"6L茅台","2016":"DJ自己准备","2015":"拉筋器+银币"},"tier":"staff"},{"id":"p80","name":"方振华","dateRaw":"12月15日","month":12,"day":15,"lunar":false,"gifts":{"2025":"iphone 17 pro max 橙色 1TB","2024":"iphone16pro max 1TB 金色","2022":"iPad pro512g+pencil","2021":"Macbook Pro16寸2T","2020":"耳机","2019":"BOSE 700","2018":"DEVIALET音箱","2017":"电动牙刷"},"tier":"staff"},{"id":"p81","name":"陈长杰","dateRaw":"12月18日","month":12,"day":18,"lunar":false,"gifts":{"2025":"LV包","2024":"DJ自己准备","2022":"提醒","2021":"DJ自己准备","2020":"DJ自己准备","2019":"DJ自己准备","2018":"LV产品DJ自己挑选","2017":"钢琴灯小","2016":"DJ自己准备（LV）"},"tier":"staff"},{"id":"p82","name":"纵婷","dateRaw":"12月20日","month":12,"day":20,"lunar":false,"gifts":{"2025":"Tiffany 项链","2024":"imac电脑 绿色","2023":"敦煌古筝21698P九色鹿","2022":"丁阁仕","2021":"Macbook Pro14寸1T","2020":"雅马哈吉他","2018":"保时捷手机2"},"tier":"staff"},{"id":"p83","name":"徐欣湄","dateRaw":"12月21日","month":12,"day":21,"lunar":false,"gifts":{"2025":"iphone 17 pro max 银色 1TB","2024":"iphone16pro max 1TB 金色","2023":"iPhone 15 Pro Max 1TB","2022":"ipad10 256g"},"tier":"staff"},{"id":"p84","name":"雷健","dateRaw":"12月21日","month":12,"day":21,"lunar":false,"gifts":{"2025":"待补充"},"tier":"staff"},{"id":"p85","name":"金伟华","dateRaw":"12月22日","month":12,"day":22,"lunar":false,"gifts":{"2025":"华为fold笔记本折叠屏电脑","2023":"赫曼米勒Aeron椅子","2022":"电钢琴","2021":"B&O A9","2020":"DJ自己准备","2019":"tiffany的乒乓球","2018":"DEVIALET音箱","2017":"小米投影机","2015":"三星VR"},"tier":"vip"},{"id":"p86","name":"许茹朋","dateRaw":"12月26日","month":12,"day":26,"lunar":false,"gifts":{"2025":"iphone 17 pro max 银色 1TB","2024":"ipad mini7 紫色","2023":"iPhone 15 Pro Max 1TB","2022":"ipad10 256G"},"tier":"staff"},{"id":"p87","name":"林佳美","dateRaw":"12月26日","month":12,"day":26,"lunar":false,"gifts":{"2025":"iphone 17 pro max 银色 1TB"},"tier":"staff"},{"id":"p88","name":"李强","dateRaw":"12月28日","month":12,"day":28,"lunar":false,"gifts":{"2025":"apple watch ultra3","2024":"戴森空气净化器","2023":"B&o音响","2022":"戴森台灯","2021":"戴森风扇","2020":"华为sondx","2018":"DJ枕头","2017":"按摩器","2016":"iphone7（小）","2015":"扫地机器人"},"tier":"staff"},{"id":"p89","name":"陈凤娇","dateRaw":"12月30日","month":12,"day":30,"lunar":false,"gifts":{"2025":"iphone 17 pro max  1TB","2024":"iphone16pro max 1TB 黑色","2023":"iphone15pro 512G  蓝色钛金属"},"tier":"staff"}],"vip":[{"id":"V1_1","name":"iPhone 18 Pro MAX 2T","price":21499,"priceRaw":"21499元","category":"手机","tier":"vip"},{"id":"V1_2","name":"iPhone 18 Pro MAX 1T","price":16499,"priceRaw":"16499元","category":"手机","tier":"vip"},{"id":"V1_3","name":"苹果 iPhone 18 Pro 1T","price":15499,"priceRaw":"15499元","category":"手机","tier":"vip"},{"id":"V1_4","name":"HUAWEI Mate XTs 非凡大师","price":21900,"priceRaw":"2.19万","category":"手机","tier":"vip"},{"id":"V1_6","name":"荣耀Magic V5 16+1TB","price":10999,"priceRaw":"10999元","category":"手机","tier":"vip"},{"id":"V6_1","name":"Apple iPad Pro 13 英寸（2TB）M5 顶配","price":21699,"priceRaw":"21699元","category":"平板","tier":"vip"},{"id":"V6_2","name":"iPad Pro 13 英寸（1TB）","price":14599,"priceRaw":"14599元","category":"平板","tier":"vip"},{"id":"V11_1","name":"LG gram Pro 2025 17英寸高性能AI轻薄笔记本 5050显卡","price":12924,"priceRaw":"12924元","category":"电脑","tier":"vip"},{"id":"V11_2","name":"Apple MacBook Pro 16英寸","price":50738,"priceRaw":"50738元","category":"电脑","tier":"vip"},{"id":"V11_3","name":"Apple MacBook Air 13.6","price":17999,"priceRaw":"17999元","category":"电脑","tier":"vip"},{"id":"V11_4","name":"华为MateBook Fold X","price":25499,"priceRaw":"25499元","category":"电脑","tier":"vip"},{"id":"V16_1","name":"B&O H100","price":12000,"priceRaw":"1.2万","category":"沉浸视听体验","tier":"vip"},{"id":"V16_2","name":"帝瓦雷音响 一套","price":62000,"priceRaw":"6.2万","category":"沉浸视听体验","tier":"vip"},{"id":"V16_3","name":"B&O PLAY beoplay A9 5.G","price":30000,"priceRaw":"3万","category":"沉浸视听体验","tier":"vip"},{"id":"V16_4","name":"梵尼诗Donut 留声机 蓝牙音箱","price":18000,"priceRaw":"1.8万","category":"沉浸视听体验","tier":"vip"},{"id":"V16_5","name":"梵尼诗i7恒哈图联名黑胶唱片机蓝牙音箱","price":33000,"priceRaw":"3.3万","category":"沉浸视听体验","tier":"vip"},{"id":"V16_6","name":"IFSPEAKER DAVID大卫猿猩猩毛绒音响","price":23800,"priceRaw":"2.38万","category":"沉浸视听体验","tier":"vip"},{"id":"V19_1","name":"华为智慧屏 V5 Pro 98英寸","price":35000,"priceRaw":"3.5万","category":"沉浸视听体验","tier":"vip"},{"id":"V19_2","name":"华为智慧屏 MateTV Pro 98英寸","price":31000,"priceRaw":"3.1万","category":"沉浸视听体验","tier":"vip"},{"id":"V19_3","name":"极米AURA 2 4K超短焦激光投影仪","price":19000,"priceRaw":"1.9万","category":"沉浸视听体验","tier":"vip"},{"id":"V19_4","name":"宫下贵裕熨斗大厦蓝牙音响雕塑音箱","price":42000,"priceRaw":"4.2万","category":"沉浸视听体验","tier":"vip"},{"id":"V22_5","name":"B&OBeosound 2 3rd蓝牙音箱","price":24800,"priceRaw":"2.48万","category":"沉浸视听体验","tier":"vip"},{"id":"V33_1","name":"奥佳华 OG-7608TEN+","price":19600,"priceRaw":"1.96万","category":"身心疗愈体验","tier":"vip"},{"id":"V33_2","name":"西屋 S810冥想 按摩沙发","price":29000,"priceRaw":"2.9万","category":"身心疗愈体验","tier":"vip"},{"id":"V38_1","name":"日默瓦 Rimowa 登机箱Twist","price":13700,"priceRaw":"1.37万","category":"出行品质体验","tier":"vip"},{"id":"V38_2","name":"日默瓦 Rimowa行李箱 Plus","price":11900,"priceRaw":"1.19万","category":"出行品质体验","tier":"vip"},{"id":"V38_3","name":"LV四轮拉杆箱","price":36500,"priceRaw":"3.65万","category":"出行品质体验","tier":"vip"},{"id":"V43_3","name":"富士（FUJIFILM）X-T5/XT5 微单相机","price":15000,"priceRaw":"1.5万","category":"影像记录体验","tier":"vip"},{"id":"V43_4","name":"Leica/徕卡 D-LUX 8多功能便携数码相","price":13800,"priceRaw":"13800元","category":"影像记录体验","tier":"vip"},{"id":"V48_1","name":"Apple Vision Pro","price":33100,"priceRaw":"3.31万","category":"互动娱乐体验","tier":"vip"},{"id":"V53_3","name":"拉菲 大拉菲","price":10100,"priceRaw":"1.01万","category":"微醺品鉴体验","tier":"vip"},{"id":"V53_5","name":"Louis XIII 经典干邑（70cl）","price":33000,"priceRaw":"3.3万","category":"微醺品鉴体验","tier":"vip"},{"id":"V53_6","name":"Johnnie Walker Vault - 高级定制混合（70cl）","price":19200,"priceRaw":"1.92万","category":"微醺品鉴体验","tier":"vip"},{"id":"V66_3","name":"HUAWEI WATCH ULTIMATE DESIGN 非凡大师 蓝宝石黄金款","price":24000,"priceRaw":"2.4万","category":"活力运动体验","tier":"vip"},{"id":"V66_4","name":"Therabody Recovery Air Pro空气波压力按摩器","price":19900,"priceRaw":"1.99万","category":"活力运动体验","tier":"vip"},{"id":"V66_5","name":"TECHNOGYM 健身椅","price":16000,"priceRaw":"1.6万","category":"活力运动体验","tier":"vip"},{"id":"V66_6","name":"Hypershell 碳 X极壳Ai外骨骼","price":11000,"priceRaw":"1.1万","category":"活力运动体验","tier":"vip"},{"id":"V69_1","name":"FIT-HV 智能腰部外骨骼机器人","price":16800,"priceRaw":"1.68万","category":"活力运动体验","tier":"vip"},{"id":"V69_2","name":"爱康登山王跑步机","price":30000,"priceRaw":"3万","category":"活力运动体验","tier":"vip"},{"id":"V69_3","name":"AEKE力量镜A1魔镜智能健身镜 套装","price":24500,"priceRaw":"2.45万","category":"活力运动体验","tier":"vip"},{"id":"V79_1","name":"赫曼米勒 Airia 办公桌","price":33600,"priceRaw":"3.36万","category":"高效办公体验","tier":"vip"},{"id":"V79_2","name":"HERMAN MILLER Aeron座椅","price":15000,"priceRaw":"1.5万","category":"高效办公体验","tier":"vip"},{"id":"V84_1","name":"CHRISTOPHER 中号双肩包","price":27599,"priceRaw":"2.76万","category":"格调穿搭体验","tier":"vip"},{"id":"V84_2","name":"KEEPALL BANDOULIÈRE 35 手袋","price":19500,"priceRaw":"1.95万","category":"格调穿搭体验","tier":"vip"},{"id":"V84_3","name":"CARRYALL 小号手袋","price":23000,"priceRaw":"2.3万","category":"格调穿搭体验","tier":"vip"},{"id":"V84_4","name":"LV x TM SPEEDY BANDOULIÈRE 25 手袋","price":23900,"priceRaw":"2.39万","category":"格调穿搭体验","tier":"vip"},{"id":"V84_5","name":"Dior 迷你Lady 手袋","price":46000,"priceRaw":"4.6万","category":"格调穿搭体验","tier":"vip"},{"id":"V84_6","name":"chanel小号口盖包","price":52000,"priceRaw":"5.2万","category":"格调穿搭体验","tier":"vip"},{"id":"V92_1","name":"碧云泉N9 智能饮水机","price":14700,"priceRaw":"1.47万","category":"生活美学体验","tier":"vip"},{"id":"V92_2","name":"SMEG 冰箱 270升 1.5米高","price":40000,"priceRaw":"4万","category":"生活美学体验","tier":"vip"},{"id":"V92_3","name":"Smegx Dolce & Gabbana 冰箱","price":51700,"priceRaw":"5.17万","category":"生活美学体验","tier":"vip"},{"id":"V92_4","name":"IQAir空气净化器","price":15400,"priceRaw":"1.54万","category":"生活美学体验","tier":"vip"},{"id":"V98_3","name":"La Marzocco 家庭意式咖啡机","price":30099,"priceRaw":"3.01万","category":"生活美学体验","tier":"vip"},{"id":"V106_1","name":"万宝龙 大班系列 钢笔（刻字版）","price":20400,"priceRaw":"2.04万","category":"仪式感体验","tier":"vip"},{"id":"V106_2","name":"爱马仕 Soleil d'Hermès花瓶","price":17000,"priceRaw":"1.7万","category":"仪式感体验","tier":"vip"},{"id":"V106_3","name":"“跳跃，爱马仕！”茶叶盒","price":10500,"priceRaw":"1.05万","category":"仪式感体验","tier":"vip"},{"id":"V106_4","name":"爱马仕 Avalon轻薄毛毯","price":18000,"priceRaw":"1.8万","category":"仪式感体验","tier":"vip"},{"id":"V111_1","name":"HERMAN MILLER Eames 伊姆斯 休闲躺椅","price":60199,"priceRaw":"6.02万","category":"家居灯光体验","tier":"vip"},{"id":"V111_4","name":"DYSON Solarcycle Morph 智能落地灯","price":13000,"priceRaw":"1.3万","category":"家居灯光体验","tier":"vip"},{"id":"V111_5","name":"moustache超大胆沙发","price":15000,"priceRaw":"1.5万","category":"家居灯光体验","tier":"vip"},{"id":"V111_6","name":"moustache Extra Bold扶手椅-实心（多种颜色）","price":14300,"priceRaw":"1.43万","category":"家居灯光体验","tier":"vip"},{"id":"V114_1","name":"Knitty休闲椅","price":58200,"priceRaw":"5.82万","category":"家居灯光体验","tier":"vip"},{"id":"V114_2","name":"Hortensia Armchair扶手椅","price":58000,"priceRaw":"5.8万","category":"家居灯光体验","tier":"vip"},{"id":"V114_3","name":"Glas Italia The Dark Side of the Moon矮桌","price":26400,"priceRaw":"2.64万","category":"家居灯光体验","tier":"vip"},{"id":"V114_4","name":"Glas Italia Shimmer tavoli茶几","price":20400,"priceRaw":"2.04万","category":"家居灯光体验","tier":"vip"},{"id":"V114_5","name":"罗奇堡 泡泡扶手椅（多种颜色）","price":26000,"priceRaw":"2.6万","category":"家居灯光体验","tier":"vip"},{"id":"V114_6","name":"ligne-roset Togo 炉边椅","price":20000,"priceRaw":"2万","category":"家居灯光体验","tier":"vip"},{"id":"V117_1","name":"casadesigngroup 扶手椅","price":10200,"priceRaw":"1.02万","category":"家居灯光体验","tier":"vip"},{"id":"V117_4","name":"LVGRACE 折叠式躺椅","price":13200,"priceRaw":"1.32万","category":"家居灯光体验","tier":"vip"},{"id":"V117_5","name":"LVVIVIENNE SNORKELING 装饰","price":26400,"priceRaw":"2.64万","category":"家居灯光体验","tier":"vip"},{"id":"V122_2","name":"Bridge Violins定制红色大理石","price":10500,"priceRaw":"1.05万","category":"乐器体验","tier":"vip"},{"id":"V122_5","name":"铃木口风琴37键木质日本进口W-37演奏级口吹琴玫瑰木红吹管SUZUKI","price":10800,"priceRaw":"1.08万","category":"乐器体验","tier":"vip"},{"id":"V127_1","name":"大疆电助力自行车","price":67000,"priceRaw":"6.7万","category":"出行通勤体验","tier":"vip"},{"id":"V127_2","name":"小牛电动摩托车X3","price":25000,"priceRaw":"2.5万","category":"出行通勤体验","tier":"vip"},{"id":"V127_3","name":"SEGWAY赛格威 跨骑电动自行车","price":12000,"priceRaw":"1.2万","category":"出行通勤体验","tier":"vip"},{"id":"V127_4","name":"BMW CE 02","price":77000,"priceRaw":"7.7万","category":"出行通勤体验","tier":"vip"},{"id":"nx1","name":"LV KEEPALL BANDOULIÈRE 25 手袋","price":19400,"priceRaw":"19400元","category":"格调穿搭体验","tier":"vip"}],"staff":[{"id":"V1_5","name":"HUAWEI Pura X 典藏版","price":9999,"priceRaw":"9999元","category":"手机","tier":"staff"},{"id":"V6_3","name":"MatePad Pro 13.2 2025（16GB+1TB）","price":9999,"priceRaw":"9999元","category":"平板","tier":"staff"},{"id":"V6_4","name":"iPad mini 7 512G","price":6499,"priceRaw":"6499元","category":"平板","tier":"staff"},{"id":"V19_5","name":"极米 RS 20 Pro 高亮版","price":7821,"priceRaw":"7821元","category":"沉浸视听体验","tier":"staff"},{"id":"V19_6","name":"当贝 X7 Ultra","price":8975,"priceRaw":"8975元","category":"沉浸视听体验","tier":"staff"},{"id":"V22_1","name":"小度添添闺蜜机 Pro 4K Max 32英寸","price":6791,"priceRaw":"6791元","category":"沉浸视听体验","tier":"staff"},{"id":"V22_2","name":"三星Moving Style Edge 闺蜜机","price":3754,"priceRaw":"3754元","category":"沉浸视听体验","tier":"staff"},{"id":"V22_3","name":"LG 31.5 英寸 4K UHD IPS 智能显示器","price":5393,"priceRaw":"5393元","category":"沉浸视听体验","tier":"staff"},{"id":"V22_4","name":"AirPods Max2 2026款","price":3999,"priceRaw":"3999元","category":"沉浸视听体验","tier":"staff"},{"id":"V22_6","name":"B&O Beo Grace耳机","price":9980,"priceRaw":"9980元","category":"沉浸视听体验","tier":"staff"},{"id":"V25_1","name":"LEXON&JEFF KOONS杰夫昆斯气球狗 蓝牙音响","price":6879,"priceRaw":"6879元","category":"沉浸视听体验","tier":"staff"},{"id":"V25_2","name":"Haloasis A1幻陆全息歌词音箱","price":6567,"priceRaw":"6567元","category":"沉浸视听体验","tier":"staff"},{"id":"V25_4","name":"三星55LS01DB 55英寸移动电视","price":6374,"priceRaw":"6374元","category":"沉浸视听体验","tier":"staff"},{"id":"V25_5","name":"B&OBeoplay H95蓝牙耳机","price":4656,"priceRaw":"4656元","category":"沉浸视听体验","tier":"staff"},{"id":"V28_1","name":"teenage engineering OB-4 烤漆红便携式无线蓝牙","price":5580,"priceRaw":"5580元","category":"沉浸视听体验","tier":"staff"},{"id":"V33_3","name":"OSIM傲胜天王椅Pro","price":7587,"priceRaw":"7587元","category":"身心疗愈体验","tier":"staff"},{"id":"V33_4","name":"西屋 S570全自动按摩椅","price":9098,"priceRaw":"9098元","category":"身心疗愈体验","tier":"staff"},{"id":"V43_1","name":"大疆 DJI Mini 4 Pro","price":6280,"priceRaw":"6280元","category":"影像记录体验","tier":"staff"},{"id":"V43_2","name":"大疆 DJI Avata 进阶套装","price":5939,"priceRaw":"5939元","category":"影像记录体验","tier":"staff"},{"id":"V43_5","name":"大疆（DJI）Osmo Pocket 4P 双摄 标准套装","price":3799,"priceRaw":"3799元","category":"影像记录体验","tier":"staff"},{"id":"V43_6","name":"徕卡（Leica）SOFORT 2拍立得","price":3579,"priceRaw":"3579元","category":"影像记录体验","tier":"staff"},{"id":"V48_2","name":"PICO 4 Ultra 含全套配件","price":6110,"priceRaw":"6110元","category":"互动娱乐体验","tier":"staff"},{"id":"V48_3","name":"任天堂Switch 2","price":3200,"priceRaw":"3200元","category":"互动娱乐体验","tier":"staff"},{"id":"V48_4","name":"PS5 Pro","price":5400,"priceRaw":"5400元","category":"互动娱乐体验","tier":"staff"},{"id":"V48_6","name":"INMO AIR3 AI智能眼镜","price":4999,"priceRaw":"4999元","category":"互动娱乐体验","tier":"staff"},{"id":"V53_2","name":"茅台 53%vol 500ML （15年）","price":7279,"priceRaw":"7279元","category":"微醺品鉴体验","tier":"staff"},{"id":"V53_4","name":"拉菲 小拉菲","price":4388,"priceRaw":"4388元","category":"微醺品鉴体验","tier":"staff"},{"id":"V56_1","name":"麦卡伦 艺术是花朵威士忌（70cl）","price":8600,"priceRaw":"8600元","category":"微醺品鉴体验","tier":"staff"},{"id":"V61_1","name":"海蓝之谜护肤套装","price":8580,"priceRaw":"8580元","category":"奢宠护肤体验","tier":"staff"},{"id":"V61_2","name":"赫莲娜黑绷带面霜 小露珠护肤套装","price":7870,"priceRaw":"7870元","category":"奢宠护肤体验","tier":"staff"},{"id":"V61_3","name":"莱珀妮鱼子精华面部提升套装","price":9060,"priceRaw":"9060元","category":"奢宠护肤体验","tier":"staff"},{"id":"V66_1","name":"Apple Watch Series 11","price":6199,"priceRaw":"6199元","category":"活力运动体验","tier":"staff"},{"id":"V66_2","name":"Apple Watch Ultra 3","price":6499,"priceRaw":"6499元","category":"活力运动体验","tier":"staff"},{"id":"V69_4","name":"Apple Watch S11","price":5798,"priceRaw":"5798元","category":"活力运动体验","tier":"staff"},{"id":"V69_6","name":"HUAWEI WATCH Ultimate 绿野传奇","price":5299,"priceRaw":"5299元","category":"活力运动体验","tier":"staff"},{"id":"V74_1","name":"戴森 (Dyson) HS09","price":3999,"priceRaw":"3999元","category":"精致个护体验","tier":"staff"},{"id":"V74_2","name":"戴森（DYSON） Supersonic r 电吹风","price":3599,"priceRaw":"3599元","category":"精致个护体验","tier":"staff"},{"id":"V74_3","name":"松下（Panasonic）大师新9系剃须刀","price":3329,"priceRaw":"3329元","category":"精致个护体验","tier":"staff"},{"id":"V74_4","name":"Dyson 戴森 智能电动牙刷","price":3899,"priceRaw":"3899元","category":"精致个护体验","tier":"staff"},{"id":"V79_3","name":"黑白调X7智能人体工学按摩椅","price":4899,"priceRaw":"4899元","category":"高效办公体验","tier":"staff"},{"id":"V79_4","name":"9am智能电动升降桌","price":4149,"priceRaw":"4149元","category":"高效办公体验","tier":"staff"},{"id":"V87_1","name":"LV WHISPER 项链","price":6400,"priceRaw":"6400元","category":"格调穿搭体验","tier":"staff"},{"id":"V87_2","name":"Monogram Row 项链","price":4400,"priceRaw":"4400元","category":"格调穿搭体验","tier":"staff"},{"id":"V87_3","name":"All About Monogram 頸巾","price":4700,"priceRaw":"4700元","category":"格调穿搭体验","tier":"staff"},{"id":"V92_5","name":"戴森（DYSON）HP12空气净化器","price":5779,"priceRaw":"5779元","category":"生活美学体验","tier":"staff"},{"id":"V95_1","name":"松下 AI万食炉CS88","price":6243,"priceRaw":"6243元","category":"生活美学体验","tier":"staff"},{"id":"V95_3","name":"追觅521L 变频电冰箱","price":6889,"priceRaw":"6889元","category":"生活美学体验","tier":"staff"},{"id":"V95_4","name":"石头扫地机器人P20Max","price":4826,"priceRaw":"4826元","category":"生活美学体验","tier":"staff"},{"id":"V95_5","name":"DYSON BP04 空气净化器","price":7190,"priceRaw":"7190元","category":"生活美学体验","tier":"staff"},{"id":"V95_6","name":"科沃斯扫地机器人T90PRO","price":4298,"priceRaw":"4298元","category":"生活美学体验","tier":"staff"},{"id":"V98_1","name":"KitchenAid Artisan 立式搅拌机 （4.7L）","price":6750,"priceRaw":"6750元","category":"生活美学体验","tier":"staff"},{"id":"V98_2","name":"Smeg地中海水壶 （1.7升）","price":5750,"priceRaw":"5750元","category":"生活美学体验","tier":"staff"},{"id":"V98_4","name":"delonghi德龙EC9885银骑士半自动咖啡机","price":6940,"priceRaw":"6940元","category":"生活美学体验","tier":"staff"},{"id":"V98_5","name":"西门子EQ700 咖啡机","price":7995,"priceRaw":"7995元","category":"生活美学体验","tier":"staff"},{"id":"V98_6","name":"Nespresso 胶囊咖啡机","price":5564,"priceRaw":"5564元","category":"生活美学体验","tier":"staff"},{"id":"V101_1","name":"德隆吉 Pinguino EM 系列便携式空调","price":5800,"priceRaw":"5800元","category":"生活美学体验","tier":"staff"},{"id":"V111_2","name":"LEXON&JEFF KOONS杰夫昆斯气球狗氛围灯","price":6879,"priceRaw":"6879元","category":"家居灯光体验","tier":"staff"},{"id":"V111_3","name":"Dyson戴森CF06 CD06落地灯","price":5990,"priceRaw":"5990元","category":"家居灯光体验","tier":"staff"},{"id":"V117_2","name":"泡泡玛特molly摆件","price":5999,"priceRaw":"5999元","category":"家居灯光体验","tier":"staff"},{"id":"V117_3","name":"HAG Capisco 人体工学椅","price":8216,"priceRaw":"8216元","category":"家居灯光体验","tier":"staff"},{"id":"V122_1","name":"LiberLive C1 无弦吉他","price":3218,"priceRaw":"3218元","category":"乐器体验","tier":"staff"},{"id":"V122_3","name":"曹氏小提琴专业级","price":9960,"priceRaw":"9960元","category":"乐器体验","tier":"staff"},{"id":"V122_4","name":"【限量新品】TOM HM5 KOA夏威夷全单26寸","price":7789,"priceRaw":"7789元","category":"乐器体验","tier":"staff"},{"id":"V122_6","name":"日本铃木PRO-24B专业乐团演奏低音口风琴","price":5977,"priceRaw":"5977元","category":"乐器体验","tier":"staff"},{"id":"s1_1","name":"LEXON&JEFF KOONS杰夫昆斯气球狗氛围灯","price":6879,"priceRaw":"6879元","category":"沉浸视听","tier":"staff"},{"id":"s1_2","name":"LEXON&JEFF KOONS杰夫昆斯气球狗 蓝牙音响","price":6879,"priceRaw":"6879元","category":"沉浸视听","tier":"staff"},{"id":"s1_3","name":"Haloasis A1幻陆全息歌词音箱","price":6567,"priceRaw":"6567元","category":"沉浸视听","tier":"staff"},{"id":"s1_4","name":"AirPods Max2 2026款","price":3999,"priceRaw":"3999元","category":"沉浸视听","tier":"staff"},{"id":"s1_5","name":"B&O Beosound Emerge 蓝牙音箱","price":5998,"priceRaw":"5998元","category":"沉浸视听","tier":"staff"},{"id":"s1_6","name":"Devialet帝瓦雷降噪耳机","price":3292,"priceRaw":"3292元","category":"沉浸视听","tier":"staff"},{"id":"s4_1","name":"Apple Watch Series 11","price":6199,"priceRaw":"6199元","category":"智能穿戴","tier":"staff"},{"id":"s4_2","name":"Apple Watch Ultra 3","price":6499,"priceRaw":"6499元","category":"智能穿戴","tier":"staff"},{"id":"s4_3","name":"Apple Watch S11","price":5798,"priceRaw":"5798元","category":"智能穿戴","tier":"staff"},{"id":"s4_4","name":"HUAWEI WATCH Ultimate 绿野传奇","price":5299,"priceRaw":"5299元","category":"智能穿戴","tier":"staff"},{"id":"s4_5","name":"iPad mini 7 512G","price":6137,"priceRaw":"6137元","category":"智能穿戴","tier":"staff"},{"id":"s4_6","name":"HUAWEI MatePad Pro 12.2英寸","price":4599,"priceRaw":"4599元","category":"智能穿戴","tier":"staff"},{"id":"s7_1","name":"三星Moving Style Edge 闺蜜机","price":3754,"priceRaw":"3754元","category":"影音大屏","tier":"staff"},{"id":"s7_2","name":"LG 31.5 英寸 4K UHD IPS 智能显示器","price":5393,"priceRaw":"5393元","category":"影音大屏","tier":"staff"},{"id":"s7_3","name":"小度添添闺蜜机 Pro 4K Max 32英寸","price":6791,"priceRaw":"6791元","category":"影音大屏","tier":"staff"},{"id":"s7_4","name":"三星55LS01DB 55英寸移动电视","price":6374,"priceRaw":"6374元","category":"影音大屏","tier":"staff"},{"id":"s7_5","name":"极米（XGIMI）RS 10 4K 家用投影仪","price":5999,"priceRaw":"5999元","category":"影音大屏","tier":"staff"},{"id":"s7_6","name":"坚果N1S 4K特别版三色激光投影仪","price":3599,"priceRaw":"3599元","category":"影音大屏","tier":"staff"},{"id":"s10_1","name":"大疆 DJI Mini 4 Pro","price":6280,"priceRaw":"6280元","category":"影像记录","tier":"staff"},{"id":"s10_2","name":"大疆 DJI Avata 进阶套装","price":5939,"priceRaw":"5939元","category":"影像记录","tier":"staff"},{"id":"s10_3","name":"大疆（DJI）Osmo Pocket 4P 双摄 标准套装","price":3799,"priceRaw":"3799元","category":"影像记录","tier":"staff"},{"id":"s10_4","name":"徕卡（Leica）SOFORT 2拍立得","price":3579,"priceRaw":"3579元","category":"影像记录","tier":"staff"},{"id":"s10_5","name":"Sony/索尼 ZV-1 II","price":4195,"priceRaw":"4195元","category":"影像记录","tier":"staff"},{"id":"s13_1","name":"PICO 4 Ultra 含全套配件","price":6110,"priceRaw":"6110元","category":"互动娱乐","tier":"staff"},{"id":"s13_2","name":"任天堂Switch 2","price":3200,"priceRaw":"3200元","category":"互动娱乐","tier":"staff"},{"id":"s13_3","name":"PS5 Pro","price":5400,"priceRaw":"5400元","category":"互动娱乐","tier":"staff"},{"id":"s13_5","name":"LiberLive C1 无弦吉他","price":3218,"priceRaw":"3218元","category":"互动娱乐","tier":"staff"},{"id":"s16_1","name":"9am智能电动升降桌","price":4149,"priceRaw":"4149元","category":"家居生活","tier":"staff"},{"id":"s16_2","name":"黑白调X7智能人体工学按摩椅","price":4899,"priceRaw":"4899元","category":"家居生活","tier":"staff"},{"id":"s16_3","name":"Dyson戴森CF06 CD06落地灯","price":5990,"priceRaw":"5990元","category":"家居生活","tier":"staff"},{"id":"s16_4","name":"BALMUDA巴慕达 无雾加湿器","price":3698,"priceRaw":"3698元","category":"家居生活","tier":"staff"},{"id":"s16_5","name":"戴森 (Dyson) HS09","price":3999,"priceRaw":"3999元","category":"家居生活","tier":"staff"},{"id":"s16_6","name":"戴森（DYSON） Supersonic r 电吹风","price":3599,"priceRaw":"3599元","category":"家居生活","tier":"staff"},{"id":"s19_1","name":"Nespresso 胶囊咖啡机","price":5564,"priceRaw":"5564元","category":"品味餐厨","tier":"staff"},{"id":"s19_2","name":"德龙 意式全自动咖啡机R5 意大利艺术家联名设计款","price":6647,"priceRaw":"6647元","category":"品味餐厨","tier":"staff"},{"id":"s19_3","name":"松下 AI万食炉CS88","price":6243,"priceRaw":"6243元","category":"品味餐厨","tier":"staff"},{"id":"s19_5","name":"飞利浦净水器","price":3499,"priceRaw":"3499元","category":"品味餐厨","tier":"staff"},{"id":"s19_6","name":"SMEG/斯麦格 EGF03咖啡机 研磨一体","price":6399,"priceRaw":"6399元","category":"品味餐厨","tier":"staff"},{"id":"s22_1","name":"石头扫地机器人P20Max","price":4826,"priceRaw":"4826元","category":"智能清洁","tier":"staff"},{"id":"s22_2","name":"追觅扫地机器人X50Pro","price":5349,"priceRaw":"5349元","category":"智能清洁","tier":"staff"},{"id":"s22_3","name":"Dyson戴森Clean+Wash Hygiene洗地机","price":3278,"priceRaw":"3278元","category":"智能清洁","tier":"staff"},{"id":"s22_5","name":"戴森（DYSON）HP12空气净化器","price":5779,"priceRaw":"5779元","category":"智能清洁","tier":"staff"},{"id":"s22_6","name":"DYSON BP04 空气净化器","price":7190,"priceRaw":"7190元","category":"智能清洁","tier":"staff"},{"id":"s25_1","name":"B&OBeoplay H95蓝牙耳机","price":4656,"priceRaw":"4656元","category":"品质生活","tier":"staff"},{"id":"s25_2","name":"KitchenAid Artisan 立式搅拌机 （4.7L）","price":6750,"priceRaw":"6750元","category":"品质生活","tier":"staff"},{"id":"s25_3","name":"Smeg地中海水壶 （1.7升）","price":5750,"priceRaw":"5750元","category":"品质生活","tier":"staff"},{"id":"s25_4","name":"飞利浦Ultra新5系咖啡机","price":4841,"priceRaw":"4841元","category":"品质生活","tier":"staff"},{"id":"s25_5","name":"delonghi德龙S9全自动咖啡机","price":3264,"priceRaw":"3264元","category":"品质生活","tier":"staff"},{"id":"s28_2","name":"极米Z9X 4K旗舰版（2026新款）","price":3941,"priceRaw":"3941元","category":"潮流精选","tier":"staff"},{"id":"s28_4","name":"Dyson 戴森 智能电动牙刷","price":3899,"priceRaw":"3899元","category":"潮流精选","tier":"staff"},{"id":"s28_5","name":"壹号本 OneXPlayer 3","price":9482,"priceRaw":"9482元","category":"潮流精选","tier":"staff"}]}</script>
 <script>
@@ -555,6 +615,76 @@ function wasSent(person, gift){
     if (s.length < 2) return false;
     return n.includes(s) || s.includes(n);
   });
+}
+
+/* ================= 观阅模式（分享给领导/寿星）================= */
+// 分享链接带 ?view=1 → 只读：隐藏「换一个」「换一批」「✕」和所有行内编辑，改为勾选
+let VIEWER = false;
+// 勾选结果只存在本地（领导勾完截图/回复即可），key 按 人+礼物 记录
+let picks = {};
+function loadPicks(){ try{ picks = JSON.parse(localStorage.getItem('giftpool_picks') || '{}') || {}; }catch(e){ picks = {}; } }
+function savePicks(){ try{ localStorage.setItem('giftpool_picks', JSON.stringify(picks)); }catch(e){} }
+function pickKey(pid, gid){ return pid + '::' + gid; }
+function isPicked(pid, gid){ return !!picks[pickKey(pid, gid)]; }
+function togglePick(pid, gid){
+  if (!VIEWER) return;
+  const k = pickKey(pid, gid);
+  const p = findPerson(pid);
+  const g = findGiftById(gid);
+  if (picks[k]){
+    delete picks[k];
+    if (p) p.selected = (p.selected || []).filter(x => x !== gid);
+  } else {
+    picks[k] = { name: p ? p.name : '', gift: g ? g.name : '', price: g ? g.price : null, at: Date.now() };
+    if (p){ p.selected = p.selected || []; if (!p.selected.includes(gid)) p.selected.push(gid); }
+  }
+  savePicks();
+  renderMonth();
+  const cnt = (p && p.selected) ? p.selected.length : 0;
+  toast(picks[k] ? `✅ 已选定${g?'：'+g.name:''}` : '已取消选择');
+  updatePickBar();
+}
+function pickedCountFor(pid){
+  const p = findPerson(pid);
+  return (p && p.selected) ? p.selected.length : 0;
+}
+function clearPicks(){
+  picks = {};
+  state.people.forEach(p => { p.selected = []; });
+  savePicks(); renderMonth(); updatePickBar();
+  toast('已清空勾选');
+}
+function updatePickBar(){
+  const bar = document.getElementById('pick-bar');
+  if (!bar) return;
+  const total = Object.keys(picks).length;
+  if (!VIEWER || total === 0){
+    bar.classList.remove('show');
+    window.__pickSummary = '';
+    const c0 = document.getElementById('pick-count');
+    if (c0) c0.textContent = '0';
+    return;
+  }
+  bar.classList.add('show');
+  // 汇总成一段可复制的文字，方便领导直接把结果回给你
+  const lines = [];
+  const byPerson = {};
+  Object.keys(picks).forEach(k => {
+    const it = picks[k];
+    (byPerson[it.name] = byPerson[it.name] || []).push(it);
+  });
+  Object.keys(byPerson).forEach(nm => {
+    lines.push('【' + nm + '】');
+    byPerson[nm].forEach(it => lines.push('  · ' + it.gift + (it.price ? '  ¥' + it.price : '')));
+  });
+  window.__pickSummary = lines.join('\n');
+  const cnt = document.getElementById('pick-count');
+  if (cnt) cnt.textContent = total;
+}
+function copyPicks(){
+  const txt = window.__pickSummary || '';
+  if (!txt){ toast('还没有勾选任何礼物'); return; }
+  copyText('已选定的礼物：\n' + txt, '✅ 已复制，可直接发给对接人');
 }
 
 /* ================= 推荐引擎 ================= */
@@ -686,6 +816,7 @@ function renderMonth(){
   // 排序：按日期
   const sorted = people.slice().sort((a,b) => (a.day||99) - (b.day||99));
   list.innerHTML = sorted.map(p => personCardHTML(p, past)).join('');
+  updatePickBar();
 }
 
 function historyEditRow(p){
@@ -722,23 +853,28 @@ function personCardHTML(p, past){
   const pastBadge = past ? '<span class="badge past">已过</span>' : '';
   const isVip = p.tier === 'vip';
   const tierBadge = isVip ? '<span class="badge vip">VIP · 1万+</span>' : '<span class="badge staff">普通员工</span>';
-  return `<div class="person-card${past?' past-card':''}" data-pid="${p.id}">
+  // 观阅模式：隐藏状态/往年编辑/分享按钮，改显示已选计数
+  const nPick = pickedCountFor(p.id);
+  const viewerBar = VIEWER
+    ? `<div class="person-pick">${nPick ? `已选 <b>${nPick}</b> 件` : '请从下面挑选，可多选'}</div>`
+    : `<button class="status-chip" data-s="${esc(status)}" onclick="cycleStatus('${p.id}')">${esc(status)}</button>
+      <button class="history-toggle" onclick="toggleHistory(this)">往年记录 ▾</button>
+      <button class="share-one-btn" onclick="sharePerson('${p.id}')" title="分享 ${esc(p.name)} 的推荐">🔗</button>`;
+  return `<div class="person-card${past?' past-card':''}${VIEWER?' viewer-card':''}" data-pid="${p.id}">
     <div class="person-head">
       <div class="avatar${isVip?' vip':''}">${esc(p.name.slice(0,1))}</div>
       <div class="person-info">
         <div class="person-name">${esc(p.name)} ${dateBadge} ${tierBadge} ${pastBadge}</div>
         <div class="person-date">🎂 ${esc(p.dateRaw || '日期待补充')}</div>
       </div>
-      <button class="status-chip" data-s="${esc(status)}" onclick="cycleStatus('${p.id}')">${esc(status)}</button>
-      <button class="history-toggle" onclick="toggleHistory(this)">往年记录 ▾</button>
-      <button class="share-one-btn" onclick="sharePerson('${p.id}')" title="分享 ${esc(p.name)} 的推荐">🔗</button>
+      ${viewerBar}
     </div>
-    <div class="history-panel">${historyHTML}${historyEditRow(p)}</div>
+    <div class="history-panel">${historyHTML}${VIEWER ? '' : historyEditRow(p)}</div>
     <div class="reco-head">
-      <div class="reco-title">🎁 为 ${esc(p.name)} 推荐的礼物（已自动避开往年送过的）</div>
-      <div class="reco-actions">
+      <div class="reco-title">🎁 为 ${esc(p.name)} 推荐的礼物${VIEWER ? '' : '（已自动避开往年送过的）'}</div>
+      ${VIEWER ? '' : `<div class="reco-actions">
         <button class="mini-btn" onclick="refreshReco('${p.id}')">🔄 换一批</button>
-      </div>
+      </div>`}
     </div>
     <div class="reco-grid">${reco.map(g => giftCardHTML(g, p.id, (p.pinned||[]).includes(g.id))).join('')}</div>
   </div>`;
@@ -752,6 +888,26 @@ function imgSlotHTML(g, ctx){
   </div>`;
 }
 function giftCardHTML(g, pid, isPinned){
+  const hasImg = !!g.img;
+  // —— 观阅模式（分享给领导/寿星）：只读 + 勾选，不出现「换一个」——
+  if (VIEWER){
+    const picked = isPicked(pid, g.id);
+    const imgHTML = hasImg
+      ? `<img src="${esc(g.img)}" alt="" onerror="this.parentElement.classList.remove('has-img');this.remove()">`
+      : '<span class="is-hint"><span class="is-ico">🖼</span>礼物图片</span>';
+    return `<div class="gift-card${picked?' is-picked':''}">
+      <div class="img-slot ${hasImg?'has-img':''}">${imgHTML}</div>
+      <div class="gift-info">
+        <span class="gc-cat">${esc(g.category||'其他')}</span>
+        <div class="gift-name">${esc(g.name)}</div>
+        <div class="gift-price">${priceText(g)}</div>
+        <button class="pick-btn${picked?' on':''}" onclick="togglePick('${pid}','${g.id}')">
+          <span class="pk-box">${picked?'✓':''}</span>${picked?'已选定':'选这个'}
+        </button>
+      </div>
+    </div>`;
+  }
+  // —— 编辑模式（自己用）：全功能 ——
   const pinBadge = isPinned
     ? `<button class="gc-pin" title="已人工指定，点击取消指定" onclick="event.stopPropagation();unpinOne('${pid}','${g.id}')">★ 已挑好</button>`
     : '';
@@ -1073,7 +1229,33 @@ loadState();
     if (y >= 2020 && y <= 2099) curYear = y;
     if (m >= 1 && m <= 12) curMonth = m;
     window.__personParam = map['person'] || '';
+    // view=1 → 观阅模式（只读+勾选）
+    var v = String(map['view'] || '').toLowerCase();
+    if (v === '1' || v === 'true' || v === 'yes') window.__viewerParam = true;
   }catch(e){}
+})();
+// 观阅模式初始化：隐藏编辑类入口，只留勾选
+(function(){
+  if (window.__viewerParam){ VIEWER = true; }
+  loadPicks();
+  if (!VIEWER) return;
+  document.body.classList.add('viewer-mode');
+  // 顶部年份/月份仍可切换（领导可能想看别的月份），但隐藏数据页等编辑入口
+  // tab 用 data-view 标识：观阅模式只保留「本月生日」
+  document.querySelectorAll('.tab').forEach(function(t){
+    var v = t.getAttribute('data-view');
+    if (v !== 'month') t.style.display = 'none';
+  });
+  // 礼物池视图在观阅模式下也不可用（防止误触发编辑）
+  ['vip','staff','people','data'].forEach(function(v){
+    var el = document.getElementById('view-' + v);
+    if (el) el.classList.remove('active');
+  });
+  var m = document.getElementById('view-month');
+  if (m) m.classList.add('active');
+  var sb = document.querySelector('.share-btn'); if (sb) sb.style.display = 'none';
+  var vt = document.getElementById('viewer-tip');
+  if (vt) vt.style.display = 'flex';
 })();
 // 微信浏览器提示
 (function(){
@@ -1129,9 +1311,18 @@ function inlineEdit(ev, tier, gid, field, el){
 }
 
 /* ================= 分享 ================= */
+let shareViewOnly = true;   // 默认生成「观阅版」链接给领导，只读+勾选
+function setShareMode(v){
+  shareViewOnly = !!v;
+  const sw = $('#share-mode');
+  if (sw) sw.classList.toggle('on', shareViewOnly);
+  updateShareLink();
+}
 function buildShareUrl(){
   const base = location.origin + location.pathname;
-  return base + '?year=' + curYear + '&month=' + curMonth;
+  let u = base + '?year=' + curYear + '&month=' + curMonth;
+  if (shareViewOnly) u += '&view=1';
+  return u;
 }
 function openShare(){
   ensureYears();
@@ -1139,7 +1330,7 @@ function openShare(){
   ys.innerHTML = yearList.map(y => `<option value="${y}" ${y===curYear?'selected':''}>${y}年</option>`).join('');
   let opts = ''; for (let m = 1; m <= 12; m++){ opts += `<option value="${m}" ${m===curMonth?'selected':''}>${m}月</option>`; }
   ms.innerHTML = opts;
-  updateShareLink();
+  setShareMode(shareViewOnly);
   openModal('share-modal');
 }
 function updateShareLink(){
@@ -1151,7 +1342,7 @@ function updateShareLink(){
   setUrlParam(y, m);
   const people = state.people.filter(p => p.month === m);
   const vips = people.filter(p => p.tier === 'vip').length;
-  $('#share-current').innerHTML = `<b>${y}年${m}月</b> · ${people.length} 位寿星${vips?'（VIP '+vips+'）':''} · 寿星点击直达 →`;
+  $('#share-current').innerHTML = `<b>${y}年${m}月</b> · ${people.length} 位寿星${vips?'（VIP '+vips+'）':''} · 观阅版含勾选功能`;
   renderMonth();
 }
 async function copyShareUrl(){
@@ -1192,9 +1383,12 @@ function buildPersonShareUrl(pid){
 function sharePerson(pid){
   const p = findPerson(pid);
   if (!p) return;
+  // 单人分享固定用观阅版（只读+勾选），避免对方误改
+  const prev = shareViewOnly; shareViewOnly = true;
   const url = buildPersonShareUrl(pid);
+  shareViewOnly = prev;
   try{ history.replaceState(null, '', '?year=' + curYear + '&month=' + curMonth + '&person=' + pid); }catch(e){}
-  copyText(url, `✅ ${p.name} 的专属链接已复制`, `请手动复制：${url}`);
+  copyText(url, `✅ ${p.name} 的观阅链接已复制（可勾选）`, `请手动复制：${url}`);
 }
 // 安全地更新地址栏（部分环境禁用 history API）
 function setUrlParam(y, m){
