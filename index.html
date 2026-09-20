@@ -1,14 +1,144 @@
-<!doctype html><html><head>
+<!doctype html><html lang="zh-CN"><head>
 <meta charset="utf-8">
-<title>生日礼物管理</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>生日礼物管理 · 登录</title>
+<style>
+  :root{
+    --ink:#1f2733; --ink2:#5b6675; --ink3:#98a2b3;
+    --gold:#c8a253; --gold-bg:#faf5ea; --line:#e8e4da;
+    --bg:#f6f4ef; --card:#ffffff; --err:#d64545;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:
+    radial-gradient(1200px 500px at 50% -10%, #efe9dc 0%, var(--bg) 55%);font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',Roboto,sans-serif;padding:24px}
+  .box{width:100%;max-width:380px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:34px 30px 30px;box-shadow:0 18px 50px -18px rgba(31,39,51,.18)}
+  .logo{width:54px;height:54px;border-radius:16px;background:var(--gold-bg);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px}
+  h1{font-size:19px;color:var(--ink);text-align:center;letter-spacing:.5px}
+  .sub{font-size:12.5px;color:var(--ink3);text-align:center;margin:7px 0 24px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;letter-spacing:.3px}
+  .field input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:.16s;background:#fdfdfb;color:var(--ink)}
+  .field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,162,83,.14);background:#fff}
+  .row{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 18px}
+  .remember{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);cursor:pointer;user-select:none}
+  .remember input{width:15px;height:15px;accent-color:var(--gold);cursor:pointer}
+  .btn{width:100%;padding:13px 0;border:none;border-radius:12px;background:var(--ink);color:#fff;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:.18s;letter-spacing:2px}
+  .btn:hover{background:#2c3646}
+  .btn:disabled{opacity:.55;cursor:wait}
+  .err{display:none;background:#fdf0f0;border:1px solid #f3d6d6;color:var(--err);font-size:12.5px;padding:9px 12px;border-radius:10px;margin-bottom:14px;text-align:center}
+  .shake{animation:shake .35s}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+  .loading{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);z-index:9}
+  .loading.show{display:flex}
+  .spin{width:30px;height:30px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--gold);animation:rot .8s linear infinite}
+  @keyframes rot{to{transform:rotate(360deg)}}
+  .loading p{font-size:13px;color:var(--ink2)}
+  .foot{margin-top:20px;text-align:center;font-size:11px;color:var(--ink3)}
+</style>
 </head><body>
-<p style="font-family:system-ui;padding:40px;text-align:center;color:#888">正在加载… <a href="./app.html">点这里</a></p>
+
+<div class="loading" id="loading"><div class="spin"></div><p id="loading-txt">正在解锁…</p></div>
+
+<div class="box" id="login-box">
+  <div class="logo">🎁</div>
+  <h1>生日礼物管理</h1>
+  <p class="sub">本页面已加密，请输入账号密码查看</p>
+  <div class="err" id="err"></div>
+  <div class="field"><label>账号</label><input id="acc" autocomplete="username" spellcheck="false"></div>
+  <div class="field"><label>密码</label><input id="pwd" type="password" autocomplete="current-password"></div>
+  <div class="row">
+    <label class="remember"><input type="checkbox" id="remember" checked>记住我（下次自动进入）</label>
+  </div>
+  <button class="btn" id="go">进 入</button>
+  <p class="foot">忘记密码请联系管理员重新设置</p>
+</div>
+
 <script>
 (function(){
-  // 跳到最新版页面；时间戳参数绕缓存；原样转发 year/month/person/view 等参数（分享链接不被破坏）
-  var q = location.search.replace(/^\?/, '');
-  var t = './app.html?cb=' + Date.now() + (q ? '&' + q : '');
-  try { location.replace(t); } catch(e){ location.href = t; }
+  var STORE_KEY = 'gp_auth_v1';
+  var $ = function(id){ return document.getElementById(id); };
+
+  function showLoading(t){ $('loading-txt').textContent = t || '正在解锁…'; $('loading').classList.add('show'); }
+  function hideLoading(){ $('loading').classList.remove('show'); }
+  function showError(msg){
+    var e = $('err');
+    e.textContent = msg; e.style.display = 'block';
+    var b = $('login-box'); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
+  }
+
+  function deriveKey(secret, salt){
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(secret), 'PBKDF2', false, ['deriveKey'])
+      .then(function(km){
+        return crypto.subtle.deriveKey(
+          { name: 'PBKDF2', salt: salt, iterations: 150000, hash: 'SHA-256' },
+          km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+        );
+      });
+  }
+
+  function boot(secret){
+    showLoading('正在解锁…');
+    return fetch('./app.enc?v=' + Date.now(), { cache: 'no-store' })
+      .then(function(r){
+        if (!r.ok) throw new Error('FETCH_' + r.status);
+        return r.arrayBuffer();
+      })
+      .then(function(buf){
+        if (buf.byteLength < 45) throw new Error('BADFILE');
+        var salt = new Uint8Array(buf, 0, 16);
+        var iv = new Uint8Array(buf, 16, 12);
+        var ct = new Uint8Array(buf, 28);
+        return deriveKey(secret, salt).then(function(key){
+          return crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, ct);
+        });
+      })
+      .then(function(plain){
+        var html = new TextDecoder('utf-8').decode(plain);
+        if (html.indexOf('<!doctype') !== 0 && html.indexOf('<!DOCTYPE') !== 0) throw new Error('BADPLAIN');
+        // 成功：可选记住，然后整页替换为解密后的应用（URL 与查询参数保持不变）
+        if ($('remember') && $('remember').checked){
+          try { localStorage.setItem(STORE_KEY, btoa(unescape(encodeURIComponent(secret)))); } catch(e){}
+        } else {
+          try { localStorage.removeItem(STORE_KEY); } catch(e){}
+        }
+        document.open(); document.write(html); document.close();
+      });
+  }
+
+  function onFail(err, isAuto){
+    hideLoading();
+    if (isAuto){
+      // 自动登录失败（密码已改/文件已换）：清掉存的密钥，回到登录框
+      try { localStorage.removeItem(STORE_KEY); } catch(e){}
+    } else if (err && String(err.message || err).indexOf('FETCH') === 0){
+      showError('网络异常，无法获取数据（' + String(err.message || err).replace('FETCH_','HTTP ') + '），请刷新重试');
+      return;
+    } else {
+      showError('账号或密码不正确');
+      $('pwd').value = ''; $('pwd').focus();
+    }
+  }
+
+  $('go').addEventListener('click', function(){
+    var acc = $('acc').value.trim().toLowerCase();
+    var pwd = $('pwd').value;
+    if (!acc || !pwd){ showError('请输入账号和密码'); return; }
+    $('go').disabled = true;
+    boot(acc + ':' + pwd)
+      .catch(function(e){ onFail(e, false); })
+      .then(function(){ $('go').disabled = false; });
+  });
+
+  $('pwd').addEventListener('keydown', function(e){ if (e.key === 'Enter') $('go').click(); });
+
+  // 自动登录（记住我）
+  try {
+    var saved = localStorage.getItem(STORE_KEY);
+    if (saved){
+      var secret = decodeURIComponent(escape(atob(saved)));
+      boot(secret).catch(function(e){ onFail(e, true); });
+    }
+  } catch(e){}
 })();
 </script>
 </body></html>
