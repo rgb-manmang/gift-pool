@@ -24,6 +24,9 @@ try { window.__preEncP = fetch('./app.enc', { cache: 'no-store' }).catch(functio
   .field label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;letter-spacing:.3px}
   .field input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:.16s;background:#fdfdfb;color:var(--ink)}
   .field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,162,83,.14);background:#fff}
+  .remember-row{display:flex;align-items:center;gap:8px;margin:6px 2px 14px;font-size:12.5px;color:var(--ink2);cursor:pointer;user-select:none}
+  .remember-row input{width:16px;height:16px;accent-color:var(--gold);cursor:pointer}
+  .remember-row span{flex:1;line-height:1.4}
   .btn{width:100%;padding:13px 0;border:none;border-radius:12px;background:var(--ink);color:#fff;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:.18s;letter-spacing:2px;margin-top:8px}
   .btn:hover{background:#2c3646}
   .btn:disabled{opacity:.55;cursor:wait}
@@ -35,13 +38,13 @@ try { window.__preEncP = fetch('./app.enc', { cache: 'no-store' }).catch(functio
   .spin{width:30px;height:30px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--gold);animation:rot .8s linear infinite}
   @keyframes rot{to{transform:rotate(360deg)}}
   .loading p{font-size:13px;color:var(--ink2);text-align:center;line-height:1.6;padding:0 24px}
-  .foot{margin-top:20px;text-align:center;font-size:11px;color:var(--ink3)}
+  .foot{margin-top:20px;text-align:center;font-size:11px;color:var(--ink3);line-height:1.6}
 </style>
 </head><body>
 
 <div class="loading" id="loading"><div class="spin"></div><div id="loading-txt" style="font-size:13px;color:var(--ink2);text-align:center;line-height:1.6">正在解锁…</div></div>
 
-<div class="box" id="login-box">
+<div class="box" id="login-box" style="display:none">
   <div class="logo">🎁</div>
   <h1>生日礼物管理</h1>
   <p class="sub">后台已加密，请输入账号密码</p>
@@ -49,16 +52,15 @@ try { window.__preEncP = fetch('./app.enc', { cache: 'no-store' }).catch(functio
   <form id="login-form">
     <div class="field"><label>账号</label><input id="acc" autocomplete="username" spellcheck="false"></div>
     <div class="field"><label>密码</label><input id="pwd" type="password" autocomplete="current-password"></div>
+    <label class="remember-row"><input type="checkbox" id="remember" checked><span>记住账号密码，下次打开自动登录</span></label>
     <button class="btn" id="go" type="submit">进 入</button>
-    <p class="foot">每次打开都需要输入密码 · 忘记请联系管理员</p>
+    <p class="foot">勾选记住后，下次打开免输入直接进入<br>在后台点「🚪 退出」可清除本机记忆</p>
   </form>
 </div>
 
 <script>
 (function(){
-  // 每次打开都要求输入 —— 清除旧设备的"记住我"记忆
-  try { localStorage.removeItem('gp_auth_v1'); } catch(e){}
-
+  var STORE_KEY = 'gp_auth_v1';
   var $ = function(id){ return document.getElementById(id); };
   function showLoading(t){
     if (Array.isArray(t)) t = t.join('  ·  ');
@@ -66,9 +68,37 @@ try { window.__preEncP = fetch('./app.enc', { cache: 'no-store' }).catch(functio
     $('loading').classList.add('show');
   }
   function hideLoading(){ $('loading').classList.remove('show'); }
+  function showLogin(){
+    hideLoading();
+    var b = $('login-box'); b.style.display = 'block';
+    try { $('acc').focus(); } catch(e){}
+  }
   function showError(msg){
     var e = $('err'); e.textContent = msg; e.style.display = 'block';
     var b = $('login-box'); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
+  }
+  function hideError(){
+    var e = $('err'); e.style.display = 'none';
+  }
+
+  // —— 记住密码（base64 简单混淆，不构成真正的安全，只是避免明文直接落盘） ——
+  function saveAuth(acc, pwd){
+    try {
+      var payload = { a: acc, p: pwd, t: Date.now() };
+      localStorage.setItem(STORE_KEY, btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
+    } catch(e){}
+  }
+  function loadAuth(){
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return null;
+      var payload = JSON.parse(decodeURIComponent(escape(atob(raw))));
+      if (!payload || !payload.a || !payload.p) return null;
+      return payload.a + ':' + payload.p;
+    } catch(e){ return null; }
+  }
+  function clearAuth(){
+    try { localStorage.removeItem(STORE_KEY); } catch(e){}
   }
 
   function deriveKey(secret, salt){
@@ -96,7 +126,8 @@ try { window.__preEncP = fetch('./app.enc', { cache: 'no-store' }).catch(functio
       return r.arrayBuffer();
     });
   }
-  function boot(secret){
+  // beforeWrite：解密成功、document.write 之前调用（用于把账号密码写到 localStorage）
+  function boot(secret, beforeWrite){
     showLoading(['正在解锁…', '派生密钥中…', '校验加密数据…']);
     return fetchEnc()
       .then(function(buf){
@@ -111,16 +142,21 @@ try { window.__preEncP = fetch('./app.enc', { cache: 'no-store' }).catch(functio
       .then(function(plain){
         var html = new TextDecoder('utf-8').decode(plain);
         if (html.indexOf('<!doctype') !== 0 && html.indexOf('<!DOCTYPE') !== 0) throw new Error('BADPLAIN');
+        if (beforeWrite) { try { beforeWrite(); } catch(e){} }
         document.open(); document.write(html); document.close();
       });
   }
   function onFail(err){
     hideLoading();
     if (err && String(err.message || err).indexOf('FETCH') === 0){
+      showLogin();
       showError('网络异常，无法获取数据（' + String(err.message || err).replace('FETCH_','HTTP ') + '），请刷新重试');
     } else {
+      // 密码错误 —— 清除记住的密码，回到登录框让用户重新输入
+      clearAuth();
+      showLogin();
       showError('账号或密码不正确');
-      $('pwd').value = ''; try { $('pwd').focus(); } catch(e){}
+      try { $('pwd').value = ''; $('acc').value = ''; $('acc').focus(); } catch(e){}
     }
   }
 
@@ -129,14 +165,22 @@ try { window.__preEncP = fetch('./app.enc', { cache: 'no-store' }).catch(functio
     var acc = $('acc').value.trim().toLowerCase();
     var pwd = $('pwd').value;
     if (!acc || !pwd){ showError('请输入账号和密码'); return; }
+    hideError();
     $('go').disabled = true;
-    boot(acc + ':' + pwd)
+    var remember = $('remember').checked;
+    var saveCb = remember ? function(){ saveAuth(acc, pwd); } : null;
+    boot(acc + ':' + pwd, saveCb)
       .catch(function(e){ onFail(e); })
       .then(function(){ try { $('go').disabled = false; } catch(e){} });
   });
 
-  // 打开页面：直接显示登录框（不自动登录，不读取任何记忆）
-  try { $('acc').focus(); } catch(e){}
+  // —— 自动登录 ——
+  var remembered = loadAuth();
+  if (remembered){
+    boot(remembered).catch(function(e){ onFail(e); });
+  } else {
+    showLogin();
+  }
 })();
 </script>
 </body></html>
