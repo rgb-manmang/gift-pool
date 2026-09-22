@@ -55,29 +55,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .msg-input::placeholder{color:#b6bfc9}
 
 /* ===== 行内展开的 picker（点开即展开，不弹窗） ===== */
-.inline-picker{display:none;margin-top:14px;padding:14px;background:#f4f7f5;border:1px solid #dde5e5;border-radius:14px}
+.inline-picker{display:none;margin:14px -15px 0;padding:12px 10px 14px;background:#f4f7f5;border-top:1px solid #dde5e5;border-bottom:1px solid #dde5e5;border-radius:0}
 .inline-picker.open{display:block;animation:expandIn .22s ease}
 @keyframes expandIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .inline-picker .ip-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
-.inline-picker .ip-ttl{font-size:13px;color:#5b6675;font-weight:600}
+.inline-picker .ip-ttl{font-size:13.5px;color:#5b6675;font-weight:600}
 .inline-picker .ip-close{width:26px;height:26px;border-radius:50%;border:1px solid #dde5e5;background:#fff;color:#5b6675;cursor:pointer;font-family:inherit;font-size:13px;display:flex;align-items:center;justify-content:center;line-height:1}
-.inline-picker-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.ipick-card{background:#fff;border:1px solid #e6ece8;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;font-family:inherit;transition:.16s}
+.inline-picker-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.ipick-card{background:#fff;border:1px solid #e6ece8;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;font-family:inherit;transition:.16s}
 .ipick-card.is-picked{border-color:#5fb88e;box-shadow:0 0 0 1px #b9ecce inset;background:#f6fcf8}
-.ipick-card .ip-img{width:100%;aspect-ratio:1;object-fit:cover;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#cbd1dd;font-size:24px}
+.ipick-card .ip-img{width:100%;aspect-ratio:1/1.12;object-fit:cover;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#cbd1dd;font-size:26px}
 .ipick-card .ip-img img{width:100%;height:100%;object-fit:cover;display:block}
-.ipick-card .ip-body{padding:8px 10px 10px;display:flex;flex-direction:column;gap:4px;flex:1}
-.ipick-card .ip-name{font-size:12.5px;font-weight:600;color:#1f2733;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ipick-card .ip-price{font-size:11px;color:#98a2b3}
+.ipick-card .ip-body{padding:9px 11px 11px;display:flex;flex-direction:column;gap:4px;flex:1}
+.ipick-card .ip-name{font-size:13.5px;font-weight:600;color:#1f2733;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ipick-card .ip-price{font-size:12px;color:#98a2b3}
 .ipick-card .ip-expect{display:inline-block;font-size:10.5px;padding:1px 7px;background:#fbf4e2;color:#d8b25a;border-radius:99px;font-weight:600;align-self:flex-start}
-.ipick-card .ip-pick{margin-top:6px;padding:6px 0;border-radius:8px;border:1px solid #e6ece8;background:#fff;color:#5b6675;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;width:100%}
+.ipick-card .ip-pick{margin-top:8px;padding:9px 0;border-radius:9px;border:1px solid #e6ece8;background:#fff;color:#5b6675;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;width:100%}
 .ipick-card.is-picked .ip-pick{background:#5fb88e;border-color:#5fb88e;color:#fff}
 .ipick-card .ip-pick .ip-box{display:inline-block;width:14px;height:14px;border-radius:3px;border:1.5px solid #cfcfcf;vertical-align:-2px;margin-right:5px;font-size:10px;line-height:1;color:transparent}
 .ipick-card.is-picked .ip-pick .ip-box{background:#fff;border-color:#fff;color:#5fb88e}
 
-/* ===== 3 个动作芯片 + 留言（常驻卡片底部） ===== */
-.viewer-actions{display:flex;margin-top:12px;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px dashed #dde5e5}
-.va-chip{font-size:12px;padding:7px 12px;border-radius:99px;border:1px solid #e6ece8;background:#fff;color:#5b6675;cursor:pointer;font-family:inherit;font-weight:600;transition:.16s;display:flex;align-items:center;gap:5px}
+/* ===== 3 个动作芯片（在选礼物面板最底部） + 留言 ===== */
+.viewer-actions{display:flex;margin-top:14px;flex-wrap:wrap;gap:9px;padding-top:14px;border-top:1px dashed #dde5e5;justify-content:center}
+.va-chip{font-size:12.5px;padding:8px 15px;border-radius:99px;border:1px solid #e6ece8;background:#fff;color:#5b6675;cursor:pointer;font-family:inherit;font-weight:600;transition:.16s;display:flex;align-items:center;gap:5px}
 .va-chip:active{transform:scale(.95)}
 .va-chip.on{border-color:#5fb88e;background:#e9f6ee;color:#2d7d52;box-shadow:0 1px 3px rgba(95,184,142,.15)}
 
@@ -280,6 +280,8 @@ function findGiftById(id){
 /* ====== 观阅版选礼物（本地 + 可提交到云端） ====== */
 // 内存视图：picks[pid] = { gid, name, gift, price, status, ask, remind, resetMark, at }
 let picks = {};
+// 记录哪些人的选礼物面板处于展开状态（卡片局部刷新后保持不收起）
+const openPickers = new Set();
 function loadPicks(){ try{ picks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') || {}; } catch(e){ picks = {}; } }
 function savePicks(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(picks)); } catch(e){} }
 
@@ -403,10 +405,11 @@ function personCardHTML(p){
     </div>`;
   }
 
-  // 行内 picker（默认收起）
+  // 行内 picker（默认收起；openPickers 记住展开状态，卡片局部刷新后不收起）
   const gifts = pickerList(p.id);
+  const isOpen = openPickers.has(p.id);
   const pickerHTML = `
-    <div class="inline-picker" id="ip-${esc(p.id)}">
+    <div class="inline-picker${isOpen?' open':''}" id="ip-${esc(p.id)}">
       <div class="ip-head">
         <span class="ip-ttl">🎁 为 ${esc(p.name)} 选礼物（共 ${gifts.length} 个候选）</span>
         <button class="ip-close" onclick="togglePicker('${esc(p.id)}')" title="收起">✕</button>
@@ -428,26 +431,25 @@ function personCardHTML(p){
           </div>`;
         }).join('')}
       </div>
+      <div class="viewer-actions" id="va-${esc(p.id)}">
+        <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">🔁 重新选择</button>
+        <button class="va-chip${cur.ask?' on':''}" onclick="toggleAction('${esc(p.id)}','ask')">❓ 询问本人</button>
+        <button class="va-chip${cur.remind?' on':''}" onclick="toggleAction('${esc(p.id)}','remind')">🔔 提醒DJ</button>
+      </div>
     </div>`;
 
-  // 3 个动作芯片（常驻底部）+ 留言输入框
-  const actionsHTML = `
-    <div class="viewer-actions" id="va-${esc(p.id)}">
-      <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">🔁 重新选择</button>
-      <button class="va-chip${cur.ask?' on':''}" onclick="toggleAction('${esc(p.id)}','ask')">❓ 询问本人</button>
-      <button class="va-chip${cur.remind?' on':''}" onclick="toggleAction('${esc(p.id)}','remind')">🔔 提醒DJ</button>
-    </div>
-    <div class="msg-row"><input class="msg-input" id="msg-${esc(p.id)}" placeholder="输入内容" value="${esc(cur.msg||'')}" oninput="saveMsg('${esc(p.id)}', this.value)"></div>`;
+  // 留言输入框（常驻卡片上，选礼物面板上方）
+  const msgHTML = `<div class="msg-row"><input class="msg-input" id="msg-${esc(p.id)}" placeholder="输入内容" value="${esc(cur.msg||'')}" oninput="saveMsg('${esc(p.id)}', this.value)"></div>`;
 
   return `<div class="viewer-person${pickedG?' is-picked':''}" data-pid="${esc(p.id)}" id="vp-${esc(p.id)}">
     <div class="viewer-name-row">
       <span class="vname">${esc(p.name)}</span>
       <span class="vdate">${esc(dateStr || p.dateRaw || '')}</span>
       ${vipBadge}
-      <button class="picker-btn" id="pb-${esc(p.id)}" onclick="togglePicker('${esc(p.id)}')">🎁 为他 / 她选礼物</button>
+      <button class="picker-btn${isOpen?' is-open':''}" id="pb-${esc(p.id)}" onclick="togglePicker('${esc(p.id)}')">🎁 为他 / 她选礼物</button>
     </div>
     ${miniHTML}
-    ${actionsHTML}
+    ${msgHTML}
     ${pickerHTML}
   </div>`;
 }
@@ -456,6 +458,7 @@ function togglePicker(pid){
   const pb = document.getElementById('pb-' + pid);
   if (!ip) return;
   const open = ip.classList.toggle('open');
+  if (open) openPickers.add(pid); else openPickers.delete(pid);
   if (pb) pb.classList.toggle('is-open', open);
   // 展开时滚动到 picker 顶部
   if (open){
