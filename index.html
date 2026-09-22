@@ -7,6 +7,7 @@
     --ink:#1f2733; --ink2:#5b6675; --ink3:#98a2b3;
     --gold:#c8a253; --gold-bg:#faf5ea; --line:#e8e4da;
     --bg:#f6f4ef; --card:#ffffff; --err:#d64545;
+    --ok:#3b8a5a; --ok-bg:#eef7f0;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:
@@ -26,31 +27,48 @@
   .btn:hover{background:#2c3646}
   .btn:disabled{opacity:.55;cursor:wait}
   .err{display:none;background:#fdf0f0;border:1px solid #f3d6d6;color:var(--err);font-size:12.5px;padding:9px 12px;border-radius:10px;margin-bottom:14px;text-align:center}
+  .hint{display:none;background:var(--ok-bg);border:1px solid #d3e9d8;color:var(--ok);font-size:12px;padding:8px 12px;border-radius:10px;margin-bottom:14px;text-align:center;line-height:1.55}
   .shake{animation:shake .35s}
   @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
   .loading{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);z-index:9}
   .loading.show{display:flex}
   .spin{width:30px;height:30px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--gold);animation:rot .8s linear infinite}
   @keyframes rot{to{transform:rotate(360deg)}}
-  .loading p{font-size:13px;color:var(--ink2)}
+  .loading p{font-size:13px;color:var(--ink2);text-align:center;line-height:1.6;padding:0 24px}
   .foot{margin-top:20px;text-align:center;font-size:11px;color:var(--ink3)}
+  .foot a{color:var(--ink2);text-decoration:none;border-bottom:1px dashed var(--ink3)}
+  .foot a:hover{color:var(--ink)}
+  /* "已记住此设备"的小标记 */
+  .remembered-chip{display:none;margin:0 0 14px;padding:8px 12px;border-radius:10px;background:var(--ok-bg);border:1px solid #d3e9d8;font-size:12px;color:var(--ok);text-align:center;line-height:1.5}
+  .remembered-chip b{color:#1f6e3d}
+  .remembered-chip .switch{margin-left:8px;color:var(--ink2);cursor:pointer;text-decoration:underline;font-size:11.5px}
 </style>
 </head><body>
 
 <div class="loading" id="loading"><div class="spin"></div><p id="loading-txt">正在解锁…</p></div>
 
-<div class="box" id="login-box">
+<div class="box" id="login-box" style="display:none">
   <div class="logo">🎁</div>
   <h1>生日礼物管理</h1>
   <p class="sub">本页面已加密，请输入账号密码查看</p>
-  <div class="err" id="err"></div>
-  <div class="field"><label>账号</label><input id="acc" autocomplete="username" spellcheck="false"></div>
-  <div class="field"><label>密码</label><input id="pwd" type="password" autocomplete="current-password"></div>
-  <div class="row">
-    <label class="remember"><input type="checkbox" id="remember" checked>记住我（下次自动进入）</label>
+
+  <div id="remembered-chip" class="remembered-chip">
+    ✅ <b>此设备已记住密码</b>，正在为你自动进入…
+    <span class="switch" id="switch-acc">换个账号</span>
   </div>
-  <button class="btn" id="go">进 入</button>
-  <p class="foot">忘记密码请联系管理员重新设置</p>
+
+  <div class="err" id="err"></div>
+  <div class="hint" id="hint"></div>
+
+  <form id="login-form">
+    <div class="field"><label>账号</label><input id="acc" autocomplete="username" spellcheck="false"></div>
+    <div class="field"><label>密码</label><input id="pwd" type="password" autocomplete="current-password"></div>
+    <div class="row">
+      <label class="remember"><input type="checkbox" id="remember" checked>记住此设备（下次直接进入，无需输入）</label>
+    </div>
+    <button class="btn" id="go" type="submit">进 入</button>
+    <p class="foot">忘记密码请联系管理员重新设置</p>
+  </form>
 </div>
 
 <script>
@@ -58,12 +76,26 @@
   var STORE_KEY = 'gp_auth_v1';
   var $ = function(id){ return document.getElementById(id); };
 
-  function showLoading(t){ $('loading-txt').textContent = t || '正在解锁…'; $('loading').classList.add('show'); }
+  function showLoading(t){
+    if (Array.isArray(t)) t = t.join('  ·  ');
+    $('loading-txt').textContent = t || '正在解锁…';
+    $('loading').classList.add('show');
+  }
   function hideLoading(){ $('loading').classList.remove('show'); }
   function showError(msg){
-    var e = $('err');
-    e.textContent = msg; e.style.display = 'block';
+    var e = $('err'); e.textContent = msg; e.style.display = 'block';
+    var h = $('hint'); if (h){ h.style.display = 'none'; h.textContent = ''; }
     var b = $('login-box'); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake');
+  }
+  function showHint(msg){
+    var h = $('hint'); if (!h) return;
+    h.textContent = msg; h.style.display = 'block';
+  }
+  function showRememberedChip(){
+    var c = $('remembered-chip'); if (c) c.style.display = '';
+  }
+  function hideRememberedChip(){
+    var c = $('remembered-chip'); if (c) c.style.display = 'none';
   }
 
   function deriveKey(secret, salt){
@@ -76,8 +108,10 @@
       });
   }
 
-  function boot(secret){
-    showLoading('正在解锁…');
+  function boot(secret, opts){
+    opts = opts || {};
+    var msgs = ['正在解锁…', '派生密钥中…', '校验加密数据…'];
+    showLoading(msgs);
     return fetch('./app.enc?v=' + Date.now(), { cache: 'no-store' })
       .then(function(r){
         if (!r.ok) throw new Error('FETCH_' + r.status);
@@ -95,11 +129,14 @@
       .then(function(plain){
         var html = new TextDecoder('utf-8').decode(plain);
         if (html.indexOf('<!doctype') !== 0 && html.indexOf('<!DOCTYPE') !== 0) throw new Error('BADPLAIN');
-        // 成功：可选记住，然后整页替换为解密后的应用（URL 与查询参数保持不变）
-        if ($('remember') && $('remember').checked){
-          try { localStorage.setItem(STORE_KEY, btoa(unescape(encodeURIComponent(secret)))); } catch(e){}
-        } else {
-          try { localStorage.removeItem(STORE_KEY); } catch(e){}
+
+        // 记住我（仅在用户主动登录时；自动登录失败后再来则强制覆盖/保留）
+        if (opts.remember !== null && opts.remember !== undefined){
+          if (opts.remember){
+            try { localStorage.setItem(STORE_KEY, btoa(unescape(encodeURIComponent(secret)))); } catch(e){}
+          } else {
+            try { localStorage.removeItem(STORE_KEY); } catch(e){}
+          }
         }
         document.open(); document.write(html); document.close();
       });
@@ -107,38 +144,64 @@
 
   function onFail(err, isAuto){
     hideLoading();
+    hideRememberedChip();
     if (isAuto){
-      // 自动登录失败（密码已改/文件已换）：清掉存的密钥，回到登录框
+      // 自动登录失败（密码已改 / 文件已换）：清掉记忆，回到登录框
       try { localStorage.removeItem(STORE_KEY); } catch(e){}
+      showHint('记忆已失效（密码或数据已更新），请重新输入账号密码');
+      // 让登录框显示，但不报错红框
     } else if (err && String(err.message || err).indexOf('FETCH') === 0){
       showError('网络异常，无法获取数据（' + String(err.message || err).replace('FETCH_','HTTP ') + '），请刷新重试');
       return;
     } else {
       showError('账号或密码不正确');
-      $('pwd').value = ''; $('pwd').focus();
+      $('pwd').value = ''; try { $('pwd').focus(); } catch(e){}
     }
   }
 
-  $('go').addEventListener('click', function(){
+  // ---- 登录表单提交 ----
+  $('login-form').addEventListener('submit', function(ev){
+    ev.preventDefault();
     var acc = $('acc').value.trim().toLowerCase();
     var pwd = $('pwd').value;
     if (!acc || !pwd){ showError('请输入账号和密码'); return; }
     $('go').disabled = true;
-    boot(acc + ':' + pwd)
+    boot(acc + ':' + pwd, { remember: $('remember').checked })
       .catch(function(e){ onFail(e, false); })
-      .then(function(){ $('go').disabled = false; });
+      .then(function(){ try { $('go').disabled = false; } catch(e){} });
   });
 
-  $('pwd').addEventListener('keydown', function(e){ if (e.key === 'Enter') $('go').click(); });
+  // ---- "换个账号"：清掉记忆，刷新出登录框 ----
+  $('switch-acc').addEventListener('click', function(){
+    try { localStorage.removeItem(STORE_KEY); } catch(e){}
+    hideRememberedChip();
+    $('acc').focus();
+  });
 
-  // 自动登录（记住我）
-  try {
-    var saved = localStorage.getItem(STORE_KEY);
-    if (saved){
-      var secret = decodeURIComponent(escape(atob(saved)));
-      boot(secret).catch(function(e){ onFail(e, true); });
+  // ---- 自动登录（记住我） ----
+  var saved = null;
+  try { saved = localStorage.getItem(STORE_KEY); } catch(e){}
+
+  if (saved){
+    // 已记住此设备：显示 chip + 自动 boot
+    $('login-box').style.display = '';
+    showRememberedChip();
+    var secret;
+    try {
+      secret = decodeURIComponent(escape(atob(saved)));
+    } catch(e){
+      // 记忆数据损坏，直接清掉，要求重新输入
+      try { localStorage.removeItem(STORE_KEY); } catch(_e){}
+      $('login-box').style.display = '';
+      showHint('记忆数据已损坏，请重新输入账号密码');
+      return;
     }
-  } catch(e){}
+    boot(secret, { remember: null }).catch(function(e){ onFail(e, true); });
+  } else {
+    // 从未登录过：直接显示登录框
+    $('login-box').style.display = '';
+    try { $('acc').focus(); } catch(e){}
+  }
 })();
 </script>
 </body></html>
