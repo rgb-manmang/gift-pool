@@ -2,6 +2,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>生日礼物管理 · 登录</title>
+<script>
+// 提前热身：页面一加载就开始下载 app.enc（与后续 PBKDF2 密钥推导并行，省一次串行等待）
+try { window.__preEncP = fetch('./app.enc', { cache: 'no-store' }).catch(function(){ return null; }); } catch(e){}
+</script>
 <style>
   :root{
     --ink:#1f2733; --ink2:#5b6675; --ink3:#98a2b3;
@@ -102,21 +106,35 @@
     return crypto.subtle.importKey('raw', new TextEncoder().encode(secret), 'PBKDF2', false, ['deriveKey'])
       .then(function(km){
         return crypto.subtle.deriveKey(
-          { name: 'PBKDF2', salt: salt, iterations: 150000, hash: 'SHA-256' },
+          { name: 'PBKDF2', salt: salt, iterations: 60000, hash: 'SHA-256' },
           km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
         );
       });
+  }
+
+  // 取加密数据：优先复用页面加载时的预取请求，失败则重新下载
+  function fetchEnc(){
+    var fp = window.__preEncP;
+    if (fp){
+      return fp.then(function(r){
+        if (r && r.ok) return r.arrayBuffer();
+        return fetch('./app.enc?v=' + Date.now(), { cache: 'no-store' }).then(function(r2){
+          if (!r2.ok) throw new Error('FETCH_' + r2.status);
+          return r2.arrayBuffer();
+        });
+      });
+    }
+    return fetch('./app.enc?v=' + Date.now(), { cache: 'no-store' }).then(function(r){
+      if (!r.ok) throw new Error('FETCH_' + r.status);
+      return r.arrayBuffer();
+    });
   }
 
   function boot(secret, opts){
     opts = opts || {};
     var msgs = ['正在解锁…', '派生密钥中…', '校验加密数据…'];
     showLoading(msgs);
-    return fetch('./app.enc?v=' + Date.now(), { cache: 'no-store' })
-      .then(function(r){
-        if (!r.ok) throw new Error('FETCH_' + r.status);
-        return r.arrayBuffer();
-      })
+    return fetchEnc()
       .then(function(buf){
         if (buf.byteLength < 45) throw new Error('BADFILE');
         var salt = new Uint8Array(buf, 0, 16);
