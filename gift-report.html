@@ -431,7 +431,7 @@ function personCardHTML(p){
       <button class="va-chip${cur.ask?' on':''}" onclick="toggleAction('${esc(p.id)}','ask')">❓ 询问本人</button>
       <button class="va-chip${cur.remind?' on':''}" onclick="toggleAction('${esc(p.id)}','remind')">🔔 提醒DJ</button>
     </div>
-    <div class="msg-row"><input class="msg-input" id="msg-${esc(p.id)}" placeholder="✍️ 留言（可选），输入想备注的话" value="${esc(cur.msg||'')}" oninput="saveMsg('${esc(p.id)}', this.value)"></div>`;
+    <div class="msg-row"><input class="msg-input" id="msg-${esc(p.id)}" placeholder="输入内容" value="${esc(cur.msg||'')}" oninput="saveMsg('${esc(p.id)}', this.value)"></div>`;
 
   return `<div class="viewer-person${pickedG?' is-picked':''}" data-pid="${esc(p.id)}" id="vp-${esc(p.id)}">
     <div class="viewer-name-row">
