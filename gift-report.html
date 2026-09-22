@@ -23,18 +23,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .viewer-report-head h1 .ico{font-size:24px}
 .viewer-report-head .meta{margin-top:8px;font-size:12.5px;color:#98a2b3;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 
-/* ===== 寿星卡片 ===== */
-.viewer-list{max-width:720px;margin:0 auto;padding:0 16px 200px}
-.viewer-person{max-width:720px;margin:0 auto 14px;background:#fff;border:1px solid #e6ece8;border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start;transition:background .18s,border-color .18s,box-shadow .18s}
+/* ===== 寿星卡片（铺满屏宽：名字行+按钮一行，其余全宽堆叠） ===== */
+.viewer-list{max-width:720px;margin:0 auto;padding:0 12px 200px}
+.viewer-person{max-width:720px;margin:0 auto 14px;background:#fff;border:1px solid #e6ece8;border-radius:18px;padding:14px 14px;display:block;transition:background .18s,border-color .18s,box-shadow .18s}
 .viewer-person.is-picked{background:linear-gradient(180deg,#fff7e6 0%,#ffe8b8 100%);border-color:#f0c97a;box-shadow:0 4px 14px -8px rgba(200,162,83,.45)}
 .viewer-person.is-picked .vname{color:#7a5618}
-.viewer-person .left{min-width:0}
 .viewer-name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .viewer-name-row .vname{font-size:18px;font-weight:600;color:#1f2733}
 .viewer-name-row .vdate{font-size:13px;color:#5b6675}
 .viewer-name-row .badge-vip{font-size:11.5px;padding:2px 8px;background:#fbf4e2;color:#d8b25a;border-radius:99px;font-weight:600}
 .viewer-name-row .badge-staff{font-size:11.5px;padding:2px 8px;background:#eef2f6;color:#7a8696;border-radius:99px;font-weight:600}
 .viewer-name-row .picked-tag{font-size:11.5px;padding:2px 8px;background:#e9f6ee;color:#5fb88e;border-radius:99px;font-weight:600}
+/* 名字行右侧的"为他/她选礼物"按钮 */
+.viewer-name-row .picker-btn{margin-left:auto;flex:none;padding:8px 14px;background:#5fb88e;color:#fff;border-radius:99px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;transition:.16s}
+.viewer-name-row .picker-btn:hover{background:#4ea87a}
+.viewer-name-row .picker-btn.is-open{background:#3a7a5b}
 
 /* 选中的礼物：迷你小窗口（价格红字+大字号） */
 .picked-mini{display:flex;align-items:center;gap:10px;margin-top:10px;padding:8px 10px;background:#f2faf5;border:1px solid #cfe8d8;border-radius:12px;max-width:360px;box-shadow:0 2px 8px -4px rgba(95,184,142,.25)}
@@ -46,13 +49,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .picked-mini .pm-price .yen{font-size:11px;font-weight:500;margin-right:1px}
 .picked-mini .pm-tag{font-size:11px;color:#1f6e3d;background:#dcf2e4;border-radius:99px;padding:3px 9px;flex:none;font-weight:600;white-space:nowrap}
 
-/* 右侧"为 ta 选礼物"按钮 */
-.viewer-reco-bar{margin-top:10px;display:flex;align-items:center;justify-content:flex-start}
-.viewer-reco-bar .picker-btn{padding:9px 16px;background:#5fb88e;color:#fff;border-radius:99px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;flex:none;display:flex;align-items:center;gap:5px;transition:.16s}
-.viewer-reco-bar .picker-btn:hover{background:#4ea87a}
-.viewer-reco-bar .picker-btn.is-open{background:#3a7a5b}
-.viewer-person .right{display:flex;flex-direction:column;align-items:stretch;min-width:0}
-.viewer-person .right .picker-btn{margin-top:2px}
+/* 留言输入（手动文字，随提交传回后台） */
+.msg-row{margin-top:12px}
+.msg-input{width:100%;padding:11px 13px;border:1.5px solid #e6ece8;border-radius:12px;font-size:13.5px;font-family:inherit;outline:none;background:#fff;color:#1f2733;transition:.16s}
+.msg-input:focus{border-color:#5fb88e;box-shadow:0 0 0 3px rgba(95,184,142,.12)}
+.msg-input::placeholder{color:#b6bfc9}
 
 /* ===== 行内展开的 picker（点开即展开，不弹窗） ===== */
 .inline-picker{display:none;margin-top:14px;padding:14px;background:#f4f7f5;border:1px solid #dde5e5;border-radius:14px}
@@ -62,8 +63,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .inline-picker .ip-ttl{font-size:13px;color:#5b6675;font-weight:600}
 .inline-picker .ip-close{width:26px;height:26px;border-radius:50%;border:1px solid #dde5e5;background:#fff;color:#5b6675;cursor:pointer;font-family:inherit;font-size:13px;display:flex;align-items:center;justify-content:center;line-height:1}
 .inline-picker .ip-close:hover{background:#e9f6ee;color:#5fb88e;border-color:#5fb88e}
-.inline-picker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-@media(max-width:540px){.inline-picker-grid{grid-template-columns:repeat(2,1fr)}}
+.inline-picker-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .ipick-card{background:#fff;border:1px solid #e6ece8;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;font-family:inherit;transition:.16s}
 .ipick-card:hover{transform:translateY(-1px);box-shadow:0 4px 12px -6px rgba(95,184,142,.25);border-color:#cfe8d8}
 .ipick-card.is-picked{border-color:#5fb88e;box-shadow:0 0 0 1px #b9ecce inset;background:#f6fcf8}
@@ -79,9 +79,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .ipick-card .ip-pick .ip-box{display:inline-block;width:14px;height:14px;border-radius:3px;border:1.5px solid #cfcfcf;vertical-align:-2px;margin-right:5px;font-size:10px;line-height:1;color:transparent}
 .ipick-card.is-picked .ip-pick .ip-box{background:#fff;border-color:#fff;color:#5fb88e}
 
-/* ===== 3 个内联动作芯片（观阅版领导自勾选） ===== */
-.viewer-actions{display:none;margin-top:10px;flex-wrap:wrap;gap:8px;padding-top:10px;border-top:1px dashed #dde5e5}
-.viewer-actions.show{display:flex}
+/* ===== 3 个动作芯片 + 留言（常驻卡片底部） ===== */
+.viewer-actions{display:flex;margin-top:12px;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px dashed #dde5e5}
 .va-chip{font-size:12px;padding:7px 12px;border-radius:99px;border:1px solid #e6ece8;background:#fff;color:#5b6675;cursor:pointer;font-family:inherit;font-weight:600;transition:.16s;display:flex;align-items:center;gap:5px}
 .va-chip:hover{border-color:#5fb88e;color:#5fb88e}
 .va-chip.on{border-color:#5fb88e;background:#e9f6ee;color:#2d7d52;box-shadow:0 1px 3px rgba(95,184,142,.15)}
@@ -312,6 +311,17 @@ function toggleAction(pid, key){
   const labels = {ask:'❓ 已标记「询问本人」', remind:'🔔 已标记「提醒 DJ」', resetMark:'🔁 已标记「重新选择」'};
   toast(labels[key] || '已更新');
 }
+// 留言：手动输入文字（防抖保存，不重渲染卡片以免丢焦点）
+let _msgTimer = null;
+function saveMsg(pid, val){
+  const cur = picks[pid] || { name: (findPerson(pid)||{}).name||'', gid:null, gift:null, price:null, at:0 };
+  cur.msg = val;
+  cur.name = (findPerson(pid)||{}).name || cur.name || '';
+  picks[pid] = cur;
+  clearTimeout(_msgTimer);
+  _msgTimer = setTimeout(savePicks, 400);
+  updateFootBar();
+}
 function resetPicks(){
   if (!confirm('清空当前所有勾选（包括 3 个标记动作）？')) return;
   picks = {};
@@ -322,18 +332,48 @@ function resetPicks(){
 }
 
 /* ====== 渲染 ====== */
+// 是否往年送过（名字相似即算）
+function wasSent(person, gift){
+  const n = norm(gift.name);
+  if (n.length < 2) return false;
+  return Object.values(person.gifts||{}).some(g => {
+    const s = norm(g);
+    if (s.length < 2) return false;
+    return n.includes(s) || s.includes(n);
+  });
+}
+// 候选固定 6 个：后台勾选的 candidates 优先，不够的用推荐补齐（避开往年送过的），绝不出全池
 function pickerList(pid){
   const p = findPerson(pid);
   if (!p) return [];
   const seen = new Set(), list = [];
   const tier = p.tier === 'vip' ? 'vip' : 'staff';
-  // 1) 候选清单
-  const cand = (p.candidates || []).map(id => findGiftById(id)).filter(g=>!!g);
-  cand.forEach(g => { if (!seen.has(g.id)){ seen.add(g.id); list.push(g); } });
-  // 2) tier 池补全
-  (state[tier]||[]).forEach(g => { if (!seen.has(g.id)){ seen.add(g.id); list.push(g); } });
-  // 3) 跨 tier 补全
-  (tier==='vip' ? (state.staff||[]) : (state.vip||[])).forEach(g => { if (!seen.has(g.id)){ seen.add(g.id); list.push(g); } });
+  const MAX = 6;
+  // 1) 后台选定的候选清单优先
+  (p.candidates || []).forEach(id => {
+    if (list.length >= MAX) return;
+    const g = findGiftById(id);
+    if (g && !seen.has(g.id)){ seen.add(g.id); list.push(g); }
+  });
+  // 2) 不够 6 个 → 本层级池推荐补齐（优先没送过的）
+  if (list.length < MAX){
+    const pool = (state[tier] || []);
+    const fresh = pool.filter(g => !seen.has(g.id) && !wasSent(p, g));
+    const rest  = pool.filter(g => !seen.has(g.id));
+    const fillFrom = fresh.length ? fresh : rest;
+    seededShuffle(fillFrom, (p.recoSeed || 0) + 7).forEach(g => {
+      if (list.length >= MAX) return;
+      if (!seen.has(g.id)){ seen.add(g.id); list.push(g); }
+    });
+  }
+  // 3) 仍不够 → 跨层级兜底
+  if (list.length < MAX){
+    const cross = (tier === 'vip' ? (state.staff || []) : (state.vip || [])).filter(g => !seen.has(g.id));
+    seededShuffle(cross, (p.recoSeed || 0) + 13).forEach(g => {
+      if (list.length >= MAX) return;
+      if (!seen.has(g.id)){ seen.add(g.id); list.push(g); }
+    });
+  }
   return list;
 }
 function personCardHTML(p){
@@ -384,29 +424,25 @@ function personCardHTML(p){
       </div>
     </div>`;
 
-  // 3 个内联动作芯片（仅当该卡片有任何勾选/状态后显示）
-  const hasAny = !!(cur.gid || cur.ask || cur.remind || cur.resetMark);
+  // 3 个动作芯片（常驻底部）+ 留言输入框
   const actionsHTML = `
-    <div class="viewer-actions${hasAny?' show':''}" id="va-${esc(p.id)}">
+    <div class="viewer-actions" id="va-${esc(p.id)}">
       <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">🔁 重新选择</button>
       <button class="va-chip${cur.ask?' on':''}" onclick="toggleAction('${esc(p.id)}','ask')">❓ 询问本人</button>
       <button class="va-chip${cur.remind?' on':''}" onclick="toggleAction('${esc(p.id)}','remind')">🔔 提醒DJ</button>
-    </div>`;
+    </div>
+    <div class="msg-row"><input class="msg-input" id="msg-${esc(p.id)}" placeholder="✍️ 留言（可选），输入想备注的话" value="${esc(cur.msg||'')}" oninput="saveMsg('${esc(p.id)}', this.value)"></div>`;
 
   return `<div class="viewer-person${pickedG?' is-picked':''}" data-pid="${esc(p.id)}" id="vp-${esc(p.id)}">
-    <div class="left">
-      <div class="viewer-name-row">
-        <span class="vname">${esc(p.name)}</span>
-        <span class="vdate">${esc(dateStr || p.dateRaw || '')}</span>
-        ${vipBadge}
-      </div>
-      ${miniHTML}
-      ${actionsHTML}
-      ${pickerHTML}
-    </div>
-    <div class="right">
+    <div class="viewer-name-row">
+      <span class="vname">${esc(p.name)}</span>
+      <span class="vdate">${esc(dateStr || p.dateRaw || '')}</span>
+      ${vipBadge}
       <button class="picker-btn" id="pb-${esc(p.id)}" onclick="togglePicker('${esc(p.id)}')">🎁 为他 / 她选礼物</button>
     </div>
+    ${miniHTML}
+    ${actionsHTML}
+    ${pickerHTML}
   </div>`;
 }
 function togglePicker(pid){
@@ -450,14 +486,17 @@ function renderList(){
 function updateFootBar(){
   const ids = Object.keys(picks);
   const picked = ids.filter(id => picks[id] && picks[id].gid).length;
-  const flagged = ids.filter(id => picks[id] && (picks[id].ask || picks[id].remind || picks[id].resetMark)).length;
+  const active = ids.filter(id => {
+    const c = picks[id];
+    return !!(c && (c.gid || c.ask || c.remind || c.resetMark || (c.msg && c.msg.trim())));
+  }).length;
   const meta = $('#vf-meta');
   if (meta){
-    if (!picked && !flagged) meta.textContent = '尚未勾选';
-    else meta.textContent = `已选 ${picked} 位${flagged?' · '+flagged+' 个标记':''}`;
+    if (!active) meta.textContent = '尚未勾选';
+    else meta.textContent = `已选 ${picked} 位 · ${active} 人有内容`;
   }
   const btn = $('#submit-btn');
-  if (btn) btn.disabled = (picked + flagged === 0);
+  if (btn) btn.disabled = (active === 0);
 }
 
 /* ====== 提交：把勾选结果写入云端 data.enc，附在 people[*].selected ====== */
@@ -488,7 +527,7 @@ async function submitPicks(){
     }
     (state.people||[]).forEach(p => {
       const cur = picks[p.id];
-      if (cur && (cur.gid || cur.ask || cur.remind || cur.resetMark)){
+      if (cur && (cur.gid || cur.ask || cur.remind || cur.resetMark || (cur.msg && cur.msg.trim()))){
         p.selected = {
           gid: cur.gid || null,
           gift: cur.gift || null,
@@ -496,6 +535,7 @@ async function submitPicks(){
           ask: !!cur.ask,
           remind: !!cur.remind,
           resetMark: !!cur.resetMark,
+          msg: (cur.msg || '').trim() || null,
           at: submittedAt,
           by: submittedBy,
         };
