@@ -709,7 +709,15 @@ function renderList(){
     </div>`;
     return;
   }
-  const sorted = REPORT ? people : people.slice().sort((a,b) => (a.day||99) - (b.day||99));
+  // 排序：按生日时间线（月份升序 → 日期升序，农历无日排当月最后）——
+  // 不按勾选先后；跨月报告自然形成 9月在前、10月在后
+  const byTimeline = (a, b) => {
+    const ma = a.month || 13, mb = b.month || 13;
+    if (ma !== mb) return ma - mb;
+    const da = a.day || 99, db = b.day || 99;
+    return da - db;
+  };
+  const sorted = people.slice().sort(byTimeline);
   list.innerHTML = sorted.map(p => personCardHTML(p)).join('');
 }
 function updateFootBar(){
