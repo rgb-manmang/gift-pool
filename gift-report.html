@@ -346,7 +346,7 @@ function togglePick(pid, gid){
   }
   toast(cur.gid ? ('✅ 已选：' + cur.gift) : '已取消选择');
 }
-// 观阅版领导自勾选的 4 个内联动作：🔁 重新挑选 / ❓ 询问本人 / 💰 面议 / 💬 留言
+// 观阅版领导自勾选的 4 个内联动作：🔁 重新推荐 / ❓ 询问本人 / 💰 面议 / 💬 留言
 function toggleAction(pid, key){
   const cur = picks[pid] || { name: (findPerson(pid)||{}).name||'', gid:null, gift:null, price:null, at:0 };
   cur[key] = !cur[key];
@@ -356,7 +356,7 @@ function toggleAction(pid, key){
   savePicks();
   refreshCard(pid);
   updateFootBar();
-  const labels = {ask:'询问本人', bargain:'面议', resetMark:'重新挑选'};
+  const labels = {ask:'询问本人', bargain:'面议', resetMark:'重新推荐'};
   const name = labels[key] || '标记';
   toast(cur[key] ? ('✅ 已标记「' + name + '」') : ('已取消「' + name + '」，恢复原样'));
 }
