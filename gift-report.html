@@ -34,7 +34,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .viewer-name-row .badge-vip{font-size:11.5px;padding:2px 8px;background:#fbf4e2;color:#d8b25a;border-radius:99px;font-weight:600}
 .viewer-name-row .badge-staff{font-size:11.5px;padding:2px 8px;background:#eef2f6;color:#7a8696;border-radius:99px;font-weight:600}
 .viewer-name-row .picked-tag{font-size:11.5px;padding:2px 8px;background:#e9f6ee;color:#5fb88e;border-radius:99px;font-weight:600}
-/* 大号"为他/她选礼物"按钮（在芯片区右侧，样式定义见后面 .picker-btn 区块） */
+/* 大号"为他/她选礼物"按钮已移除：礼物改为常显两行 */
 
 /* 选中的礼物：迷你小窗口（价格红字+大字号） */
 .picked-mini{display:flex;align-items:center;gap:10px;margin-top:10px;padding:8px 10px;background:#f2faf5;border:1px solid #cfe8d8;border-radius:12px;max-width:360px;box-shadow:0 2px 8px -4px rgba(95,184,142,.25)}
@@ -51,38 +51,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .msg-input:focus{border-color:#5fb88e;box-shadow:0 0 0 3px rgba(95,184,142,.12)}
 .msg-input::placeholder{color:#b6bfc9}
 
-/* ===== 行内展开的 picker（点开即展开，不弹窗） ===== */
-.inline-picker{display:none;margin:14px -15px 0;padding:12px 10px 14px;background:#f4f7f5;border-top:1px solid #dde5e5;border-bottom:1px solid #dde5e5;border-radius:0}
-.inline-picker.open{display:block;animation:expandIn .22s ease}
-@keyframes expandIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.inline-picker .ip-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
-.inline-picker .ip-ttl{font-size:13.5px;color:#5b6675;font-weight:600}
-.inline-picker .ip-close{width:26px;height:26px;border-radius:50%;border:1px solid #dde5e5;background:#fff;color:#5b6675;cursor:pointer;font-family:inherit;font-size:13px;display:flex;align-items:center;justify-content:center;line-height:1}
-.inline-picker-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.ipick-card{background:#fff;border:1px solid #e6ece8;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;font-family:inherit;transition:.16s}
+/* ===== 礼物网格：常显两行 × 每行 3 个 ===== */
+.inline-picker{display:block;margin:12px 0 0;padding:0;background:none;border:none;border-radius:0}
+.inline-picker .ip-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;gap:8px}
+.inline-picker .ip-ttl{font-size:13px;color:#8a95a0;font-weight:600}
+.inline-picker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.ipick-card{background:#fff;border:1px solid #e6ece8;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;font-family:inherit;transition:.16s}
 .ipick-card.is-picked{border-color:#5fb88e;box-shadow:0 0 0 1px #b9ecce inset;background:#f6fcf8}
-.ipick-card .ip-img{width:100%;aspect-ratio:1/1.12;object-fit:cover;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#cbd1dd;font-size:26px}
+.ipick-card .ip-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#f0f0f0;display:flex;align-items:center;justify-content:center;color:#cbd1dd;font-size:22px}
 .ipick-card .ip-img img{width:100%;height:100%;object-fit:cover;display:block}
-.ipick-card .ip-body{padding:9px 11px 11px;display:flex;flex-direction:column;gap:4px;flex:1}
-.ipick-card .ip-name{font-size:13.5px;font-weight:600;color:#1f2733;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ipick-card .ip-price{font-size:12px;color:#98a2b3}
-.ipick-card .ip-expect{display:inline-block;font-size:10.5px;padding:1px 7px;background:#fbf4e2;color:#d8b25a;border-radius:99px;font-weight:600;align-self:flex-start}
-.ipick-card .ip-pick{margin-top:8px;padding:9px 0;border-radius:9px;border:1px solid #e6ece8;background:#fff;color:#5b6675;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;width:100%}
+.ipick-card .ip-body{padding:7px 7px 8px;display:flex;flex-direction:column;gap:3px;flex:1}
+.ipick-card .ip-name{font-size:11.5px;font-weight:600;color:#1f2733;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
+.ipick-card .ip-price{font-size:11px;color:#98a2b3;font-weight:600}
+.ipick-card .ip-price .yen{font-size:9.5px;margin-right:1px}
+.ipick-card .ip-expect{display:inline-block;font-size:9.5px;padding:1px 5px;background:#fbf4e2;color:#d8b25a;border-radius:99px;font-weight:600;align-self:flex-start;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.ipick-card .ip-pick{margin-top:auto;padding:7px 0;border-radius:8px;border:1px solid #e6ece8;background:#fff;color:#5b6675;font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;width:100%}
 .ipick-card.is-picked .ip-pick{background:#5fb88e;border-color:#5fb88e;color:#fff}
-.ipick-card .ip-pick .ip-box{display:inline-block;width:14px;height:14px;border-radius:3px;border:1.5px solid #cfcfcf;vertical-align:-2px;margin-right:5px;font-size:10px;line-height:1;color:transparent}
+.ipick-card .ip-pick .ip-box{display:none}
 .ipick-card.is-picked .ip-pick .ip-box{background:#fff;border-color:#fff;color:#5fb88e}
 
-/* ===== 2×2 气泡（3 个动作 + 💬 留言）在左 + 大号选礼物按钮在右 ===== */
-.va-layout{display:flex;gap:10px;margin-top:12px;align-items:stretch}
-.va-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0}
-.va-chip{font-size:12px;padding:10px 4px;border-radius:12px;border:1px solid #e6ece8;background:#fff;color:#5b6675;cursor:pointer;font-family:inherit;font-weight:600;transition:.16s;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;line-height:1.3}
+/* ===== 四个动作：礼物网格下方横排 ===== */
+.va-layout{margin-top:11px}
+.va-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.va-chip{font-size:11.5px;padding:9px 2px;border-radius:10px;border:1px solid #e6ece8;background:#fff;color:#5b6675;cursor:pointer;font-family:inherit;font-weight:600;transition:.16s;display:flex;align-items:center;justify-content:center;gap:3px;text-align:center;line-height:1.25}
 .va-chip:active{transform:scale(.95)}
 .va-chip.on{border-color:#5fb88e;background:#e9f6ee;color:#2d7d52;box-shadow:0 1px 3px rgba(95,184,142,.15)}
-.picker-btn{flex:none;width:118px;border:none;border-radius:14px;background:#5fb88e;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:.16s;padding:8px 10px;line-height:1.4;letter-spacing:.5px}
-.picker-btn .pb-ico{font-size:22px;line-height:1}
-.picker-btn.is-open{background:#3a7a5b}
-.picker-btn:active{transform:scale(.97)}
-
+.va-chip.on.bargain{border-color:#e0a96b;background:#fdf4e8;color:#a3690f;box-shadow:0 1px 3px rgba(224,169,107,.18)}
 /* ===== 留言编辑框（点💬留言展开）+ 保存后内容小字 ===== */
 .msg-edit{display:flex;gap:8px;margin-top:10px}
 .msg-done{flex:none;padding:0 18px;border:none;border-radius:12px;background:#1f2733;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
@@ -98,7 +92,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 
 /* ===== 悬停效果：只在真正带鼠标的设备上启用（避免手机点按后 hover 样式"粘住"） ===== */
 @media (hover:hover) and (pointer:fine){
-  .picker-btn:hover{background:#4ea87a}
   .inline-picker .ip-close:hover{background:#e9f6ee;color:#5fb88e;border-color:#5fb88e}
   .ipick-card:hover{transform:translateY(-1px);box-shadow:0 4px 12px -6px rgba(95,184,142,.25);border-color:#cfe8d8}
   .ipick-card .ip-pick:hover{border-color:#5fb88e;color:#5fb88e}
@@ -177,6 +170,44 @@ const GH_PAGES_BASE = 'https://rgb-manmang.github.io/gift-pool/';
 const STORAGE_KEY = 'gp_view_picks_v1';
 const MONTH = new Date().getMonth() + 1;
 const YEAR  = new Date().getFullYear();
+
+/* ====== 自定义报告：?rp=<base64url(JSON)> ======
+   结构：{ t:'标题', y:年份, m:月份, items:[{ pid, gids:[...] }] }
+   后台「新建报告」可自由挑人、挑月份、并手动指定每人要展示哪几个礼物候选。
+   —— 没带 rp 参数时，退回原来的「当月全部寿星 + 自动推荐」。 */
+let REPORT = null;
+function _b64uDecode(s){
+  s = String(s || '').replace(/-/g,'+').replace(/_/g,'/');
+  while (s.length % 4) s += '=';
+  const bin = atob(s);
+  const bytes = new Uint8Array(bin.length);
+  for (let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+function _b64uEncode(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+(function parseReportParam(){
+  try {
+    const qs = new URLSearchParams(location.search);
+    const raw = qs.get('rp');
+    if (!raw) return;
+    const obj = JSON.parse(_b64uDecode(raw));
+    if (!obj || !Array.isArray(obj.items) || !obj.items.length) return;
+    REPORT = {
+      title: obj.t || '',
+      year:  (obj.y >= 2020 && obj.y <= 2099) ? obj.y : null,
+      month: (obj.m >= 1 && obj.m <= 12) ? obj.m : null,
+      items: obj.items.filter(it => it && it.pid).map(it => ({
+        pid: String(it.pid),
+        gids: Array.isArray(it.gids) ? it.gids.map(String) : [],
+      })),
+    };
+  } catch(e){ console.warn('report param parse failed', e); }
+})();
 
 /* ====== 工具 ====== */
 const $ = s => document.querySelector(s);
@@ -285,10 +316,8 @@ function findGiftById(id){
 }
 
 /* ====== 观阅版选礼物（本地 + 可提交到云端） ====== */
-// 内存视图：picks[pid] = { gid, name, gift, price, status, ask, remind, resetMark, at }
+// 内存视图：picks[pid] = { gid, name, gift, price, ask, bargain, resetMark, msg, at }
 let picks = {};
-// 记录哪些人的选礼物面板处于展开状态（卡片局部刷新后保持不收起）
-const openPickers = new Set();
 function loadPicks(){ try{ picks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') || {}; } catch(e){ picks = {}; } }
 function savePicks(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(picks)); } catch(e){} }
 
@@ -307,8 +336,6 @@ function togglePick(pid, gid){
   cur.at = Date.now();
   picks[pid] = cur;
   savePicks();
-  // 选完礼物 → 自动收起面板，直接跳回原来的页面
-  if (cur.gid) openPickers.delete(pid);
   refreshCard(pid);
   updateFootBar();
   if (cur.gid){
@@ -319,7 +346,7 @@ function togglePick(pid, gid){
   }
   toast(cur.gid ? ('✅ 已选：' + cur.gift) : '已取消选择');
 }
-// 观阅版领导自勾选的 3 个内联动作：🔁 重新选择（清该人 gift） / ❓ 询问本人 / 🔔 提醒DJ
+// 观阅版领导自勾选的 4 个内联动作：🔁 重新挑选 / ❓ 询问本人 / 💰 面议 / 💬 留言
 function toggleAction(pid, key){
   const cur = picks[pid] || { name: (findPerson(pid)||{}).name||'', gid:null, gift:null, price:null, at:0 };
   cur[key] = !cur[key];
@@ -329,7 +356,7 @@ function toggleAction(pid, key){
   savePicks();
   refreshCard(pid);
   updateFootBar();
-  const labels = {ask:'询问本人', remind:'提醒 DJ', resetMark:'重新选择'};
+  const labels = {ask:'询问本人', bargain:'面议', resetMark:'重新挑选'};
   const name = labels[key] || '标记';
   toast(cur[key] ? ('✅ 已标记「' + name + '」') : ('已取消「' + name + '」，恢复原样'));
 }
@@ -381,9 +408,17 @@ function wasSent(person, gift){
   });
 }
 // 候选固定 6 个：后台勾选的 candidates 优先，不够的用推荐补齐（避开往年送过的），绝不出全池
+// 自定义报告模式：该人在报告里手动指定了礼物 → 严格按指定顺序；没指定 → 走默认推荐
 function pickerList(pid){
   const p = findPerson(pid);
   if (!p) return [];
+  // 0) 自定义报告：指定了礼物 → 只按指定顺序渲染；没指定 → 继续走下面的默认推荐
+  if (REPORT){
+    const item = REPORT.items.find(it => it.pid === pid);
+    if (item && item.gids.length){
+      return item.gids.map(id => findGiftById(id)).filter(g => g);
+    }
+  }
   const seen = new Set(), list = [];
   const tier = p.tier === 'vip' ? 'vip' : 'staff';
   const MAX = 6;
@@ -436,21 +471,19 @@ function personCardHTML(p){
     </div>`;
   }
 
-  // 行内 picker（默认收起；选完礼物会自动收起）
+  // 礼物网格：常显两行 × 每行 3 个（不再需要点「选礼物」展开）
   const gifts = pickerList(p.id);
-  const isOpen = openPickers.has(p.id);
   const pickerHTML = `
-    <div class="inline-picker${isOpen?' open':''}" id="ip-${esc(p.id)}">
+    <div class="inline-picker" id="ip-${esc(p.id)}">
       <div class="ip-head">
-        <span class="ip-ttl">🎁 为 ${esc(p.name)} 选礼物（共 ${gifts.length} 个候选）</span>
-        <button class="ip-close" onclick="togglePicker('${esc(p.id)}')" title="收起">✕</button>
+        <span class="ip-ttl">🎁 候选礼物（${gifts.length} 个，选一个）</span>
       </div>
       <div class="inline-picker-grid">
         ${gifts.map(g => {
           const picked = cur.gid === g.id;
           const src = imgSrc(g);
           const imgHTML2 = src ? `<img src="${esc(src)}" alt="" onerror="this.remove()">` : '🖼';
-          const expectBadge = g.expect ? '<span class="ip-expect">🌟 同学期待</span>' : '';
+          const expectBadge = g.expect ? '<span class="ip-expect">🌟 期待</span>' : '';
           return `<div class="ipick-card${picked?' is-picked':''}" data-gid="${esc(g.id)}">
             <div class="ip-img">${imgHTML2}</div>
             <div class="ip-body">
@@ -464,16 +497,15 @@ function personCardHTML(p){
       </div>
     </div>`;
 
-  // 左侧 2×2 芯片（3 个动作 + 💬 留言）+ 右侧大按钮「为他/她选礼物」
+  // 四个动作：礼物网格下方横排（🔁 重新挑选 / ❓ 询问本人 / 💰 面议 / 💬 留言）
   const actionsHTML = `
     <div class="va-layout">
       <div class="va-grid">
-        <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">🔁 重新选择</button>
+        <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">🔁 重新挑选</button>
         <button class="va-chip${cur.ask?' on':''}" onclick="toggleAction('${esc(p.id)}','ask')">❓ 询问本人</button>
-        <button class="va-chip${cur.remind?' on':''}" onclick="toggleAction('${esc(p.id)}','remind')">🔔 提醒DJ</button>
+        <button class="va-chip bargain${cur.bargain?' on':''}" onclick="toggleAction('${esc(p.id)}','bargain')">💰 面议</button>
         <button class="va-chip${msgTrim?' on':''}" onclick="openMsgEdit('${esc(p.id)}')">💬 留言</button>
       </div>
-      <button class="picker-btn${isOpen?' is-open':''}" id="pb-${esc(p.id)}" onclick="togglePicker('${esc(p.id)}')"><span class="pb-ico">🎁</span>为他 / 她选礼物</button>
     </div>`;
 
   // 留言：编辑中 → 输入框 + 完成；有留言 → 内容小字显示在下面
@@ -494,25 +526,10 @@ function personCardHTML(p){
       ${vipBadge}
     </div>
     ${miniHTML}
+    ${pickerHTML}
     ${actionsHTML}
     ${msgHTML}
-    ${pickerHTML}
   </div>`;
-}
-function togglePicker(pid){
-  const ip = document.getElementById('ip-' + pid);
-  const pb = document.getElementById('pb-' + pid);
-  if (!ip) return;
-  const open = ip.classList.toggle('open');
-  if (open) openPickers.add(pid); else openPickers.delete(pid);
-  if (pb) pb.classList.toggle('is-open', open);
-  if (open){
-    // 展开时滚动到 picker 顶部
-    setTimeout(()=>{
-      try { ip.scrollIntoView({behavior:'smooth', block:'nearest'}); }
-      catch(e){ try{ ip.scrollIntoView(); }catch(_){} }
-    }, 60);
-  }
 }
 function refreshCard(pid){
   const wrap = document.getElementById('vp-' + pid);
@@ -524,18 +541,31 @@ function refreshCard(pid){
   try { window.scrollTo(0, y); } catch(e){}
 }
 function renderList(){
-  const people = (state.people||[]).filter(p => p.month === MONTH);
-  const totalAll = (state.people||[]).length;
-  const vips = people.filter(p=>p.tier==='vip').length;
-  const staff = people.length - vips;
-  $('#vr-title').textContent = `${YEAR} 年 ${MONTH} 月 · 生日礼物人员`;
-  $('#vr-meta').innerHTML = `<span>${people.length} 位寿星</span><span>VIP ${vips} 位</span><span>普通员工 ${staff} 位</span>`;
+  // 自定义报告：只渲染报告里挑好的人（顺序也按报告里的顺序）
+  let people, title, metaHTML;
+  if (REPORT){
+    people = REPORT.items.map(it => findPerson(it.pid)).filter(p => p);
+    const y = REPORT.year || YEAR, m = REPORT.month;
+    title = REPORT.title || ((m ? y + ' 年 ' + m + ' 月 · ' : '') + '生日礼物人员');
+    const vips = people.filter(p=>p.tier==='vip').length;
+    metaHTML = `<span>${people.length} 位寿星</span>` +
+      (vips ? `<span>VIP ${vips} 位</span>` : '') +
+      (people.length - vips ? `<span>普通员工 ${people.length - vips} 位</span>` : '');
+  } else {
+    people = (state.people||[]).filter(p => p.month === MONTH);
+    const vips = people.filter(p=>p.tier==='vip').length;
+    const staff = people.length - vips;
+    title = `${YEAR} 年 ${MONTH} 月 · 生日礼物人员`;
+    metaHTML = `<span>${people.length} 位寿星</span><span>VIP ${vips} 位</span><span>普通员工 ${staff} 位</span>`;
+  }
+  const tt = $('#vr-title'); if (tt) tt.textContent = title;
+  const mm = $('#vr-meta'); if (mm) mm.innerHTML = metaHTML;
   const list = $('#viewer-list');
   if (!people.length){
-    list.innerHTML = `<div class="empty-state"><div class="big">🎂</div><p>${YEAR}年${MONTH}月没有生日人员</p></div>`;
+    list.innerHTML = `<div class="empty-state"><div class="big">🎂</div><p>这份报告里还没有人员</p></div>`;
     return;
   }
-  const sorted = people.slice().sort((a,b) => (a.day||99) - (b.day||99));
+  const sorted = REPORT ? people : people.slice().sort((a,b) => (a.day||99) - (b.day||99));
   list.innerHTML = sorted.map(p => personCardHTML(p)).join('');
 }
 function updateFootBar(){
@@ -543,7 +573,7 @@ function updateFootBar(){
   const picked = ids.filter(id => picks[id] && picks[id].gid).length;
   const active = ids.filter(id => {
     const c = picks[id];
-    return !!(c && (c.gid || c.ask || c.remind || c.resetMark || (c.msg && c.msg.trim())));
+    return !!(c && (c.gid || c.ask || c.bargain || c.resetMark || (c.msg && c.msg.trim())));
   }).length;
   const meta = $('#vf-meta');
   if (meta){
@@ -582,13 +612,13 @@ async function submitPicks(){
     }
     (state.people||[]).forEach(p => {
       const cur = picks[p.id];
-      if (cur && (cur.gid || cur.ask || cur.remind || cur.resetMark || (cur.msg && cur.msg.trim()))){
+      if (cur && (cur.gid || cur.ask || cur.bargain || cur.resetMark || (cur.msg && cur.msg.trim()))){
         p.selected = {
           gid: cur.gid || null,
           gift: cur.gift || null,
           price: cur.price || null,
           ask: !!cur.ask,
-          remind: !!cur.remind,
+          bargain: !!cur.bargain,
           resetMark: !!cur.resetMark,
           msg: (cur.msg || '').trim() || null,
           at: submittedAt,
