@@ -343,7 +343,7 @@ function togglePick(pid, gid){
   }
   toast(cur.gid ? ('✅ 已选：' + cur.gift) : '已取消选择');
 }
-// 观阅版领导自勾选的 4 个内联动作：🔁 重新推荐 / ❓ 询问本人 / 💰 面议 / 💬 留言
+// 观阅版领导自勾选的 5 个内联动作：重新推荐 / 询问本人 / 面议 / DJ 自备 / 留言
 function toggleAction(pid, key){
   const cur = picks[pid] || { name: (findPerson(pid)||{}).name||'', gid:null, gift:null, price:null, at:0 };
   cur[key] = !cur[key];
@@ -357,7 +357,7 @@ function toggleAction(pid, key){
   const name = labels[key] || '标记';
   toast(cur[key] ? ('✅ 已标记「' + name + '」') : ('已取消「' + name + '」，恢复原样'));
 }
-// 留言：点「💬 留言」气泡打开编辑框；点「完成」收起，内容以小字显示在下面
+// 留言：点「留言」气泡打开编辑框；点「完成」收起，内容以小字显示在下面
 const editingMsg = new Set();
 function openMsgEdit(pid){
   editingMsg.add(pid);
@@ -371,7 +371,7 @@ function closeMsgEdit(pid){
   editingMsg.delete(pid);
   refreshCard(pid);
   const v = ((picks[pid]||{}).msg || '').trim();
-  toast(v ? '💬 留言已保存' : '留言为空');
+  toast(v ? '留言已保存' : '留言为空');
 }
 // 留言内容输入（防抖保存，不重渲染卡片以免丢焦点）
 let _msgTimer = null;
@@ -477,7 +477,7 @@ function personCardHTML(p){
           const picked = cur.gid === g.id;
           const src = imgSrc(g);
           const imgHTML2 = src ? `<img src="${esc(src)}" alt="" onerror="this.remove()">` : '🖼';
-          const expectBadge = g.expect ? '<span class="ip-expect">🌟 期待</span>' : '';
+          const expectBadge = g.expect ? '<span class="ip-expect">同学期待</span>' : '';
           return `<div class="ipick-card${picked?' is-picked':''}" data-gid="${esc(g.id)}" onclick="togglePick('${esc(p.id)}','${esc(g.id)}')">
             <div class="ip-img">${imgHTML2}</div>
             <div class="ip-body">
@@ -494,13 +494,13 @@ function personCardHTML(p){
   const actionsHTML = `
     <div class="va-layout">
       <div class="va-grid">
-        <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">🔁 重新推荐</button>
-        <button class="va-chip${cur.ask?' on':''}" onclick="toggleAction('${esc(p.id)}','ask')">❓ 询问本人</button>
-        <button class="va-chip bargain${cur.bargain?' on':''}" onclick="toggleAction('${esc(p.id)}','bargain')">💰 面议</button>
+        <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">重新推荐</button>
+        <button class="va-chip${cur.ask?' on':''}" onclick="toggleAction('${esc(p.id)}','ask')">询问本人</button>
+        <button class="va-chip bargain${cur.bargain?' on':''}" onclick="toggleAction('${esc(p.id)}','bargain')">面议</button>
       </div>
       <div class="va-row-2">
-        <button class="va-chip dj-self${cur.djSelf?' on':''}" onclick="toggleAction('${esc(p.id)}','djSelf')">🎤 DJ 自备</button>
-        <button class="va-chip${msgTrim?' on':''}" onclick="openMsgEdit('${esc(p.id)}')">💬 留言</button>
+        <button class="va-chip dj-self${cur.djSelf?' on':''}" onclick="toggleAction('${esc(p.id)}','djSelf')">DJ 自备</button>
+        <button class="va-chip${msgTrim?' on':''}" onclick="openMsgEdit('${esc(p.id)}')">留言</button>
       </div>
     </div>`;
 
@@ -512,7 +512,7 @@ function personCardHTML(p){
       <button class="msg-done" onclick="closeMsgEdit('${esc(p.id)}')">完成</button>
     </div>`;
   } else if (msgTrim){
-    msgHTML = `<div class="msg-preview" id="mp-${esc(p.id)}">💬 ${esc(msgTrim)}</div>`;
+    msgHTML = `<div class="msg-preview" id="mp-${esc(p.id)}">${esc(msgTrim)}</div>`;
   }
 
   return `<div class="viewer-person${pickedG?' is-picked':''}" data-pid="${esc(p.id)}" id="vp-${esc(p.id)}">
