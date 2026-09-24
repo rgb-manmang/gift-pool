@@ -190,21 +190,127 @@ function _b64uEncode(str){
 (function parseReportParam(){
   try {
     const qs = new URLSearchParams(location.search);
-    const raw = qs.get('rp');
-    if (!raw) return;
-    const obj = JSON.parse(_b64uDecode(raw));
-    if (!obj || !Array.isArray(obj.items) || !obj.items.length) return;
-    REPORT = {
-      title: obj.t || '',
-      year:  (obj.y >= 2020 && obj.y <= 2099) ? obj.y : null,
-      month: (obj.m >= 1 && obj.m <= 12) ? obj.m : null,
-      items: obj.items.filter(it => it && it.pid).map(it => ({
-        pid: String(it.pid),
-        gids: Array.isArray(it.gids) ? it.gids.map(String) : [],
-      })),
-    };
+    // 新格式: ?r=<紧凑字符串> | 旧格式: ?rp=<base64 JSON>
+    const newRaw = qs.get('r');
+    const oldRaw = qs.get('rp');
+    if (newRaw){
+      // 新格式（v1 字典 + v3 索引两套兼容）:
+      //   t:<title>|m:<month>|y:<yy>|p:<pid字典>|g:<gid字典>|i:<pi>-<gi>,...
+      //   t:<title>|m:<month>|y:<yy>|i:<pidIdx>-<gidIdx>,...      ← v3 极简（依赖观阅端 state 索引）
+      const obj = { items: [], _raw: newRaw };
+      const segs = newRaw.split('|');
+      let pDict = [], gDict = [];
+      for (const seg of segs){
+        const idx = seg.indexOf(':');
+        if (idx < 0) continue;
+        const key = seg.slice(0, idx);
+        const val = seg.slice(idx + 1);
+        if (key === 't') obj.title = decodeURIComponent(val);
+        else if (key === 'y') obj.year = 2000 + (+val || 0);
+        else if (key === 'm') obj.month = +val;
+        else if (key === 'p') pDict = val ? val.split('|') : [];
+        else if (key === 'g') gDict = val ? val.split('|') : [];
+        else if (key === 'i'){
+          if (!val) continue;
+          val.split(';').forEach(pair => {
+            const dash = pair.indexOf('-');
+            if (dash < 0) return;
+            const head = pair.slice(0, dash);
+            const tail = pair.slice(dash + 1);
+            const gRawIdxs = tail.split(',').map(s => +s).filter(n => !isNaN(n));
+            if (pDict.length){
+              // v1 字典式
+              const pid = pDict[+head];
+              if (!pid) return;
+              const gids = gRawIdxs.map(gi => gDict[gi]).filter(Boolean);
+              if (!gids.length) return;
+              obj.items.push({ pid: String(pid), gids: gids.map(String) });
+            } else {
+              // v3 索引式（延迟解析）
+              obj.items.push({ _pidx: +head, _gidxs: gRawIdxs });
+            }
+          });
+        }
+      }
+      if (!obj.items.length) return;
+      // 暂存 obj，等 state 加载完后再解析（v3 索引式）
+      window.__pendingReport = obj;
+      REPORT = { _pending: true };
+      return;
+    }
+    if (oldRaw){
+      // 旧格式: ?rp=<base64url(JSON)> —— 完整兼容
+      const obj = JSON.parse(_b64uDecode(oldRaw));
+      if (!obj || !Array.isArray(obj.items) && !Array.isArray(obj.i)) return;
+      const items = [];
+      if (obj.v === 2 && Array.isArray(obj.p) && Array.isArray(obj.i)){
+        const pDict = obj.p;
+        const gDict = obj.g || [];
+        obj.i.forEach(it => {
+          if (!Array.isArray(it) || it.length < 2) return;
+          const pidIdx = +it[0];
+          const gIdxs = Array.isArray(it[1]) ? it[1] : [];
+          const pid = pDict[pidIdx];
+          if (!pid) return;
+          const gids = gIdxs.map(gi => gDict[+gi]).filter(Boolean);
+          if (!gids.length) return;
+          items.push({ pid: String(pid), gids: gids.map(String) });
+        });
+      } else if (Array.isArray(obj.items)){
+        obj.items.forEach(it => {
+          if (!it || !it.pid) return;
+          items.push({ pid: String(it.pid), gids: Array.isArray(it.gids) ? it.gids.map(String) : [] });
+        });
+      }
+      if (!items.length) return;
+      REPORT = {
+        title: obj.t || '',
+        year:  (obj.y >= 2020 && obj.y <= 2099) ? obj.y : null,
+        month: (obj.m >= 1 && obj.m <= 12) ? obj.m : null,
+        items: items,
+      };
+    }
   } catch(e){ console.warn('report param parse failed', e); }
 })();
+
+// 解析 v3 索引式报告（在 state 加载完后再解析）
+// 不再消费 _pending 标志——每次 state 更新都重新解析并触发 renderList
+let _resolvedFromCloud = false;  // 是否已经从云端 state 解析过
+function resolveReportFromState(){
+  if (!window.__pendingReport) return;
+  const obj = window.__pendingReport;
+  const isIdxFmt = obj.items.some(it => it._pidx != null);
+  if (!isIdxFmt){
+    // v1 字典式：直接转 REPORT（只有一次）
+    if (!REPORT || REPORT._pending){
+      REPORT = {
+        title: obj.title || '',
+        year:  (obj.year >= 2020 && obj.year <= 2099) ? obj.year : null,
+        month: (obj.month >= 1 && obj.month <= 12) ? obj.month : null,
+        items: obj.items,
+      };
+    }
+    return;
+  }
+  // v3 索引式：用当前 state.people 和 state.vip/staff 数组顺序解析
+  const allG = [...(state.vip || []), ...(state.staff || [])];
+  const resolved = obj.items.map(it => {
+    if (it._pidx == null) return it;
+    const p = (state.people || [])[it._pidx];
+    if (!p) return null;
+    const gids = (it._gidxs || []).map(gi => (allG[gi] || {}).id).filter(Boolean);
+    if (!gids.length) return null;
+    return { pid: p.id, gids: gids };
+  }).filter(Boolean);
+  if (resolved.length){
+    REPORT = {
+      title: obj.title || '',
+      year:  (obj.year >= 2020 && obj.year <= 2099) ? obj.year : null,
+      month: (obj.month >= 1 && obj.month <= 12) ? obj.month : null,
+      items: resolved,
+    };
+  }
+}
 
 /* ====== 工具 ====== */
 const $ = s => document.querySelector(s);
@@ -542,23 +648,30 @@ function renderList(){
   if (REPORT){
     people = REPORT.items.map(it => findPerson(it.pid)).filter(p => p);
     const y = REPORT.year || YEAR, m = REPORT.month;
-    title = REPORT.title || ((m ? y + ' 年 ' + m + ' 月 · ' : '') + '生日礼物人员');
+    // 标题由用户自己填，没填才用月份兜底
+    title = REPORT.title || (m ? (y + ' 年 ' + m + ' 月 · 生日礼物人员') : '生日礼物人员');
     const vips = people.filter(p=>p.tier==='vip').length;
-    metaHTML = `<span>${people.length} 位寿星</span>` +
+    const staffCnt = people.length - vips;
+    // 统计：共X位寿星 · VIP X位 · 普通员工Y位（不写礼物数量）
+    metaHTML = `<span>共 ${people.length} 位寿星</span>` +
       (vips ? `<span>VIP ${vips} 位</span>` : '') +
-      (people.length - vips ? `<span>普通员工 ${people.length - vips} 位</span>` : '');
+      (staffCnt ? `<span>普通员工 ${staffCnt} 位</span>` : '');
   } else {
-    people = (state.people||[]).filter(p => p.month === MONTH);
-    const vips = people.filter(p=>p.tier==='vip').length;
-    const staff = people.length - vips;
-    title = `${YEAR} 年 ${MONTH} 月 · 生日礼物人员`;
-    metaHTML = `<span>${people.length} 位寿星</span><span>VIP ${vips} 位</span><span>普通员工 ${staff} 位</span>`;
+    // 没带 ?r= 参数（链接被截/丢失/手动改了）→ 不再 fallback 显示当月全部寿星
+    // 而是明确告诉用户："报告里没有勾选任何寿星，请回后台生成链接"
+    people = [];
+    title = '尚未生成报告';
+    metaHTML = `<span style="color:#c14a4a">⚠️ 未识别到报告参数</span>`;
   }
   const tt = $('#vr-title'); if (tt) tt.textContent = title;
   const mm = $('#vr-meta'); if (mm) mm.innerHTML = metaHTML;
   const list = $('#viewer-list');
   if (!people.length){
-    list.innerHTML = `<div class="empty-state"><div class="big">🎂</div><p>这份报告里还没有人员</p></div>`;
+    list.innerHTML = `<div class="empty-state">
+      <div class="big">🎂</div>
+      <p>${REPORT ? '这份报告里还没有人员' : '这份链接没有携带报告参数'}</p>
+      ${!REPORT ? '<p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">请回到后台 → 点「📝 新建报告」→ 勾选寿星 → 复制链接发过来</p>' : ''}
+    </div>`;
     return;
   }
   const sorted = REPORT ? people : people.slice().sort((a,b) => (a.day||99) - (b.day||99));
@@ -653,24 +766,53 @@ async function submitPicks(){
 
 /* ====== 轻量后台同步：每 45s 拉一次数据 ====== */
 let _pullTimer = null;
+let _cloudReady = false;  // 云端 state 是否已经拉到（v3 索引必须等这个才渲染）
 async function viewPull(){
   try {
     const remote = await cloudGet();
-    if (!remote || !remote.state) return;
+    if (!remote || !remote.state) return false;
     state = remote.state;
-    const y = window.scrollY || document.documentElement.scrollTop || 0;
-    renderList();
-    try { window.scrollTo(0, y); } catch(e){}
-    syncBadge('☁️ 已更新 · ' + new Date().toTimeString().slice(0,5), 'ok');
+    _cloudReady = true;
+    // 拉到新 state 后重新解析 v3 索引式报告
+    resolveReportFromState();
+    return true;
   } catch(e){
-    syncBadge('⚠️ 网络不通', 'warn');
+    if (!_cloudReady){
+      syncBadge('⚠️ 网络不通，请稍候重试', 'warn');
+    }
+    return false;
   }
 }
 function startPullLoop(){
   clearInterval(_pullTimer);
-  _pullTimer = setInterval(viewPull, 45000);
-  window.addEventListener('focus', viewPull);
-  document.addEventListener('visibilitychange', function(){ if (!document.hidden) viewPull(); });
+  _pullTimer = setInterval(async () => {
+    const ok = await viewPull();
+    if (ok){
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      renderList();
+      try { window.scrollTo(0, y); } catch(e){}
+      syncBadge('☁️ 已更新 · ' + new Date().toTimeString().slice(0,5), 'ok');
+    }
+  }, 45000);
+  window.addEventListener('focus', async () => {
+    const ok = await viewPull();
+    if (ok){
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      renderList();
+      try { window.scrollTo(0, y); } catch(e){}
+      syncBadge('☁️ 已更新 · ' + new Date().toTimeString().slice(0,5), 'ok');
+    }
+  });
+  document.addEventListener('visibilitychange', async function(){
+    if (document.hidden) return;
+    const ok = await viewPull();
+    if (ok){
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      renderList();
+      try { window.scrollTo(0, y); } catch(e){}
+      syncBadge('☁️ 已更新 · ' + new Date().toTimeString().slice(0,5), 'ok');
+    }
+  });
 }
 
 /* ====== 启动 ====== */
@@ -678,10 +820,49 @@ function startPullLoop(){
   try {
     loadState();
     loadPicks();
-    renderList();
-    updateFootBar();
-    syncBadge('☁️ 拉取最新名单…');
-    await viewPull();         // 立即拉一次（拿到 imgUrl 等远端字段）
+    // 判断本次报告是否需要云端 state（v3 索引式必须，否则会用错位的内置 state）
+    const needsCloud = !!(window.__pendingReport && window.__pendingReport.items.some(it => it._pidx != null));
+    if (!needsCloud){
+      // v1 字典式：用本地 state 即可
+      resolveReportFromState();
+      renderList();
+      updateFootBar();
+    } else {
+      // v3 索引式：先显示加载占位，等云端 state 到位再解析并渲染
+      const tt = $('#vr-title');
+      const mm = $('#vr-meta');
+      if (tt) tt.textContent = '☁️ 正在同步寿星名单…';
+      if (mm) mm.innerHTML = '<span>请稍候</span>';
+      const list = $('#viewer-list');
+      if (list){
+        list.innerHTML = `<div class="empty-state">
+          <div class="big">☁️</div>
+          <p>正在从云端拉取最新寿星名单…</p>
+          <p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">链接里的索引会按云端最新顺序解析</p>
+        </div>`;
+      }
+      updateFootBar();
+      syncBadge('☁️ 拉取最新名单…');
+      const ok = await viewPull();
+      if (ok){
+        resolveReportFromState();
+        const y = window.scrollY || document.documentElement.scrollTop || 0;
+        renderList();
+        try { window.scrollTo(0, y); } catch(e){}
+        syncBadge('☁️ 已更新 · ' + new Date().toTimeString().slice(0,5), 'ok');
+      } else {
+        // 云端拉不到：不要用错位的内置 state 渲染，避免显示未勾选的寿星
+        if (tt) tt.textContent = '⚠️ 网络不通，无法加载报告';
+        if (mm) mm.innerHTML = '<span style="color:#c14a4a">请检查网络后刷新</span>';
+        if (list){
+          list.innerHTML = `<div class="empty-state">
+            <div class="big">📡</div>
+            <p style="color:#c14a4a">无法连接云端，请检查网络后刷新页面</p>
+            <p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">v3 链接依赖云端名单顺序，本地快照可能与后台不一致</p>
+          </div>`;
+        }
+      }
+    }
     startPullLoop();
   } catch(e){
     console.error(e);
