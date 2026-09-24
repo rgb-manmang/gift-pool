@@ -194,6 +194,12 @@ function _b64uEncode(str){
     const newRaw = qs.get('r');
     const oldRaw = qs.get('rp');
     if (newRaw){
+      // —— 云端短链模式：?r=<8位ID>（不含 : 和 |）→ 报告数据存在云端 data.enc 的 reports[id] 里 ——
+      if (!/[:|]/.test(newRaw)){
+        window.__pendingReportId = newRaw;
+        REPORT = { _pending: true };
+        return;
+      }
       // 新格式（v1 字典 + v3 索引两套兼容）:
       //   t:<title>|m:<month>|y:<yy>|p:<pid字典>|g:<gid字典>|i:<pi>-<gi>,...
       //   t:<title>|m:<month>|y:<yy>|i:<pidIdx>-<gidIdx>,...      ← v3 极简（依赖观阅端 state 索引）
@@ -273,10 +279,33 @@ function _b64uEncode(str){
   } catch(e){ console.warn('report param parse failed', e); }
 })();
 
-// 解析 v3 索引式报告（在 state 加载完后再解析）
-// 不再消费 _pending 标志——每次 state 更新都重新解析并触发 renderList
-let _resolvedFromCloud = false;  // 是否已经从云端 state 解析过
+// 解析报告：三种模式（云端短链 ID / v3 索引式 / v1 字典式）
+// 云端短链与 v3 都依赖云端 state —— 每次 viewPull 拉到新 state 都重新解析
 function resolveReportFromState(){
+  // —— 模式一：云端短链 ?r=<ID> → 直接从 state.reports[id] 取（items 已是 pid/gids，无需索引解析） ——
+  const rid = window.__pendingReportId;
+  if (rid){
+    const rep = (state.reports || {})[rid];
+    if (rep && Array.isArray(rep.items)){
+      const items = rep.items
+        .map(it => (it && it.pid) ? { pid: String(it.pid), gids: (Array.isArray(it.gids) ? it.gids : []).map(String) } : null)
+        .filter(Boolean);
+      if (items.length){
+        REPORT = {
+          title: rep.title || '',
+          year:  (rep.year >= 2020 && rep.year <= 2099) ? rep.year : null,
+          month: (rep.month >= 1 && rep.month <= 12) ? rep.month : null,
+          items: items,
+        };
+        window.__reportMissing = false;
+        return;
+      }
+    }
+    // 云端拉到了但没这份报告 → 标记"不存在"（若后台稍后补推，下一次轮询会自愈）
+    if (_cloudReady) window.__reportMissing = true;
+    return;
+  }
+  // —— 模式二/三：URL 自带数据（v1 字典 / v3 索引） ——
   if (!window.__pendingReport) return;
   const obj = window.__pendingReport;
   const isIdxFmt = obj.items.some(it => it._pidx != null);
@@ -657,20 +686,26 @@ function renderList(){
       (vips ? `<span>VIP ${vips} 位</span>` : '') +
       (staffCnt ? `<span>普通员工 ${staffCnt} 位</span>` : '');
   } else {
-    // 没带 ?r= 参数（链接被截/丢失/手动改了）→ 不再 fallback 显示当月全部寿星
-    // 而是明确告诉用户："报告里没有勾选任何寿星，请回后台生成链接"
-    people = [];
-    title = '尚未生成报告';
-    metaHTML = `<span style="color:#c14a4a">⚠️ 未识别到报告参数</span>`;
+    // 没带 ?r= 参数 / 云端短链但报告已不存在
+    if (window.__reportMissing){
+      people = [];
+      title = '报告不存在';
+      metaHTML = `<span style="color:#c14a4a">⚠️ 这份短链接的报告已过期或被覆盖</span>`;
+    } else {
+      people = [];
+      title = '尚未生成报告';
+      metaHTML = `<span style="color:#c14a4a">⚠️ 未识别到报告参数</span>`;
+    }
   }
   const tt = $('#vr-title'); if (tt) tt.textContent = title;
   const mm = $('#vr-meta'); if (mm) mm.innerHTML = metaHTML;
   const list = $('#viewer-list');
   if (!people.length){
     list.innerHTML = `<div class="empty-state">
-      <div class="big">🎂</div>
-      <p>${REPORT ? '这份报告里还没有人员' : '这份链接没有携带报告参数'}</p>
-      ${!REPORT ? '<p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">请回到后台 → 点「📝 新建报告」→ 勾选寿星 → 复制链接发过来</p>' : ''}
+      <div class="big">${window.__reportMissing ? '🔗' : '🎂'}</div>
+      <p>${window.__reportMissing ? '短链接对应的报告不在云端（可能后台生成了新报告，旧链接自动清理）' : (REPORT ? '这份报告里还没有人员' : '这份链接没有携带报告参数')}</p>
+      ${!REPORT && !window.__reportMissing ? '<p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">请回到后台 → 点「📝 新建报告」→ 勾选寿星 → 复制链接发过来</p>' : ''}
+      ${window.__reportMissing ? '<p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">请让对方重新复制一次最新链接</p>' : ''}
     </div>`;
     return;
   }
@@ -820,8 +855,8 @@ function startPullLoop(){
   try {
     loadState();
     loadPicks();
-    // 判断本次报告是否需要云端 state（v3 索引式必须，否则会用错位的内置 state）
-    const needsCloud = !!(window.__pendingReport && window.__pendingReport.items.some(it => it._pidx != null));
+    // 判断本次报告是否需要云端 state（云端短链 / v3 索引式必须，否则会用错位的内置 state）
+    const needsCloud = !!(window.__pendingReportId || (window.__pendingReport && window.__pendingReport.items.some(it => it._pidx != null)));
     if (!needsCloud){
       // v1 字典式：用本地 state 即可
       resolveReportFromState();
