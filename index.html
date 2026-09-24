@@ -3,6 +3,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>生日礼物管理 · 登录</title>
 <script>
+// 短链入口：/?r=<云端报告ID> 或 /?r=<v3串> 或 /?rp=<旧版> → 不进登录，直接转给观阅报告页
+try {
+  var __q = location.search || '';
+  if (/[?&](r|rp)=/.test(__q)) location.replace('gift-report.html' + __q);
+} catch(e){}
 // 提前热身：页面一加载就开始下载 app.enc（与后续 PBKDF2 密钥推导并行，省一次串行等待）
 try { window.__preEncP = fetch('./app.enc', { cache: 'no-store' }).catch(function(){ return null; }); } catch(e){}
 </script>
