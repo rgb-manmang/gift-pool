@@ -497,11 +497,11 @@ function personCardHTML(p){
       </div>
     </div>`;
 
-  // 四个动作：礼物网格下方横排（🔁 重新挑选 / ❓ 询问本人 / 💰 面议 / 💬 留言）
+  // 四个动作：礼物网格下方横排（🔁 重新推荐 / ❓ 询问本人 / 💰 面议 / 💬 留言）
   const actionsHTML = `
     <div class="va-layout">
       <div class="va-grid">
-        <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">🔁 重新挑选</button>
+        <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">🔁 重新推荐</button>
         <button class="va-chip${cur.ask?' on':''}" onclick="toggleAction('${esc(p.id)}','ask')">❓ 询问本人</button>
         <button class="va-chip bargain${cur.bargain?' on':''}" onclick="toggleAction('${esc(p.id)}','bargain')">💰 面议</button>
         <button class="va-chip${msgTrim?' on':''}" onclick="openMsgEdit('${esc(p.id)}')">💬 留言</button>
