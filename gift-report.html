@@ -136,34 +136,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .rs-head .rs-sub{margin-top:7px;font-size:13.5px;color:#5b6675;font-weight:600}
 
 /* 每个人的一张表 */
+/* 每个人：上下两块结构 —— 上=信息条（序号|姓名+生日|往年记录|备注），下=礼物区 */
 .rs-person{background:#fff;border:1.5px solid #1f2733;border-radius:6px;margin:0 auto 16px;
-  display:flex;align-items:stretch;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
-/* 左侧大序号 */
-.rs-idx{flex:none;width:44px;display:flex;align-items:center;justify-content:center;
-  font-size:22px;font-weight:800;color:#98a2b3;border-right:1.5px solid #1f2733}
-/* 姓名 + 生日（生日高亮） */
-.rs-who{flex:none;width:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:5px;padding:8px 4px;border-right:1.5px solid #1f2733;text-align:center}
-.rs-name{font-size:16.5px;font-weight:800;color:#1f2733;line-height:1.2}
-.rs-bday{display:inline-block;font-size:12.5px;font-weight:800;color:#c0392b;
-  background:#ffe9e5;border:1.5px solid #e8836f;border-radius:5px;padding:2px 7px;line-height:1.3;white-space:nowrap}
-/* 历史记录（2列 × 3行，新年份在左列自上而下，与参考表一致） */
-.rs-hist{flex:none;width:170px;display:grid;grid-template-columns:repeat(2,1fr);
-  grid-template-rows:repeat(3,1fr);grid-auto-flow:column;border-right:1.5px solid #1f2733}
+  display:flex;flex-direction:column;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
+/* ---- 上排：信息条 ---- */
+.rs-hrow{display:flex;align-items:stretch;border-bottom:1.5px solid #1f2733;min-height:64px}
+.rs-idx{flex:none;width:40px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:800;color:#98a2b3;border-right:1.5px solid #1f2733}
+.rs-who{flex:none;width:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;padding:6px 4px;border-right:1.5px solid #1f2733;text-align:center}
+.rs-name{font-size:16px;font-weight:800;color:#1f2733;line-height:1.2}
+.rs-bday{display:inline-block;font-size:12px;font-weight:800;color:#c0392b;
+  background:#ffe9e5;border:1.5px solid #e8836f;border-radius:5px;padding:2px 6px;line-height:1.3;white-space:nowrap}
+/* 往年记录（2列 × 3行，新年份在左列） */
+.rs-hist{flex:1 1 auto;min-width:0;display:grid;grid-template-columns:repeat(2,1fr);
+  grid-template-rows:repeat(3,1fr);grid-auto-flow:column;
+  border-right:1.5px solid #1f2733}
 .rs-hist .rh-cell{border-right:1px solid #cfd6dd;border-bottom:1px solid #cfd6dd;
-  padding:3px 4px;font-size:10.5px;line-height:1.25;color:#5b6675;display:flex;align-items:center;
-  justify-content:center;text-align:center;overflow:hidden;word-break:break-all}
-.rs-hist .rh-cell .rh-y{color:#98a2b3;font-weight:700;margin-right:2px;flex:none}
+  padding:3px 6px;font-size:10.5px;line-height:1.25;color:#5b6675;display:flex;align-items:center;
+  overflow:hidden;word-break:break-all;gap:3px}
+.rs-hist .rh-cell:nth-child(3n){border-bottom:none}
+.rs-hist .rh-cell .rh-y{color:#98a2b3;font-weight:700;flex:none}
 .rs-hist .rh-cell .rh-t{flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
 .rs-hist .rh-cell.rh-empty{color:#c3cad2}
-/* 礼物区 */
-.rs-gifts{flex:1;min-width:0;display:flex;flex-direction:column}
+/* 上排右侧：备注（不勾选，只留备注区） */
+.rs-side{flex:none;width:120px;border-left:1.5px solid #1f2733;display:flex;flex-direction:column}
+.rs-side .rside-top{flex:1;padding:6px 8px;font-size:10.5px;color:#5b6675;line-height:1.6;word-break:break-all}
+.rs-side .rside-top .rside-ttl{font-weight:800;color:#8a95a0;font-size:10px;letter-spacing:.5px;display:block;margin-bottom:3px}
+/* ---- 下排：礼物区 ---- */
+.rs-gifts{display:flex;flex-direction:column}
 .rs-gift-row{display:flex;border-bottom:1.5px solid #1f2733}
 .rs-gift-row:last-child{border-bottom:none}
 .rs-gift{flex:1;min-width:0;border-right:1px solid #cfd6dd;display:flex;flex-direction:column;
   break-inside:avoid;page-break-inside:avoid}
 .rs-gift:last-child{border-right:none}
-.rs-gift .rg-img{width:100%;height:88px;background:#fff;display:flex;align-items:center;
+.rs-gift .rg-img{width:100%;height:92px;background:#fff;display:flex;align-items:center;
   justify-content:center;overflow:hidden;border-bottom:1px solid #cfd6dd}
 .rs-gift .rg-img img{max-width:100%;max-height:100%;object-fit:contain;display:block}
 .rs-gift .rg-img .rg-emoji{font-size:26px;color:#cbd1dd}
@@ -173,27 +180,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .rs-gift .rg-pr{font-size:12px;font-weight:800;color:#d64545;text-align:center;
   padding:4px 3px;background:#fdece8;border-top:1px solid #cfd6dd;white-space:nowrap}
 .rs-gift .rg-pr .yen{font-size:10px;font-weight:600;margin-right:1px}
-/* 右列：备注 + 老板勾选 */
-.rs-side{flex:none;width:118px;border-left:1.5px solid #1f2733;display:flex;flex-direction:column}
-.rs-side .rside-top{flex:1;padding:6px 7px;font-size:10.5px;color:#5b6675;line-height:1.6;
-  border-bottom:1.5px solid #1f2733;word-break:break-all}
-.rs-side .rside-top .rside-ttl{font-weight:800;color:#8a95a0;font-size:10px;letter-spacing:.5px;display:block;margin-bottom:3px}
-.rs-side .rside-chk{display:flex;align-items:center;gap:5px;padding:7px 7px;
-  border-bottom:1px solid #cfd6dd;font-size:12px;font-weight:800;color:#1f2733}
-.rs-side .rside-chk:last-child{border-bottom:none}
-.rs-side .rside-chk .rc-box{flex:none;width:15px;height:15px;border:1.5px solid #1f2733;
-  border-radius:3px;display:inline-flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:900;color:#c0392b;background:#fff}
-.rs-side .rside-chk.is-on .rc-box{background:#1f2733;color:#fff;border-color:#1f2733}
-.rs-side .rside-chk.hot{background:#ffd84d}
-.rs-side .rside-chk.hot .rc-box{border-color:#1f2733;background:#fff}
-.rs-side .rside-chk.hot.is-on .rc-box{background:#1f2733;color:#fff}
-/* 点击勾选（仅屏幕，打印时方框反映勾选状态） */
-@media (hover:hover) and (pointer:fine){
-  .rs-side .rside-chk{cursor:pointer}
-  .rs-side .rside-chk:hover{background:#f2f7f4}
-  .rs-side .rside-chk.hot:hover{background:#ffcf2e}
-}
 /* 点击礼物（仅屏幕；打印无影响） */
 @media (hover:hover) and (pointer:fine){
   .rs-gift{cursor:pointer;transition:.14s}
@@ -215,26 +201,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
   .rs-head h1{font-size:17pt}
   .rs-head .rs-sub{font-size:9.5pt;margin-top:3px}
   .rs-summary{display:none}
-  .rs-person{margin:0 0 6px;border-width:1.2pt;border-color:#000;page-break-inside:avoid;break-inside:avoid}
-  .rs-idx{width:26px;font-size:14pt;border-right-width:1.2pt;color:#444}
-  .rs-who{width:76px;border-right-width:1.2pt;padding:5px 2px;gap:3px}
-  .rs-name{font-size:11pt}
-  .rs-bday{font-size:8pt;padding:1px 4px;border-width:1pt;background:#ffe9e5 !important;
-    -webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .rs-hist{width:150px;border-right-width:1.2pt}
-  .rs-hist .rh-cell{font-size:7pt;padding:2px 2px;line-height:1.2}
-  .rs-gift-row{border-bottom-width:1.2pt}
-  .rs-gift .rg-img{height:54px}
-  .rs-gift .rg-nm{font-size:7pt;min-height:2.4em;background:#f7f9fb !important;
-    -webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .rs-gift .rg-pr{font-size:8pt;background:#fdece8 !important;
-    -webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .rs-side{width:84px;border-left-width:1.2pt}
-  .rs-side .rside-top{font-size:7pt;padding:4px 4px}
-  .rs-side .rside-chk{font-size:7.5pt;padding:3px 4px;gap:3px;line-height:1.3;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .rs-side .rside-chk .rc-box{width:11px;height:11px;font-size:8px;border-width:1pt}
-  .rs-side .rside-chk.hot{background:#ffd84d !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+   .rs-person{margin:0 0 6px;border-width:1.2pt;border-color:#000;page-break-inside:avoid;break-inside:avoid}
+   .rs-head{border-bottom-width:1.2pt;min-height:0}
+   .rs-idx{width:24px;font-size:13pt;border-right-width:1.2pt;color:#444}
+   .rs-who{width:72px;border-right-width:1.2pt;padding:4px 2px;gap:3px}
+   .rs-name{font-size:10.5pt}
+   .rs-bday{font-size:8pt;padding:1px 4px;border-width:1pt;background:#ffe9e5 !important;
+     -webkit-print-color-adjust:exact;print-color-adjust:exact}
+   .rs-hist{border-right-width:1.2pt}
+   .rs-hist .rh-cell{font-size:7pt;padding:2px 4px;line-height:1.2}
+   .rs-gift-row{border-bottom-width:1.2pt}
+   .rs-gift .rg-img{height:52px}
+   .rs-gift .rg-nm{font-size:7pt;min-height:2.4em;background:#f7f9fb !important;
+     -webkit-print-color-adjust:exact;print-color-adjust:exact}
+   .rs-gift .rg-pr{font-size:8pt;background:#fdece8 !important;
+     -webkit-print-color-adjust:exact;print-color-adjust:exact}
+   .rs-side{width:80px;border-left-width:1.2pt}
+   .rs-side .rside-top{font-size:7pt;padding:4px}
+   img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 /* 窄屏兜底：手机上横向可滚动查看整表 */
 @media (max-width:900px){
@@ -272,9 +256,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 <!-- PDF 兜底：若系统分享/自动下载被拦，长按此按钮手动保存 -->
 <div id="pdf-fallback-bar" style="display:none;position:fixed;left:12px;right:12px;bottom:76px;z-index:80;
   background:#1f2733;color:#fff;border-radius:14px;padding:12px 14px;align-items:center;gap:10px;
-  box-shadow:0 10px 30px -8px rgba(0,0,0,.5);font-size:13px">
-  <span style="flex:1">📄 PDF 已生成</span>
-  <a style="background:#5fb88e;color:#fff;text-decoration:none;padding:9px 16px;border-radius:99px;font-weight:700;white-space:nowrap" download>保存 / 分享</a>
+  box-shadow:0 10px 30px -8px rgba(0,0,0,.5);font-size:13px;flex-wrap:wrap">
+  <span style="flex:1 1 100%;font-weight:700">📄 PDF 已生成</span>
+  <span class="pfb-tip" style="flex:1 1 100%;color:#cfd6dd;line-height:1.5;font-size:12.5px">保存或分享给好友</span>
+  <a style="background:#5fb88e;color:#fff;text-decoration:none;padding:9px 16px;border-radius:99px;font-weight:700;white-space:nowrap" download>保存到手机</a>
+  <a class="pfb-open" target="_blank" rel="noopener"
+     style="background:#3d4a5c;color:#fff;text-decoration:none;padding:9px 16px;border-radius:99px;font-weight:700;white-space:nowrap">打开 PDF</a>
   <button onclick="document.getElementById('pdf-fallback-bar').style.display='none'"
     style="background:transparent;border:none;color:#98a2b3;font-size:18px;cursor:pointer;padding:0 4px">✕</button>
 </div>
@@ -715,55 +702,63 @@ async function _doExportPDF(){
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const outScale = 2;                                 // 输出放大倍数（清晰度）
 
-    const src = document.getElementById('report-sheet');
-    const rect = src.getBoundingClientRect();
-    const contentW = Math.min(rect.width, 1080);
-
-    // 用 html2canvas 思路：手动逐块绘制，避免额外依赖
-    // —— 改为：整块截取 → 按 A4 高度切片（分页保证不切断表格）
-    const chapters = [];
-    document.querySelectorAll('.rs-head, .rs-person').forEach(el => chapters.push(el));
-
-    // 计算每页放得下的“块”（块的像素高度）
-    const mmToPx = (mm) => mm * PX_PER_MM;
-    const usableH = mmToPx(pageHMM - padMM * 2);
-    const usableW = mmToPx(pageWMM - padMM * 2);
-    const ratio = usableW / contentW;                   // 内容宽度映射到 A4 可用宽度
-
-    // 先把每个块画成 canvas（含图片）
-    const blockCanvas = [];
-    for (const el of chapters){
-      const c = await _renderElToCanvas(el, outScale);
-      blockCanvas.push(c);
+    // —— 逐块渲染（大标题 / 每个人一张表）→ 按 A4 可用高度整块分页，绝不切断表格
+    // 块顺序：标题头（.viewer-report-head）+ 每个人一张表 → 保证标题出现在 PDF 第一页顶部
+    const blocks = [];
+    const headEl = document.querySelector('.viewer-report-head');
+    if (headEl){
+      const hr = headEl.getBoundingClientRect();
+      if (hr.width > 0 && hr.height > 0) blocks.push(headEl);
     }
-    // 分页组装
+    document.querySelectorAll('#report-sheet .rs-person').forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) blocks.push(el);
+    });
+    if (!blocks.length) throw new Error('没有可导出的内容');
+
+    // 内容宽度统一取最大块宽度（避免标题窄、表格宽导致比例不一致）
+    let contentW = 0;
+    blocks.forEach(el => { contentW = Math.max(contentW, el.getBoundingClientRect().width); });
+    // 标题块可能比表格窄，统一按 report-sheet 宽度作为版心，避免比例不一致
+    const sheetEl = document.getElementById('report-sheet');
+    if (sheetEl){
+      const sr = sheetEl.getBoundingClientRect();
+      if (sr.width > 0) contentW = Math.max(contentW, sr.width);
+    }
+    const usableWpx = Math.round((pageWMM - padMM * 2) * PX_PER_MM);   // A4 可用宽（输出像素）
+    const usableHpx = Math.round((pageHMM - padMM * 2) * PX_PER_MM);   // A4 可用高（输出像素）
+    const ratio = usableWpx / (contentW * outScale);                   // 块像素 → 输出像素
+
+    // 每块渲染成 canvas
+    const blockEnv = [];
+    for (const el of blocks){
+      const c = await _renderElToCanvas(el, outScale);
+      blockEnv.push({ c, outW: Math.round(c.width * ratio), outH: Math.round(c.height * ratio) });
+    }
+
+    // 贪心分页：整块摆放；单块超过一页才允许独占并等比缩小到一页
     const pages = [];
     let cur = [], curH = 0;
-    for (const bc of blockCanvas){
-      const h = bc.height * ratio / outScale * (outScale / 1) ;  // 已按 outScale 放大 → 折算回
-      const bh = (bc.height / outScale) * ratio * outScale / 1;
-      const hh = bc.height * ratio;                     // canvas 高度 * 缩放系数
-      if (curH + hh > usableH * outScale && cur.length){ pages.push(cur); cur = []; curH = 0; }
-      cur.push(bc); curH += hh;
-      // 单块超过一页 → 自己独占一页（极端情况）
-      if (hh > usableH * outScale){ pages.push(cur); cur = []; curH = 0; }
+    for (const b of blockEnv){
+      if (curH + b.outH > usableHpx && cur.length){ pages.push({ items: cur }); cur = []; curH = 0; }
+      cur.push(b); curH += b.outH;
+      if (b.outH > usableHpx){ pages.push({ items: cur }); cur = []; curH = 0; }
     }
-    if (cur.length) pages.push(cur);
+    if (cur.length) pages.push({ items: cur });
 
-    // 生成 PDF（手写最小 PDF，内嵌 JPEG，无需外部库）
+    // 组装每页 canvas
     const pdfPages = [];
     for (const pg of pages){
-      const cw = Math.round(usableW * outScale);
-      const ch = Math.round(usableH * outScale);
       const cv = document.createElement('canvas');
-      cv.width = cw; cv.height = ch;
+      cv.width = usableWpx; cv.height = usableHpx;
       const ctx = cv.getContext('2d');
-      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cw, ch);
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, usableWpx, usableHpx);
       let y = 0;
-      for (const bc of pg){
-        const w = cw;
-        const h = Math.round(bc.height * ratio);
-        ctx.drawImage(bc, 0, 0, bc.width, bc.height, 0, y, w, h);
+      for (const b of pg.items){
+        const h = Math.min(b.outH, usableHpx - y);
+        if (h <= 0) break;
+        const w = (h === b.outH) ? b.outW : Math.round(b.outW * h / b.outH);
+        ctx.drawImage(b.c, 0, 0, b.c.width, b.c.height, 0, y, w, h);
         y += h;
       }
       pdfPages.push(cv);
@@ -926,33 +921,76 @@ function _buildPDFBlob(canvases, wmm, hmm){
   push(`trailer\n<< /Size ${offsets.length + 1} /Root 1 0 R >>\nstartxref\n${xrefPos}\n%%EOF\n`);
   return new Blob(chunks, {type: 'application/pdf'});
 }
-// 交付：优先系统分享（可发微信），退化为下载/新窗口打开
+// 交付：优先系统分享（可发微信），微信内置浏览器引导用外部浏览器打开
+function _isWeChat(){
+  return /micromessenger/i.test(navigator.userAgent || '');
+}
+function _isIOS(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent || '');
+}
+// 判断能否真正分享文件（微信内 canShare 常返回 false 或 share 直接失败）
+function _canShareFile(file){
+  try { return !!(navigator.canShare && navigator.canShare({files: [file]})); }
+  catch(e){ return false; }
+}
 async function _deliverPDF(blob, fname){
   const file = new File([blob], fname, {type: 'application/pdf'});
-  // Web Share API（手机浏览器 / Safari / 部分微信）
-  if (navigator.canShare && navigator.canShare({files: [file]})){
+  const inWX = _isWeChat();
+
+  // 1) 非微信场景：直接调系统分享面板（可发微信/QQ/邮件等）
+  if (!inWX && _canShareFile(file)){
     try {
       await navigator.share({files: [file], title: fname});
       return;
     } catch(e){
-      if (e && e.name === 'AbortError') return;    // 用户取消
-      // 分享失败 → 继续走下载兜底
+      if (e && e.name === 'AbortError') return;    // 用户主动取消
+      // 其他错误 → 走下面的兜底
     }
   }
-  // 兜底 1：直接下载（iOS Safari 会弹「存储到文件」）
+
+  // 2) 生成一个稳定的直链，供下载 / 长按保存 / 新窗口打开
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = fname;
+  a.href = url; a.download = fname; a.rel = 'noopener';
+
+  // 微信内置浏览器：不能分享文件、下载也常被拦 → 明确引导「用浏览器打开」
+  if (inWX){
+    _pdfToast('📄 PDF 已生成，请按下方提示保存后再发给好友', 6000);
+    const bar = document.getElementById('pdf-fallback-bar');
+    if (bar){
+      bar.style.display = 'flex';
+      const lnk = bar.querySelector('a');
+      lnk.href = url; lnk.download = fname;
+      const opn = bar.querySelector('.pfb-open');
+      if (opn) opn.href = url;
+      const tip = bar.querySelector('.pfb-tip');
+      if (tip){
+        tip.innerHTML = '<b>微信内无法直接转发文件。</b>'
+          + '① 点右上角 <b>···</b> → <b>在浏览器打开</b>，再点「转 PDF」即可分享给微信好友；'
+          + '② 或先点「保存到手机」，再在微信里发文件。';
+      }
+    }
+    return;
+  }
+
+  // 3) 普通浏览器 / iOS Safari：直接下载
   document.body.appendChild(a);
   a.click();
-  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 8000);
-  // 兜底 2：同时给个手动打开的入口，防止下载被拦
-  _pdfToast('📄 已生成，如未自动保存可长按下方按钮', 5000);
+  setTimeout(() => { a.remove(); }, 4000);
+  _pdfToast('📄 PDF 已生成，正在保存…', 4000);
   const bar = document.getElementById('pdf-fallback-bar');
   if (bar){
     bar.style.display = 'flex';
-    bar.querySelector('a').href = url;
-    bar.querySelector('a').download = fname;
+    const lnk = bar.querySelector('a');
+    lnk.href = url; lnk.download = fname;
+    const opn = bar.querySelector('.pfb-open');
+    if (opn) opn.href = url;
+    const tip = bar.querySelector('.pfb-tip');
+    if (tip){
+      tip.innerHTML = _isIOS()
+        ? '没弹出保存？点「打开 PDF」→ 右上角分享 → 存储到文件 / 发给好友。'
+        : '没自动保存？点「打开 PDF」用新窗口打开，再另存或分享。';
+    }
   }
 }
 
@@ -1079,11 +1117,8 @@ function renderList(){
     return da - db;
   };
   const sorted = people.slice().sort(byTimeline);
-  // —— 统计小字（帮助确认勾选是否齐全，打印时隐藏）——
-  const vips = sorted.filter(p => p.tier === 'vip').length;
-  const staffCnt = sorted.length - vips;
-  const summary = `<div class="rs-summary">共 ${sorted.length} 位寿星 · VIP ${vips} 位 · 普通员工 ${staffCnt} 位 · 点右上角「转 PDF / 打印」可直接打印勾选</div>`;
-  sheet.innerHTML = summary + sorted.map((p, i) => personTableHTML(p, i + 1)).join('');
+  // 统计已并入标题副标题（.rs-head .rs-sub），正文不再重复一行
+  sheet.innerHTML = sorted.map((p, i) => personTableHTML(p, i + 1)).join('');
 }
 
 /* ===== 报表：一个人的整块表格（序号 | 姓名+生日 | 历史记录 | 礼物 | 备注+勾选） ===== */
@@ -1125,7 +1160,7 @@ function personTableHTML(p, idx){
     const padHTML = pad > 0 ? '<div class="rs-gift"><div class="rg-img"></div><div class="rg-nm"></div><div class="rg-pr"></div></div>'.repeat(pad) : '';
     rows.push(`<div class="rs-gift-row">${cells}${padHTML}</div>`);
   }
-  // 备注区：选中礼物 + 后台标记
+  // 备注区：只展示说明文字（勾选栏已移除）
   const noteBits = [];
   if (cur.gid){
     const pg = findGiftById(cur.gid);
@@ -1134,28 +1169,21 @@ function personTableHTML(p, idx){
   if (cur.msg && cur.msg.trim()) noteBits.push(cur.msg.trim());
   const noteHTML = noteBits.length
     ? `<span class="rside-ttl">备注</span>${esc(noteBits.join(' / '))}`
-    : '<span class="rside-ttl">备注</span>';
-  // 勾选栏：重新推荐 / 亲自送 / 寄送（后两者为常用项，寄送底色高亮，便于老板勾）
-  const chk = (key, label, hot) => {
-    const on = !!cur[key];
-    return `<div class="rside-chk${hot?' hot':''}${on?' is-on':''}" onclick="toggleAction('${esc(p.id)}','${key}')">
-      <span class="rc-box">${on?'✓':''}</span><span>${label}</span></div>`;
-  };
+    : '';
+  // 上下结构：上排 = 序号 | 姓名+生日 | 往年记录 | 备注 ／ 下排 = 礼物
   return `<div class="rs-person" id="rp-${esc(p.id)}">
-    <div class="rs-idx">${idx}</div>
-    <div class="rs-who">
-      <div class="rs-name">${esc(p.name)}</div>
-      <div class="rs-bday">${esc(p.dateRaw || ((p.month||'')+'月'+(p.day||'')+'日'))}</div>
+    <div class="rs-hrow">
+      <div class="rs-idx">${idx}</div>
+      <div class="rs-who">
+        <div class="rs-name">${esc(p.name)}</div>
+        <div class="rs-bday">${esc(p.dateRaw || ((p.month||'')+'月'+(p.day||'')+'日'))}</div>
+      </div>
+      <div class="rs-hist">${histCellsHTML(p)}</div>
+      <div class="rs-side">
+        <div class="rside-top">${noteHTML}</div>
+      </div>
     </div>
-    <div class="rs-hist">${histCellsHTML(p)}</div>
     <div class="rs-gifts">${rows.join('')}</div>
-    <div class="rs-side">
-      <div class="rside-top">${noteHTML}</div>
-      ${chk('djSelf','DJ自己准备',false)}
-      ${chk('resetMark','重新推荐',false)}
-      ${chk('ask','亲自送',false)}
-      ${chk('bargain','寄送',true)}
-    </div>
   </div>`;
 }
 // 表格内直接点礼物 = 选中/取消（屏幕交互；打印不受影响）
