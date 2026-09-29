@@ -111,6 +111,129 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 
 /* ===== 空状态 ===== */
 .empty-state{text-align:center;padding:80px 20px;color:#5b6675}
+/* ============================================================
+   打印报表版式（参考「生日礼物待确认」表）
+   —— 屏幕与打印共用一套表格结构，打印时 A4 自动分页
+   ============================================================ */
+/* 右上角打印按钮 */
+.print-fab{position:fixed;top:12px;right:12px;z-index:70;display:flex;align-items:center;gap:6px;
+  padding:10px 16px;border:none;border-radius:99px;background:#1f2733;color:#fff;
+  font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;
+  box-shadow:0 6px 22px -6px rgba(31,39,51,.5);transition:.16s}
+.print-fab:active{transform:scale(.95)}
+.print-fab .pf-ico{font-size:15px}
+
+/* 报表容器 */
+.report-sheet{max-width:1080px;margin:0 auto;padding:0 14px 120px}
+.rs-head{text-align:center;margin:22px auto 16px;padding:0 14px}
+.rs-head h1{font-size:24px;font-weight:800;color:#1f2733;letter-spacing:.5px}
+.rs-head .rs-sub{margin-top:7px;font-size:13.5px;color:#5b6675;font-weight:600}
+
+/* 每个人的一张表 */
+.rs-person{background:#fff;border:1.5px solid #1f2733;border-radius:6px;margin:0 auto 16px;
+  display:flex;align-items:stretch;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
+/* 左侧大序号 */
+.rs-idx{flex:none;width:44px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:800;color:#98a2b3;border-right:1.5px solid #1f2733}
+/* 姓名 + 生日（生日高亮） */
+.rs-who{flex:none;width:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:5px;padding:8px 4px;border-right:1.5px solid #1f2733;text-align:center}
+.rs-name{font-size:16.5px;font-weight:800;color:#1f2733;line-height:1.2}
+.rs-bday{display:inline-block;font-size:12.5px;font-weight:800;color:#c0392b;
+  background:#ffe9e5;border:1.5px solid #e8836f;border-radius:5px;padding:2px 7px;line-height:1.3;white-space:nowrap}
+/* 历史记录（2列 × 3行，新年份在左列自上而下，与参考表一致） */
+.rs-hist{flex:none;width:170px;display:grid;grid-template-columns:repeat(2,1fr);
+  grid-template-rows:repeat(3,1fr);grid-auto-flow:column;border-right:1.5px solid #1f2733}
+.rs-hist .rh-cell{border-right:1px solid #cfd6dd;border-bottom:1px solid #cfd6dd;
+  padding:3px 4px;font-size:10.5px;line-height:1.25;color:#5b6675;display:flex;align-items:center;
+  justify-content:center;text-align:center;overflow:hidden;word-break:break-all}
+.rs-hist .rh-cell .rh-y{color:#98a2b3;font-weight:700;margin-right:2px;flex:none}
+.rs-hist .rh-cell.rh-empty{color:#c3cad2}
+/* 礼物区 */
+.rs-gifts{flex:1;min-width:0;display:flex;flex-direction:column}
+.rs-gift-row{display:flex;border-bottom:1.5px solid #1f2733}
+.rs-gift-row:last-child{border-bottom:none}
+.rs-gift{flex:1;min-width:0;border-right:1px solid #cfd6dd;display:flex;flex-direction:column;
+  break-inside:avoid;page-break-inside:avoid}
+.rs-gift:last-child{border-right:none}
+.rs-gift .rg-img{width:100%;height:88px;background:#fff;display:flex;align-items:center;
+  justify-content:center;overflow:hidden;border-bottom:1px solid #cfd6dd}
+.rs-gift .rg-img img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.rs-gift .rg-img .rg-emoji{font-size:26px;color:#cbd1dd}
+.rs-gift .rg-nm{font-size:11px;font-weight:700;color:#1f2733;line-height:1.25;padding:4px 5px;
+  min-height:2.5em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;word-break:break-all;background:#f7f9fb}
+.rs-gift .rg-pr{font-size:12px;font-weight:800;color:#d64545;text-align:center;
+  padding:4px 3px;background:#fdece8;border-top:1px solid #cfd6dd;white-space:nowrap}
+.rs-gift .rg-pr .yen{font-size:10px;font-weight:600;margin-right:1px}
+/* 右列：备注 + 老板勾选 */
+.rs-side{flex:none;width:118px;border-left:1.5px solid #1f2733;display:flex;flex-direction:column}
+.rs-side .rside-top{flex:1;padding:6px 7px;font-size:10.5px;color:#5b6675;line-height:1.6;
+  border-bottom:1.5px solid #1f2733;word-break:break-all}
+.rs-side .rside-top .rside-ttl{font-weight:800;color:#8a95a0;font-size:10px;letter-spacing:.5px;display:block;margin-bottom:3px}
+.rs-side .rside-chk{display:flex;align-items:center;gap:5px;padding:7px 7px;
+  border-bottom:1px solid #cfd6dd;font-size:12px;font-weight:800;color:#1f2733}
+.rs-side .rside-chk:last-child{border-bottom:none}
+.rs-side .rside-chk .rc-box{flex:none;width:15px;height:15px;border:1.5px solid #1f2733;
+  border-radius:3px;display:inline-flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;color:#c0392b;background:#fff}
+.rs-side .rside-chk.is-on .rc-box{background:#1f2733;color:#fff;border-color:#1f2733}
+.rs-side .rside-chk.hot{background:#ffd84d}
+.rs-side .rside-chk.hot .rc-box{border-color:#1f2733;background:#fff}
+.rs-side .rside-chk.hot.is-on .rc-box{background:#1f2733;color:#fff}
+/* 点击勾选（仅屏幕，打印时方框反映勾选状态） */
+@media (hover:hover) and (pointer:fine){
+  .rs-side .rside-chk{cursor:pointer}
+  .rs-side .rside-chk:hover{background:#f2f7f4}
+  .rs-side .rside-chk.hot:hover{background:#ffcf2e}
+}
+/* 点击礼物（仅屏幕；打印无影响） */
+@media (hover:hover) and (pointer:fine){
+  .rs-gift{cursor:pointer;transition:.14s}
+  .rs-gift:hover{background:#f6fcf8;box-shadow:inset 0 0 0 1.5px #5fb88e}
+}
+.rs-gift.is-picked{background:#e9f6ee;box-shadow:inset 0 0 0 2px #5fb88e}
+.rs-gift.is-picked .rg-nm{background:#dcf0e4}
+
+/* 顶部小字统计（打印也保留） */
+.rs-summary{max-width:1080px;margin:0 auto 14px;padding:0 14px;font-size:12.5px;color:#5b6675;text-align:center}
+
+/* ============ 打印 / A4 适配 ============ */
+@page{size:A4 portrait;margin:10mm 8mm}
+@media print{
+  html,body{background:#fff !important}
+  .print-fab,.viewer-foot-bar,.sync-stat,#toast,.viewer-foot{display:none !important}
+  .report-sheet{max-width:none;padding:0;margin:0}
+  .rs-head{margin:0 0 10px}
+  .rs-head h1{font-size:17pt}
+  .rs-head .rs-sub{font-size:9.5pt;margin-top:3px}
+  .rs-summary{display:none}
+  .rs-person{margin:0 0 6px;border-width:1.2pt;border-color:#000;page-break-inside:avoid;break-inside:avoid}
+  .rs-idx{width:26px;font-size:14pt;border-right-width:1.2pt;color:#444}
+  .rs-who{width:76px;border-right-width:1.2pt;padding:5px 2px;gap:3px}
+  .rs-name{font-size:11pt}
+  .rs-bday{font-size:8pt;padding:1px 4px;border-width:1pt;background:#ffe9e5 !important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rs-hist{width:150px;border-right-width:1.2pt}
+  .rs-hist .rh-cell{font-size:7pt;padding:2px 2px;line-height:1.2}
+  .rs-gift-row{border-bottom-width:1.2pt}
+  .rs-gift .rg-img{height:54px}
+  .rs-gift .rg-nm{font-size:7pt;min-height:2.4em;background:#f7f9fb !important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rs-gift .rg-pr{font-size:8pt;background:#fdece8 !important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rs-side{width:84px;border-left-width:1.2pt}
+  .rs-side .rside-top{font-size:7pt;padding:4px 4px}
+  .rs-side .rside-chk{font-size:7.5pt;padding:3px 4px;gap:3px;line-height:1.3;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rs-side .rside-chk .rc-box{width:11px;height:11px;font-size:8px;border-width:1pt}
+  .rs-side .rside-chk.hot{background:#ffd84d !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+/* 窄屏兜底：手机上横向可滚动查看整表 */
+@media (max-width:900px){
+  .report-sheet{overflow-x:auto}
+  .rs-person{min-width:760px}
+}
 .empty-state .big{font-size:46px;margin-bottom:14px;opacity:.35}
 .empty-state p{font-size:14.5px}
 
@@ -125,12 +248,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 
 <div class="sync-stat" id="sync-stat">☁️ 正在连接云端…</div>
 
+<button class="print-fab" onclick="window.print()" title="打印 / 另存为 PDF">
+  <span class="pf-ico">🖨️</span>转 PDF / 打印
+</button>
+
 <div class="viewer-report-head">
-  <h1><span class="ico">🎂</span><span id="vr-title">本月 · 生日礼物人员</span></h1>
+  <h1><span id="vr-title">本月 · 生日礼物人员</span></h1>
   <div class="meta" id="vr-meta"></div>
 </div>
 
-<div class="viewer-list" id="viewer-list"></div>
+<div class="report-sheet" id="report-sheet"></div>
+<div class="viewer-list" id="viewer-list" style="display:none"></div>
 
 <div class="viewer-foot">© 生日礼物管理 · 观阅版（明文免密码，可勾选）</div>
 
@@ -589,94 +717,28 @@ function pickerList(pid){
   }
   return list;
 }
-function personCardHTML(p){
-  const cur = picks[p.id] || {};
-  const pickedG = cur.gid ? findGiftById(cur.gid) : null;
-  const dateStr = (p.month||'') + ' 月' + (p.day ? ' ' + p.day + ' 日' : '');
-  const vipBadge = p.tier === 'vip' ? '<span class="badge-vip">VIP</span>' : '<span class="badge-staff">普通员工</span>';
-  const msgTrim = (cur.msg || '').trim();
-
-  // 选中礼物 → 迷你窗口
-  let miniHTML = '';
-  if (pickedG){
-    const s = imgSrc(pickedG);
-    const imgHTML = s ? `<img src="${esc(s)}" alt="" onerror="this.remove()">` : '🎁';
-    miniHTML = `<div class="picked-mini">
-      <div class="pm-img">${imgHTML}</div>
-      <div class="pm-body">
-        <div class="pm-name">${esc(pickedG.name)}</div>
-        <div class="pm-price">${priceText(pickedG)}</div>
-      </div>
-      <span class="pm-tag">✓ 已选择</span>
-    </div>`;
-  }
-
-  // 礼物网格：常显两行 × 每行 3 个（不再需要点「选礼物」展开）
-  const gifts = pickerList(p.id);
-  const pickerHTML = `
-<div class="inline-picker">
-        <div class="inline-picker-grid">
-        ${gifts.map(g => {
-          const picked = cur.gid === g.id;
-          const src = imgSrc(g);
-          const imgHTML2 = src ? `<img src="${esc(src)}" alt="" onerror="this.remove()">` : '🖼';
-          const expectBadge = g.expect ? '<span class="ip-expect">同学期待</span>' : '';
-          return `<div class="ipick-card${picked?' is-picked':''}" data-gid="${esc(g.id)}" onclick="togglePick('${esc(p.id)}','${esc(g.id)}')">
-            <div class="ip-img">${imgHTML2}</div>
-            <div class="ip-body">
-              <div class="ip-name">${esc(g.name)}</div>
-              <div class="ip-price">${priceText(g)}</div>
-              ${expectBadge}
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-
-  // 5 个动作：礼物网格下方分两行（第 1 行 3 个：重新推荐/询问本人/面议；第 2 行 2 个：DJ 自备/留言）
-  const actionsHTML = `
-    <div class="va-layout">
-      <div class="va-grid">
-        <button class="va-chip${cur.resetMark?' on':''}" onclick="toggleAction('${esc(p.id)}','resetMark')">重新推荐</button>
-        <button class="va-chip${cur.ask?' on':''}" onclick="toggleAction('${esc(p.id)}','ask')">询问本人</button>
-        <button class="va-chip bargain${cur.bargain?' on':''}" onclick="toggleAction('${esc(p.id)}','bargain')">面议</button>
-      </div>
-      <div class="va-row-2">
-        <button class="va-chip dj-self${cur.djSelf?' on':''}" onclick="toggleAction('${esc(p.id)}','djSelf')">DJ 自备</button>
-        <button class="va-chip${msgTrim?' on':''}" onclick="openMsgEdit('${esc(p.id)}')">留言</button>
-      </div>
-    </div>`;
-
-  // 留言：编辑中 → 输入框 + 完成；有留言 → 内容小字显示在下面
-  let msgHTML = '';
-  if (editingMsg.has(p.id)){
-    msgHTML = `<div class="msg-edit">
-      <input class="msg-input" id="msg-${esc(p.id)}" placeholder="输入内容" value="${esc(cur.msg||'')}" oninput="saveMsg('${esc(p.id)}', this.value)" onkeydown="if(event.key==='Enter'){closeMsgEdit('${esc(p.id)}');}">
-      <button class="msg-done" onclick="closeMsgEdit('${esc(p.id)}')">完成</button>
-    </div>`;
-  } else if (msgTrim){
-    msgHTML = `<div class="msg-preview" id="mp-${esc(p.id)}">${esc(msgTrim)}</div>`;
-  }
-
-  return `<div class="viewer-person${pickedG?' is-picked':''}" data-pid="${esc(p.id)}" id="vp-${esc(p.id)}">
-    <div class="viewer-name-row">
-      <span class="vname">${esc(p.name)}</span>
-      <span class="vdate">${esc(dateStr || p.dateRaw || '')}</span>
-      ${vipBadge}
-    </div>
-    ${miniHTML}
-    ${pickerHTML}
-    ${actionsHTML}
-    ${msgHTML}
-  </div>`;
-}
 function refreshCard(pid){
-  const wrap = document.getElementById('vp-' + pid);
-  if (!wrap) return;
+  // 报表模式：只重渲染该人那一块表格（保留滚动位置，避免整页闪动）
+  const wrap = document.getElementById('rp-' + pid);
+  if (!wrap){
+    // 兜底：整页重渲染
+    renderList();
+    return;
+  }
   const p = findPerson(pid);
   if (!p) return;
+  // 找到该人当前序号（与 renderList 的排序保持一致）
+  const sorted = REPORT
+    ? REPORT.items.map(it => findPerson(it.pid)).filter(x => x)
+        .sort((a,b) => {
+          const ma = a.month || 13, mb = b.month || 13;
+          if (ma !== mb) return ma - mb;
+          return (a.day || 99) - (b.day || 99);
+        })
+    : [];
+  const idx = sorted.findIndex(x => x.id === pid);
   const y = window.scrollY || document.documentElement.scrollTop || 0;
-  wrap.outerHTML = personCardHTML(p);
+  wrap.outerHTML = personTableHTML(p, idx >= 0 ? idx + 1 : 0);
   try { window.scrollTo(0, y); } catch(e){}
 }
 function renderList(){
@@ -707,9 +769,9 @@ function renderList(){
   }
   const tt = $('#vr-title'); if (tt) tt.textContent = title;
   const mm = $('#vr-meta'); if (mm) mm.innerHTML = metaHTML;
-  const list = $('#viewer-list');
+  const sheet = $('#report-sheet');
   if (!people.length){
-    list.innerHTML = `<div class="empty-state">
+    sheet.innerHTML = `<div class="empty-state">
       <div class="big">${window.__reportMissing ? '🔗' : '🎂'}</div>
       <p>${window.__reportMissing ? '短链接对应的报告不在云端（可能后台生成了新报告，旧链接自动清理）' : (REPORT ? '这份报告里还没有人员' : '这份链接没有携带报告参数')}</p>
       ${!REPORT && !window.__reportMissing ? '<p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">请回到后台 → 点「📝 新建报告」→ 勾选寿星 → 复制链接发过来</p>' : ''}
@@ -717,8 +779,7 @@ function renderList(){
     </div>`;
     return;
   }
-  // 排序：按生日时间线（月份升序 → 日期升序，农历无日排当月最后）——
-  // 不按勾选先后；跨月报告自然形成 9月在前、10月在后
+  // 排序：按生日时间线（月份升序 → 日期升序，农历无日排当月最后）
   const byTimeline = (a, b) => {
     const ma = a.month || 13, mb = b.month || 13;
     if (ma !== mb) return ma - mb;
@@ -726,8 +787,86 @@ function renderList(){
     return da - db;
   };
   const sorted = people.slice().sort(byTimeline);
-  list.innerHTML = sorted.map(p => personCardHTML(p)).join('');
+  // —— 统计小字（帮助确认勾选是否齐全，打印时隐藏）——
+  const vips = sorted.filter(p => p.tier === 'vip').length;
+  const staffCnt = sorted.length - vips;
+  const summary = `<div class="rs-summary">共 ${sorted.length} 位寿星 · VIP ${vips} 位 · 普通员工 ${staffCnt} 位 · 点右上角「转 PDF / 打印」可直接打印勾选</div>`;
+  sheet.innerHTML = summary + sorted.map((p, i) => personTableHTML(p, i + 1)).join('');
 }
+
+/* ===== 报表：一个人的整块表格（序号 | 姓名+生日 | 历史记录 | 礼物 | 备注+勾选） ===== */
+// 历史记录：最近 6 年，按年份降序，列优先填（左列上→下 = 最新3年，右列 = 更早3年，与参考表一致）
+function histCellsHTML(p){
+  const g = p.gifts || {};
+  const years = Object.keys(g).filter(y => /^\d{4}$/.test(y)).sort((a,b) => b - a).slice(0, 6);
+  const cells = [];
+  for (let i = 0; i < 6; i++){
+    const y = years[i];
+    if (!y){ cells.push('<div class="rh-cell rh-empty"></div>'); continue; }
+    const v = String(g[y] || '').trim();
+    if (!v){ cells.push('<div class="rh-cell rh-empty"></div>'); continue; }
+    cells.push(`<div class="rh-cell"><span class="rh-y">${y}</span>${esc(v)}</div>`);
+  }
+  return cells.join('');
+}
+function giftCellHTML(g, pid){
+  const cur = picks[pid] || {};
+  const isPicked = cur.gid === g.id;
+  const s = imgSrc(g);
+  const img = s ? `<img src="${esc(s)}" alt="" onerror="this.outerHTML='<span class=\\'rg-emoji\\'>🎁</span>'">` : '<span class="rg-emoji">🎁</span>';
+  return `<div class="rs-gift${isPicked?' is-picked':''}" onclick="togglePick('${esc(pid)}','${esc(g.id)}')">
+    <div class="rg-img">${img}</div>
+    <div class="rg-nm">${esc(g.name)}</div>
+    <div class="rg-pr">${priceText(g)}</div>
+  </div>`;
+}
+function personTableHTML(p, idx){
+  const cur = picks[p.id] || {};
+  const gifts = pickerList(p.id);
+  const PER_ROW = 6;                                   // 每行 6 个；多于 6 个自动换行
+  const rows = [];
+  for (let i = 0; i < Math.max(gifts.length, 1); i += PER_ROW){
+    const chunk = gifts.slice(i, i + PER_ROW);
+    const cells = chunk.map(g => giftCellHTML(g, p.id)).join('');
+    // 不足 6 个时补空格子，保持表格边框完整
+    const pad = PER_ROW - chunk.length;
+    const padHTML = pad > 0 ? '<div class="rs-gift"><div class="rg-img"></div><div class="rg-nm"></div><div class="rg-pr"></div></div>'.repeat(pad) : '';
+    rows.push(`<div class="rs-gift-row">${cells}${padHTML}</div>`);
+  }
+  // 备注区：选中礼物 + 后台标记
+  const noteBits = [];
+  if (cur.gid){
+    const pg = findGiftById(cur.gid);
+    if (pg) noteBits.push('已选：' + pg.name);
+  }
+  if (cur.msg && cur.msg.trim()) noteBits.push(cur.msg.trim());
+  const noteHTML = noteBits.length
+    ? `<span class="rside-ttl">备注</span>${esc(noteBits.join(' / '))}`
+    : '<span class="rside-ttl">备注</span>';
+  // 勾选栏：重新推荐 / 亲自送 / 寄送（后两者为常用项，寄送底色高亮，便于老板勾）
+  const chk = (key, label, hot) => {
+    const on = !!cur[key];
+    return `<div class="rside-chk${hot?' hot':''}${on?' is-on':''}" onclick="toggleAction('${esc(p.id)}','${key}')">
+      <span class="rc-box">${on?'✓':''}</span><span>${label}</span></div>`;
+  };
+  return `<div class="rs-person" id="rp-${esc(p.id)}">
+    <div class="rs-idx">${idx}</div>
+    <div class="rs-who">
+      <div class="rs-name">${esc(p.name)}</div>
+      <div class="rs-bday">${esc(p.dateRaw || ((p.month||'')+'月'+(p.day||'')+'日'))}</div>
+    </div>
+    <div class="rs-hist">${histCellsHTML(p)}</div>
+    <div class="rs-gifts">${rows.join('')}</div>
+    <div class="rs-side">
+      <div class="rside-top">${noteHTML}</div>
+      ${chk('djSelf','DJ自己准备',false)}
+      ${chk('resetMark','重新推荐',false)}
+      ${chk('ask','亲自送',false)}
+      ${chk('bargain','寄送',true)}
+    </div>
+  </div>`;
+}
+// 表格内直接点礼物 = 选中/取消（屏幕交互；打印不受影响）
 function updateFootBar(){
   const ids = Object.keys(picks);
   const picked = ids.filter(id => picks[id] && picks[id].gid).length;
