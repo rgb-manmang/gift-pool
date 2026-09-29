@@ -18,10 +18,10 @@ html,body{min-height:100vh}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 
 /* ===== 顶部标题（明文无密码） ===== */
-.viewer-report-head{max-width:720px;margin:6px auto 14px;padding:18px 16px 6px;background:none;border:none;border-radius:0}
-.viewer-report-head h1{font-size:22px;letter-spacing:.5px;display:flex;align-items:center;gap:10px;color:#1f2733;font-weight:700;justify-content:center}
-.viewer-report-head h1 .ico{font-size:24px}
-.viewer-report-head .meta{margin-top:8px;font-size:12.5px;color:#98a2b3;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.viewer-report-head{max-width:1080px;margin:0 auto;padding:20px 14px 10px;background:none;border:none}
+.viewer-report-head h1{font-size:19px;letter-spacing:.3px;color:#111;font-weight:800;text-align:left}
+.viewer-report-head h1 .ico{display:none}
+.viewer-report-head .meta{display:none}
 
 /* ===== 寿星卡片（铺满屏宽：名字行+按钮一行，其余全宽堆叠） ===== */
 .viewer-list{max-width:720px;margin:0 auto;padding:0 12px 200px}
@@ -131,99 +131,90 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 
 /* 报表容器 */
 .report-sheet{max-width:1080px;margin:0 auto;padding:0 14px 120px}
-.rs-head{text-align:center;margin:22px auto 16px;padding:0 14px}
-.rs-head h1{font-size:24px;font-weight:800;color:#1f2733;letter-spacing:.5px}
-.rs-head .rs-sub{margin-top:7px;font-size:13.5px;color:#5b6675;font-weight:600}
 
-/* 每个人的一张表 */
-/* 每个人：上下两块结构 —— 上=信息条（序号|姓名+生日|往年记录|备注），下=礼物区 */
-.rs-person{background:#fff;border:1.5px solid #1f2733;border-radius:6px;margin:0 auto 16px;
-  display:flex;flex-direction:column;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
-/* ---- 上排：信息条 ---- */
-.rs-hrow{display:flex;align-items:stretch;border-bottom:1.5px solid #1f2733;min-height:64px}
-.rs-idx{flex:none;width:40px;display:flex;align-items:center;justify-content:center;
-  font-size:20px;font-weight:800;color:#98a2b3;border-right:1.5px solid #1f2733}
-.rs-who{flex:none;width:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;padding:6px 4px;border-right:1.5px solid #1f2733;text-align:center}
-.rs-name{font-size:16px;font-weight:800;color:#1f2733;line-height:1.2}
-.rs-bday{display:inline-block;font-size:12px;font-weight:800;color:#c0392b;
-  background:#ffe9e5;border:1.5px solid #e8836f;border-radius:5px;padding:2px 6px;line-height:1.3;white-space:nowrap}
-/* 往年记录（2列 × 3行，新年份在左列） */
-.rs-hist{flex:1 1 auto;min-width:0;display:grid;grid-template-columns:repeat(2,1fr);
-  grid-template-rows:repeat(3,1fr);grid-auto-flow:column;
-  border-right:1.5px solid #1f2733}
-.rs-hist .rh-cell{border-right:1px solid #cfd6dd;border-bottom:1px solid #cfd6dd;
-  padding:3px 6px;font-size:10.5px;line-height:1.25;color:#5b6675;display:flex;align-items:center;
-  overflow:hidden;word-break:break-all;gap:3px}
-.rs-hist .rh-cell:nth-child(3n){border-bottom:none}
-.rs-hist .rh-cell .rh-y{color:#98a2b3;font-weight:700;flex:none}
-.rs-hist .rh-cell .rh-t{flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
-.rs-hist .rh-cell.rh-empty{color:#c3cad2}
-/* 上排右侧：备注（不勾选，只留备注区） */
-.rs-side{flex:none;width:120px;border-left:1.5px solid #1f2733;display:flex;flex-direction:column}
-.rs-side .rside-top{flex:1;padding:6px 8px;font-size:10.5px;color:#5b6675;line-height:1.6;word-break:break-all}
-.rs-side .rside-top .rside-ttl{font-weight:800;color:#8a95a0;font-size:10px;letter-spacing:.5px;display:block;margin-bottom:3px}
-/* ---- 下排：礼物区 ---- */
-.rs-gifts{display:flex;flex-direction:column}
-.rs-gift-row{display:flex;border-bottom:1.5px solid #1f2733}
-.rs-gift-row:last-child{border-bottom:none}
-.rs-gift{flex:1;min-width:0;border-right:1px solid #cfd6dd;display:flex;flex-direction:column;
-  break-inside:avoid;page-break-inside:avoid}
+/* ====== 每人一张表（Excel 风格：左侧大序号 + 黑框表格） ====== */
+.rs-person{display:flex;align-items:stretch;margin:0 auto 18px;break-inside:avoid;page-break-inside:avoid}
+/* 左侧大序号（表格外，灰色大字） */
+.rs-num{flex:none;width:46px;display:flex;align-items:center;justify-content:center;
+  font-size:38px;font-weight:700;color:#b9bdc4;font-family:Arial,'Helvetica Neue',sans-serif}
+/* 右侧黑框表格 */
+.rs-tbl{flex:1;min-width:0;border:2px solid #000;background:#fff;display:flex;flex-direction:column}
+
+/* ---- 上排：姓名 | 生日 | 往年记录 | 状态 ---- */
+.rs-hrow{display:flex;align-items:stretch;border-bottom:2px solid #000;min-height:88px}
+.rs-name{flex:none;width:78px;display:flex;align-items:center;justify-content:center;
+  border-right:1.5px solid #000;font-size:15.5px;font-weight:800;color:#111;
+  text-align:center;padding:4px 2px;word-break:break-all;line-height:1.3}
+.rs-bday{flex:none;width:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;border-right:1.5px solid #000;text-align:center;padding:4px 2px}
+.rs-bday .bd-solar{font-size:12.5px;font-weight:700;color:#111;white-space:nowrap}
+.rs-bday .bd-lunar{font-size:10.5px;color:#8a8f98;white-space:nowrap}
+/* 往年记录：4列(年|文|年|文) × 3行 */
+.rs-hist{flex:1 1 auto;min-width:0;display:grid;grid-template-columns:auto 1fr auto 1fr;
+  grid-template-rows:repeat(3,1fr);grid-auto-flow:row}
+.rs-hist .rh-y{background:#efefef;color:#a8adb5;font-size:11px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;padding:2px 7px;
+  border-right:1px solid #d9d9d9;border-bottom:1px solid #d9d9d9;white-space:nowrap}
+.rs-hist .rh-t{color:#8f959e;font-size:10.5px;line-height:1.3;padding:2px 7px;
+  display:flex;align-items:center;overflow:hidden;border-bottom:1px solid #d9d9d9;
+  word-break:break-all}
+.rs-hist .rh-t.rh-none{color:#c4c9cf}
+.rs-hist .rh-y:nth-last-child(-n+4),.rs-hist .rh-t:nth-last-child(-n+4){border-bottom:none}
+/* 状态列（打印后给老板手勾） */
+.rs-status{flex:none;width:96px;border-left:1.5px solid #000;display:flex;flex-direction:column}
+.rs-status .st-item{flex:1;display:flex;align-items:center;justify-content:center;gap:3px;
+  font-size:11px;font-weight:700;color:#222;border-bottom:1px solid #d9d9d9;white-space:nowrap}
+.rs-status .st-item:last-child{border-bottom:none}
+.rs-status .st-item .st-box{font-size:12px;color:#555;font-weight:400}
+
+/* ---- 下排：礼物（名字在上 + 图片 + 橙色价格条） ---- */
+.rs-gifts{display:flex}
+.rs-gift{flex:1;min-width:0;border-right:1px solid #000;display:flex;flex-direction:column}
 .rs-gift:last-child{border-right:none}
-.rs-gift .rg-img{width:100%;height:92px;background:#fff;display:flex;align-items:center;
-  justify-content:center;overflow:hidden;border-bottom:1px solid #cfd6dd}
-.rs-gift .rg-img img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.rs-gift .rg-nm{font-size:10.5px;font-weight:600;color:#1c1c1c;line-height:1.3;text-align:center;
+  padding:4px 4px;min-height:2.6em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;word-break:break-all}
+.rs-gift .rg-img{width:100%;height:96px;background:#fff;display:flex;align-items:center;
+  justify-content:center;overflow:hidden}
+.rs-gift .rg-img img{max-width:88%;max-height:92%;object-fit:contain;display:block}
 .rs-gift .rg-img .rg-emoji{font-size:26px;color:#cbd1dd}
-.rs-gift .rg-nm{font-size:11px;font-weight:700;color:#1f2733;line-height:1.25;padding:4px 5px;
-  min-height:2.5em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-  overflow:hidden;word-break:break-all;background:#f7f9fb}
-.rs-gift .rg-pr{font-size:12px;font-weight:800;color:#d64545;text-align:center;
-  padding:4px 3px;background:#fdece8;border-top:1px solid #cfd6dd;white-space:nowrap}
-.rs-gift .rg-pr .yen{font-size:10px;font-weight:600;margin-right:1px}
-/* 点击礼物（仅屏幕；打印无影响） */
+.rs-gift .rg-pr{font-size:12px;font-weight:800;color:#161616;text-align:center;
+  padding:4px 3px;background:#f9c897;border-top:1px solid #000;white-space:nowrap}
+/* 点击选中（仅屏幕） */
 @media (hover:hover) and (pointer:fine){
   .rs-gift{cursor:pointer;transition:.14s}
   .rs-gift:hover{background:#f6fcf8;box-shadow:inset 0 0 0 1.5px #5fb88e}
 }
 .rs-gift.is-picked{background:#e9f6ee;box-shadow:inset 0 0 0 2px #5fb88e}
-.rs-gift.is-picked .rg-nm{background:#dcf0e4}
-
-/* 顶部小字统计（打印也保留） */
-.rs-summary{max-width:1080px;margin:0 auto 14px;padding:0 14px;font-size:12.5px;color:#5b6675;text-align:center}
+.rs-gift.rg-pad .rg-pr{background:transparent;border-top-color:#d9d9d9}
 
 /* ============ 打印 / A4 适配 ============ */
-@page{size:A4 portrait;margin:10mm 8mm}
+@page{size:A4 portrait;margin:9mm 7mm}
 @media print{
   html,body{background:#fff !important}
   .print-fab,.viewer-foot-bar,.sync-stat,#toast,.viewer-foot{display:none !important}
   .report-sheet{max-width:none;padding:0;margin:0}
-  .rs-head{margin:0 0 10px}
-  .rs-head h1{font-size:17pt}
-  .rs-head .rs-sub{font-size:9.5pt;margin-top:3px}
-  .rs-summary{display:none}
-   .rs-person{margin:0 0 6px;border-width:1.2pt;border-color:#000;page-break-inside:avoid;break-inside:avoid}
-   .rs-head{border-bottom-width:1.2pt;min-height:0}
-   .rs-idx{width:24px;font-size:13pt;border-right-width:1.2pt;color:#444}
-   .rs-who{width:72px;border-right-width:1.2pt;padding:4px 2px;gap:3px}
-   .rs-name{font-size:10.5pt}
-   .rs-bday{font-size:8pt;padding:1px 4px;border-width:1pt;background:#ffe9e5 !important;
-     -webkit-print-color-adjust:exact;print-color-adjust:exact}
-   .rs-hist{border-right-width:1.2pt}
-   .rs-hist .rh-cell{font-size:7pt;padding:2px 4px;line-height:1.2}
-   .rs-gift-row{border-bottom-width:1.2pt}
-   .rs-gift .rg-img{height:52px}
-   .rs-gift .rg-nm{font-size:7pt;min-height:2.4em;background:#f7f9fb !important;
-     -webkit-print-color-adjust:exact;print-color-adjust:exact}
-   .rs-gift .rg-pr{font-size:8pt;background:#fdece8 !important;
-     -webkit-print-color-adjust:exact;print-color-adjust:exact}
-   .rs-side{width:80px;border-left-width:1.2pt}
-   .rs-side .rside-top{font-size:7pt;padding:4px}
-   img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-}
-/* 窄屏兜底：手机上横向可滚动查看整表 */
-@media (max-width:900px){
-  .report-sheet{overflow-x:auto}
-  .rs-person{min-width:760px}
+  .viewer-report-head{padding:0 0 8px}
+  .viewer-report-head h1{font-size:13pt}
+  .rs-person{margin:0 0 10px}
+  .rs-num{width:30px;font-size:24pt;color:#b9bdc4 !important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rs-tbl{border-width:1.6pt}
+  .rs-hrow{border-bottom-width:1.6pt;min-height:64px}
+  .rs-name{width:56px;font-size:10.5pt;border-right-width:1.2pt}
+  .rs-bday{width:64px;border-right-width:1.2pt}
+  .rs-bday .bd-solar{font-size:8.5pt}
+  .rs-bday .bd-lunar{font-size:7pt}
+  .rs-hist .rh-y{font-size:7.5pt;padding:1px 5px;background:#efefef !important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rs-hist .rh-t{font-size:7pt;padding:1px 5px}
+  .rs-status{width:70px;border-left-width:1.2pt}
+  .rs-status .st-item{font-size:8pt}
+  .rs-gift .rg-nm{font-size:7pt;min-height:2.4em}
+  .rs-gift .rg-img{height:58px}
+  .rs-gift .rg-pr{font-size:8.5pt;background:#f9c897 !important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 
 
@@ -1078,13 +1069,9 @@ function renderList(){
     people = REPORT.items.map(it => findPerson(it.pid)).filter(p => p);
     const y = REPORT.year || YEAR, m = REPORT.month;
     // 标题由用户自己填，没填才用月份兜底
-    title = REPORT.title || (m ? (y + ' 年 ' + m + ' 月 · 生日礼物人员') : '生日礼物人员');
-    const vips = people.filter(p=>p.tier==='vip').length;
-    const staffCnt = people.length - vips;
-    // 统计：共X位寿星 · VIP X位 · 普通员工Y位（不写礼物数量）
-    metaHTML = `<span>共 ${people.length} 位寿星</span>` +
-      (vips ? `<span>VIP ${vips} 位</span>` : '') +
-      (staffCnt ? `<span>普通员工 ${staffCnt} 位</span>` : '');
+    // 与参考 PDF 一致：「2026-9月 12人 生日礼物待确认」
+    title = REPORT.title || (m ? (y + '-' + m + '月 ' + people.length + '人 生日礼物待确认') : '生日礼物待确认');
+    metaHTML = '';
   } else {
     // 没带 ?r= 参数 / 云端短链但报告已不存在
     if (window.__reportMissing){
@@ -1121,20 +1108,34 @@ function renderList(){
   sheet.innerHTML = sorted.map((p, i) => personTableHTML(p, i + 1)).join('');
 }
 
-/* ===== 报表：一个人的整块表格（序号 | 姓名+生日 | 历史记录 | 礼物 | 备注+勾选） ===== */
-// 历史记录：最近 6 年，按年份降序，列优先填（左列上→下 = 最新3年，右列 = 更早3年，与参考表一致）
+/* ===== 报表：一个人的整块表格（Excel 风格，对齐用户参考 PDF） ===== */
+// 历史记录：报告年份的前 6 年（2025..2020），4列(年|文|年|文)×3行；左列=最新3年
 function histCellsHTML(p){
   const g = p.gifts || {};
-  const years = Object.keys(g).filter(y => /^\d{4}$/.test(y)).sort((a,b) => b - a).slice(0, 6);
-  const cells = [];
-  for (let i = 0; i < 6; i++){
-    const y = years[i];
-    if (!y){ cells.push('<div class="rh-cell rh-empty"></div>'); continue; }
+  const Y = (REPORT && REPORT.year) || YEAR;
+  const left = [], right = [];
+  for (let i = 1; i <= 6; i++){
+    const y = String(Y - i);
     const v = String(g[y] || '').trim();
-    if (!v){ cells.push('<div class="rh-cell rh-empty"></div>'); continue; }
-    cells.push(`<div class="rh-cell"><span class="rh-y">${y}</span><span class="rh-t">${esc(v)}</span></div>`);
+    const cell = { y, v };
+    (i <= 3 ? left : right).push(cell);
   }
-  return cells.join('');
+  const cellHTML = c =>
+    `<div class="rh-y">${c.y}</div>` +
+    `<div class="rh-t${c.v ? '' : ' rh-none'}">${c.v ? esc(c.v) : '无记录'}</div>`;
+  // 行序：left[i], right[i] → grid row-major 排列
+  let out = '';
+  for (let i = 0; i < 3; i++) out += cellHTML(left[i]) + cellHTML(right[i]);
+  return out;
+}
+// 礼物格：名字在上 + 图片 + 橙色价格条（6879元 / 2.15万元）
+function priceBarText(g){
+  if (g.price){
+    const n = Number(g.price);
+    if (n >= 10000) return (Math.round(n / 100) / 100) + '万元';
+    return n + '元';
+  }
+  return esc(g.priceRaw || '价格待询');
 }
 function giftCellHTML(g, pid){
   const cur = picks[pid] || {};
@@ -1142,13 +1143,24 @@ function giftCellHTML(g, pid){
   const s = imgSrc(g);
   const img = s ? `<img src="${esc(s)}" alt="" onerror="this.outerHTML='<span class=\\'rg-emoji\\'>🎁</span>'">` : '<span class="rg-emoji">🎁</span>';
   return `<div class="rs-gift${isPicked?' is-picked':''}" onclick="togglePick('${esc(pid)}','${esc(g.id)}')">
-    <div class="rg-img">${img}</div>
     <div class="rg-nm">${esc(g.name)}</div>
-    <div class="rg-pr">${priceText(g)}</div>
+    <div class="rg-img">${img}</div>
+    <div class="rg-pr">${priceBarText(g)}</div>
   </div>`;
 }
-function personTableHTML(p, idx){
+// 状态列：固定「重新推荐/亲自送/寄送」三行给老板手勾；有提交状态的高亮显示
+function statusColHTML(p){
   const cur = picks[p.id] || {};
+  const row = (label, on) =>
+    `<div class="st-item"${on ? ' style="background:#ffe94d"' : ''}>` +
+    `<span>${label}</span><span class="st-box">${on ? '☑' : '□'}</span></div>`;
+  let html = row('重新推荐', !!cur.resetMark) + row('亲自送', false) + row('寄　送', false);
+  if (cur.djSelf) html += row('DJ自备', true);
+  else if (cur.ask) html += row('询问本人', true);
+  else if (cur.bargain) html += row('面　议', true);
+  return html;
+}
+function personTableHTML(p, idx){
   const gifts = pickerList(p.id);
   const PER_ROW = 6;                                   // 每行 6 个；多于 6 个自动换行
   const rows = [];
@@ -1157,33 +1169,32 @@ function personTableHTML(p, idx){
     const cells = chunk.map(g => giftCellHTML(g, p.id)).join('');
     // 不足 6 个时补空格子，保持表格边框完整
     const pad = PER_ROW - chunk.length;
-    const padHTML = pad > 0 ? '<div class="rs-gift"><div class="rg-img"></div><div class="rg-nm"></div><div class="rg-pr"></div></div>'.repeat(pad) : '';
-    rows.push(`<div class="rs-gift-row">${cells}${padHTML}</div>`);
+    const padHTML = pad > 0 ? '<div class="rs-gift rg-pad"><div class="rg-nm"></div><div class="rg-img"></div><div class="rg-pr"></div></div>'.repeat(pad) : '';
+    rows.push(`<div class="rs-gifts">${cells}${padHTML}</div>`);
   }
-  // 备注区：只展示说明文字（勾选栏已移除）
-  const noteBits = [];
-  if (cur.gid){
-    const pg = findGiftById(cur.gid);
-    if (pg) noteBits.push('已选：' + pg.name);
+  // 生日：公历在上，农历在下（如「9月13日 / 农8.3」）
+  let solar = '', lunar = '';
+  if (p.month){
+    solar = p.month + '月' + (p.day ? p.day + '日' : '');
+    if (p.lunar && p.dateRaw){
+      const m = String(p.dateRaw).split('农')[0].replace(/[（）()、，,.\s]+/g, '').trim();
+      lunar = m ? '农' + m : '';
+    }
+  } else {
+    solar = p.dateRaw || '';
   }
-  if (cur.msg && cur.msg.trim()) noteBits.push(cur.msg.trim());
-  const noteHTML = noteBits.length
-    ? `<span class="rside-ttl">备注</span>${esc(noteBits.join(' / '))}`
-    : '';
-  // 上下结构：上排 = 序号 | 姓名+生日 | 往年记录 | 备注 ／ 下排 = 礼物
+  // 结构：左侧大序号（表格外）+ 黑框表格（上排信息 / 下排礼物）
   return `<div class="rs-person" id="rp-${esc(p.id)}">
-    <div class="rs-hrow">
-      <div class="rs-idx">${idx}</div>
-      <div class="rs-who">
+    <div class="rs-num">${idx}</div>
+    <div class="rs-tbl">
+      <div class="rs-hrow">
         <div class="rs-name">${esc(p.name)}</div>
-        <div class="rs-bday">${esc(p.dateRaw || ((p.month||'')+'月'+(p.day||'')+'日'))}</div>
+        <div class="rs-bday"><span class="bd-solar">${esc(solar)}</span>${lunar ? `<span class="bd-lunar">${esc(lunar)}</span>` : ''}</div>
+        <div class="rs-hist">${histCellsHTML(p)}</div>
+        <div class="rs-status">${statusColHTML(p)}</div>
       </div>
-      <div class="rs-hist">${histCellsHTML(p)}</div>
-      <div class="rs-side">
-        <div class="rside-top">${noteHTML}</div>
-      </div>
+      ${rows.join('')}
     </div>
-    <div class="rs-gifts">${rows.join('')}</div>
   </div>`;
 }
 // 表格内直接点礼物 = 选中/取消（屏幕交互；打印不受影响）
