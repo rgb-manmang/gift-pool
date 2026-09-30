@@ -686,7 +686,14 @@ function exportPDF(){
   _pdfToast('📄 正在生成 PDF，请稍候…', 0);
   // 关掉交互态、隐藏不需要打印的东西后渲染
   document.body.classList.add('pdf-making');
+  // 【看门狗】55 秒还没出结果 → 强制解除卡死，给出可操作的提示
+  const dog = setTimeout(() => {
+    _pdfBusy = false;
+    document.body.classList.remove('pdf-making');
+    _pdfToast('⚠️ 生成超时了。请检查网络后重试，或点右上角「···」用浏览器打开再转', 7000);
+  }, 55000);
   setTimeout(() => { _doExportPDF().finally(() => {
+    clearTimeout(dog);
     document.body.classList.remove('pdf-making');
     _pdfBusy = false;
   }); }, 60);
@@ -697,6 +704,12 @@ async function _doExportPDF(){
     _pdfToast('📄 正在准备图片…', 0);
     const imgStat = await _preloadAllImages();
     console.log('[PDF] 图片预加载', imgStat);
+    // 图片没全到位也继续（缺图位置留白），只有一张都没加载到才提示
+    if (imgStat.total > 0 && imgStat.ok === 0){
+      _pdfToast('⚠️ 图片加载失败，将生成无图版本…', 2500);
+    } else {
+      _pdfToast('📄 正在排版生成…', 0);
+    }
     const padMM = 8;                                    // A4 页边距
     const pageWMM = 210, pageHMM = 297;
     // A4 @ 150dpi ≈ 1240×1754 px；用 2 倍超采样保证清晰
@@ -800,21 +813,28 @@ function _loadImgCORS(src){
   if (_imgCache.has(src)) return _imgCache.get(src);
   const p = new Promise((resolve) => {
     const im = new Image();
+    let done = false;
+    // 无论成功/失败/超时，只结算一次，避免重复 resolve
+    const finish = (val) => { if (done) return; done = true; clearTimeout(timer); resolve(val); };
+    // 【关键】超时兜底：弱网或 CDN 挂起时，onload/onerror 可能都不触发，
+    // 没有这行整个 PDF 导出会永久卡在「正在准备图片」
+    const timer = setTimeout(() => finish(null), 6000);
     im.crossOrigin = 'anonymous';
-    im.onload = () => resolve(im);
-    im.onerror = () => resolve(null);       // 加载失败 → 该图留白，不阻塞整个 PDF
+    im.onload = () => finish(im);
+    im.onerror = () => finish(null);        // 加载失败 → 该图留白，不阻塞整个 PDF
     im.src = src;
   });
   _imgCache.set(src, p);
   return p;
 }
 // 预加载页面内所有图片（CORS 版），返回 已就绪图片数
+// 用 allSettled 语义：单张图失败/超时都不会拖住整体
 async function _preloadAllImages(){
   const srcs = new Set();
   document.querySelectorAll('.rg-img img').forEach(im => { if (im.src) srcs.add(im.src); });
   const arr = Array.from(srcs);
-  let ok = 0;
-  await Promise.all(arr.map(async s => { const im = await _loadImgCORS(s); if (im) ok++; }));
+  const res = await Promise.all(arr.map(s => _loadImgCORS(s)));
+  const ok = res.filter(Boolean).length;
   return { total: arr.length, ok: ok };
 }
 // 递归把 DOM 画到 canvas（支持表格块、文字、图片、背景、边框）
