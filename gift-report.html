@@ -80,21 +80,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .msg-done{flex:none;padding:0 18px;border:none;border-radius:12px;background:#1f2733;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
 .msg-preview{margin-top:10px;font-size:11.5px;color:#8a95a0;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#f6faf8;border:1px dashed #cfe3d8;border-radius:10px;padding:8px 11px}
 
-/* ===== 底部固定 提交/取消 按钮栏 ===== */
-.viewer-foot-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(244,247,245,.96);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:1px solid #e6ece8;padding:12px 16px;display:flex;align-items:center;gap:10px;justify-content:center}
-.viewer-foot-bar .vf-meta{font-size:12.5px;color:#5b6675;margin-right:6px}
-.vsr-btn{padding:12px 26px;border:none;border-radius:99px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:.16s;letter-spacing:.5px}
-.vsr-btn.primary{background:#5fb88e;color:#fff;box-shadow:0 6px 20px -6px rgba(95,184,142,.5)}
-.vsr-btn.primary:disabled{background:#a3c8b6;cursor:not-allowed;transform:none;box-shadow:none}
-.vsr-btn.ghost{background:transparent;color:#5b6675;border:1px solid #dde5e5}
-
 /* ===== 悬停效果：只在真正带鼠标的设备上启用（避免手机点按后 hover 样式"粘住"） ===== */
 @media (hover:hover) and (pointer:fine){
   .inline-picker .ip-close:hover{background:#e9f6ee;color:#5fb88e;border-color:#5fb88e}
   .ipick-card:hover{transform:translateY(-1px);box-shadow:0 4px 12px -6px rgba(95,184,142,.25);border-color:#cfe8d8}
   .va-chip:hover{border-color:#5fb88e;color:#5fb88e}
-  .vsr-btn.primary:hover{background:#4ea87a;transform:translateY(-1px)}
-  .vsr-btn.ghost:hover{background:#fff;border-color:#5b6675;color:#1f2733}
 }
 
 /* ===== 报告底部 ===== */
@@ -265,12 +255,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 <div class="viewer-list" id="viewer-list" style="display:none"></div>
 
 <div class="viewer-foot">© 生日礼物管理 · 观阅版（明文免密码，可勾选）</div>
-
-<div class="viewer-foot-bar">
-  <span class="vf-meta" id="vf-meta">尚未勾选</span>
-  <button class="vsr-btn ghost" onclick="resetPicks()">清空</button>
-  <button class="vsr-btn primary" id="submit-btn" onclick="submitPicks()">📤 提交</button>
-</div>
 
 <div id="toast"></div>
 
