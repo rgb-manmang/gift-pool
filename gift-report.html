@@ -808,17 +808,19 @@ async function _doExportPDF(){
     }
     const GAP_OUT = Math.round(GAP_PX * outScale * ratio);   // 间距 → 输出像素
 
-    // 分页：整块摆放；每页最多 PER_PAGE 人；相邻块之间预留 GAP_OUT 空行
+    // 分页：整块摆放；每页最多 PER_PAGE 人；相邻块之间预留 GAP_OUT 空行；页首若是寿星 → 顶部也空一行
     const pages = [];
     let cur = [], curH = 0, curN = 0;
     for (const b of blockEnv){
       const gap = (cur.length && cur[cur.length-1].isPerson && b.isPerson) ? GAP_OUT : 0;  // 人与人之间才空行
+      const topGap = (!cur.length && b.isPerson) ? GAP_OUT : 0;                            // 新页第一人是寿星 → 顶部空一行
       const full = b.isPerson && curN >= PER_PAGE;          // 人数已满 → 强制换页
-      if ((curH + gap + b.outH > usableHpx || full) && cur.length){
+      if ((curH + topGap + gap + b.outH > usableHpx || full) && cur.length){
         pages.push({ items: cur }); cur = []; curH = 0; curN = 0;
       }
       const g2 = (cur.length && cur[cur.length-1].isPerson && b.isPerson) ? GAP_OUT : 0;
-      cur.push(b); curH += g2 + b.outH; if (b.isPerson) curN++;
+      const t2 = (!cur.length && b.isPerson) ? GAP_OUT : 0;
+      cur.push(b); curH += t2 + g2 + b.outH; if (b.isPerson) curN++;
       if (b.outH > usableHpx){ pages.push({ items: cur }); cur = []; curH = 0; curN = 0; }
     }
     if (cur.length) pages.push({ items: cur });
@@ -833,7 +835,8 @@ async function _doExportPDF(){
       let y = 0;
       for (let i = 0; i < pg.items.length; i++){
         const b = pg.items[i];
-        if (i > 0 && b.isPerson && pg.items[i-1].isPerson) y += GAP_OUT;   // 人与人之间空一行（标题后不加）
+        if (i === 0 && b.isPerson) y += GAP_OUT;                            // 页面顶部空一行（页首是寿星时）
+        else if (i > 0 && b.isPerson && pg.items[i-1].isPerson) y += GAP_OUT; // 人与人之间空一行（标题后不加）
         const h = Math.min(b.outH, usableHpx - y);
         if (h <= 0) break;
         const w = (h === b.outH) ? b.outW : Math.round(b.outW * h / b.outH);
