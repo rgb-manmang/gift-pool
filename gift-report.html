@@ -230,12 +230,25 @@ body.pdf-making .rs-hist{flex:1 1 auto !important;order:0 !important;height:126p
 body.pdf-making .rs-gifts{display:grid !important;grid-template-columns:repeat(3,1fr) !important;
   overflow:visible !important}
 body.pdf-making .rs-gift{flex:none !important;width:auto !important;
-  border-right:1.2px solid #000 !important;border-bottom:1.2px solid #000 !important}
+  border-right:2px solid #000 !important;border-bottom:2px solid #000 !important}
 body.pdf-making .rs-gift:nth-child(3n){border-right:none !important}
-body.pdf-making .rs-gift .rg-nm{height:2.9em !important}
+body.pdf-making .rs-gift .rg-nm{height:2.9em !important;border-bottom-width:2px !important}
 body.pdf-making .rs-gift .rg-img{height:85px !important}
-body.pdf-making .rs-gift .rg-pr{font-size:17px !important}
+body.pdf-making .rs-gift .rg-pr{font-size:17px !important;border-top-width:2px !important}
 body.pdf-making .rs-gift.rg-pad{display:flex !important}
+
+/* 【PDF 线条加粗】1.2px 细线经 PDF 缩放+JPEG 压缩后会发虚 → 导出时统一加粗到 2px（打印约0.39mm，清晰不粗糙） */
+body.pdf-making .rs-tbl{border-width:2.2px !important}
+body.pdf-making .rs-hrow{border-bottom-width:2px !important}
+body.pdf-making .rs-who{border-right-width:2px !important}
+body.pdf-making .rs-hist .rh-y,
+body.pdf-making .rs-hist .rh-t{border-width:2px !important}
+body.pdf-making .rs-hist .rh-t:nth-child(4n){border-right-width:0 !important}
+body.pdf-making .rs-hist .rh-y:nth-last-child(-n+4),
+body.pdf-making .rs-hist .rh-t:nth-last-child(-n+4){border-bottom-width:0 !important}
+body.pdf-making .rs-status{border-left-width:2px !important}
+body.pdf-making .rs-status .st-item{border-bottom-width:2px !important}
+body.pdf-making .rs-status .st-item:last-child{border-bottom-width:0 !important}
 
 /* ============ 打印 / A4 适配 ============ */
 @page{size:A4 portrait;margin:9mm 7mm}
