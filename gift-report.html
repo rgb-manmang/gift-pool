@@ -180,17 +180,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .rs-gift.is-picked{background:#e9f6ee;box-shadow:inset 0 0 0 2px #5fb88e}
 .rs-gift.rg-pad .rg-pr{background:transparent;border-top-color:#d9d9d9}
 
-/* ============ 手机端：礼物行横向滑动、格子与字放大（打印不受影响） ============ */
+/* ============ 手机端：礼物格子放大、左右滑动看更多（导出 PDF 时自动切回完整网格） ============ */
 @media (max-width:820px){
   .report-sheet{overflow-x:visible;padding:0 10px 110px}
   .rs-person{min-width:0;margin-bottom:18px}
-  /* 手机上礼物格子与字放大；一排 2 个方便看（打印机/PDF 不受影响，仍 3 个） */
-  .rs-gifts{grid-template-columns:repeat(2,1fr)}
+  /* 手机上礼物格子固定宽 → 左右滑动；字大图大看得清 */
+  .rs-gifts{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;
+    scrollbar-color:#c9d0d8 transparent}
+  .rs-gifts::-webkit-scrollbar{height:5px}
+  .rs-gifts::-webkit-scrollbar-thumb{background:#c9d0d8;border-radius:9px}
+  .rs-gift{flex:0 0 160px;border-right:1px solid #000}
   .rs-gift:nth-child(3n){border-right:1px solid #000}
-  .rs-gift:nth-child(2n){border-right:none}
   .rs-gift .rg-nm{font-size:15px;height:2.9em}
   .rs-gift .rg-img{height:132px}
   .rs-gift .rg-pr{font-size:17px}
+  .rs-gift.rg-pad{display:none}      /* 横滑时补位空格没意义，隐藏 */
   .rs-who{width:158px}
   .rs-status{width:104px}
   .rs-status .st-item{font-size:12px}
@@ -200,6 +204,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
     border-top:1px solid #000}
   .rs-hist .rh-item{font-size:12px}
 }
+
+/* ============ PDF 导出中（body.pdf-making）：强制与桌面/打印一致的完整版式 ============
+   覆盖手机端的横滑与窄版心 —— 保证任何设备导出的 PDF 都是：
+   一排 3 个礼物、1080px 版心、一页 3 人、所有礼物完整不缺 */
+body.pdf-making #report-sheet{width:1080px !important;max-width:1080px !important;padding:0 !important}
+body.pdf-making .rs-person{margin:0 auto 20px !important}
+body.pdf-making .rs-who{width:190px !important}
+body.pdf-making .rs-status{width:118px !important}
+body.pdf-making .rs-status .st-item{font-size:13px !important}
+body.pdf-making .rs-hrow{flex-wrap:nowrap !important}
+body.pdf-making .rs-hist{flex:1 1 auto !important;order:0 !important;max-height:110px !important;
+  border-top:none !important}
+body.pdf-making .rs-gifts{display:grid !important;grid-template-columns:repeat(3,1fr) !important;
+  overflow:visible !important}
+body.pdf-making .rs-gift{flex:none !important;width:auto !important;
+  border-right:1px solid #000 !important;border-bottom:1px solid #000 !important}
+body.pdf-making .rs-gift:nth-child(3n){border-right:none !important}
+body.pdf-making .rs-gift .rg-nm{height:2.9em !important}
+body.pdf-making .rs-gift .rg-img{height:95px !important}
+body.pdf-making .rs-gift .rg-pr{font-size:17px !important}
+body.pdf-making .rs-gift.rg-pad{display:flex !important}
 
 /* ============ 打印 / A4 适配 ============ */
 @page{size:A4 portrait;margin:9mm 7mm}
