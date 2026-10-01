@@ -912,13 +912,32 @@ async function _paintEl(ctx, el, ox, oy, scale){
     _roundRect(ctx, x, y, r.width, r.height, parseFloat(cs.borderTopLeftRadius) || 0);
     ctx.fill();
   }
-  // 边框
-  if (parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== 'none'){
+  // 边框：逐边绘制（原来只画了 borderTop，导致表格的 border-right/bottom 在 PDF 里全部丢失）
+  const bwT = parseFloat(cs.borderTopWidth)    || 0;
+  const bwR = parseFloat(cs.borderRightWidth)  || 0;
+  const bwB = parseFloat(cs.borderBottomWidth) || 0;
+  const bwL = parseFloat(cs.borderLeftWidth)   || 0;
+  const stT = cs.borderTopStyle, stR = cs.borderRightStyle,
+        stB = cs.borderBottomStyle, stL = cs.borderLeftStyle;
+  if (bwT > 0 && stT !== 'none'){
     ctx.strokeStyle = cs.borderTopColor;
-    ctx.lineWidth = parseFloat(cs.borderTopWidth);
-    _roundRect(ctx, x + ctx.lineWidth/2, y + ctx.lineWidth/2,
-      r.width - ctx.lineWidth, r.height - ctx.lineWidth, parseFloat(cs.borderTopLeftRadius) || 0);
-    ctx.stroke();
+    ctx.lineWidth = bwT;
+    ctx.beginPath(); ctx.moveTo(x, y + bwT/2); ctx.lineTo(x + r.width, y + bwT/2); ctx.stroke();
+  }
+  if (bwR > 0 && stR !== 'none'){
+    ctx.strokeStyle = cs.borderRightColor;
+    ctx.lineWidth = bwR;
+    ctx.beginPath(); ctx.moveTo(x + r.width - bwR/2, y); ctx.lineTo(x + r.width - bwR/2, y + r.height); ctx.stroke();
+  }
+  if (bwB > 0 && stB !== 'none'){
+    ctx.strokeStyle = cs.borderBottomColor;
+    ctx.lineWidth = bwB;
+    ctx.beginPath(); ctx.moveTo(x, y + r.height - bwB/2); ctx.lineTo(x + r.width, y + r.height - bwB/2); ctx.stroke();
+  }
+  if (bwL > 0 && stL !== 'none'){
+    ctx.strokeStyle = cs.borderLeftColor;
+    ctx.lineWidth = bwL;
+    ctx.beginPath(); ctx.moveTo(x + bwL/2, y); ctx.lineTo(x + bwL/2, y + r.height); ctx.stroke();
   }
   // 图片（用 CORS 版，避免污染 canvas）
   if (el.tagName === 'IMG'){
