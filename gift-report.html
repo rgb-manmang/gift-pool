@@ -18,7 +18,7 @@ html,body{min-height:100vh}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 
 /* ===== 顶部标题（明文无密码） ===== */
-.viewer-report-head{max-width:1080px;margin:0 auto;padding:20px 14px 10px;background:none;border:none}
+.viewer-report-head{max-width:1080px;margin:0 auto;padding:12px 14px 8px;background:none;border:none}
 .viewer-report-head h1{font-size:30px;letter-spacing:.5px;color:#111;font-weight:800;text-align:left}
 .viewer-report-head h1 .ico{display:none}
 .viewer-report-head .meta{display:none}
@@ -131,7 +131,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .rs-tbl{flex:1;min-width:0;border:1.5px solid #000;background:#fff;display:flex;flex-direction:column}
 
 /* ---- 上排：姓名+生日（高亮块）| 往年记录（细线表格）| 状态列4项 ---- */
-.rs-hrow{display:flex;align-items:stretch;border-bottom:1.2px solid #000;min-height:126px}
+.rs-hrow{display:flex;align-items:stretch;border-bottom:1.2px solid #000;min-height:118px}
 /* 姓名 + 生日：黄色高亮，字体明显 */
 .rs-who{flex:none;width:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:5px;background:#fff176;border-right:1.2px solid #000;text-align:center;padding:10px 6px}
@@ -142,12 +142,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 /* 往年记录：4列(年|内容|年|内容)×3行 小表格；左列=最新3年(2025/2024/2023)，右列=2022/2021/2020 */
 .rs-hist{flex:1 1 auto;min-width:0;display:grid;
   grid-template-columns:auto 1fr auto 1fr;grid-template-rows:repeat(3,minmax(0,1fr));
-  height:126px;padding:0;overflow:hidden;background:#fff}
+  height:118px;padding:0;overflow:hidden;background:#fff}
 .rs-hist .rh-y{display:flex;align-items:center;justify-content:center;
   background:#f4f4f4;color:#9aa0a8;font-size:12px;font-weight:400;white-space:nowrap;
-  border-right:1px solid #000;border-bottom:1px solid #000;padding:2px 7px}
+  border-right:1.2px solid #000;border-bottom:1.2px solid #000;padding:2px 7px}
 .rs-hist .rh-t{display:flex;align-items:center;color:#1c1c1c;font-size:12px;line-height:1.3;
-  border-right:1px solid #000;border-bottom:1px solid #000;padding:2px 7px;overflow:hidden}
+  border-right:1.2px solid #000;border-bottom:1.2px solid #000;padding:2px 7px;overflow:hidden}
 /* 每行第 4 格（行末）去右线；最后一行（末 4 格）去底线 */
 .rs-hist .rh-t:nth-child(4n){border-right:none}
 .rs-hist .rh-y:nth-last-child(-n+4),.rs-hist .rh-t:nth-last-child(-n+4){border-bottom:none}
@@ -155,25 +155,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 /* 状态列：DJ自己准备 / 重新推荐 / 亲自送 / 寄送（打印后手勾，有提交状态黄底☑） */
 .rs-status{flex:none;width:118px;border-left:1.2px solid #000;display:flex;flex-direction:column}
 .rs-status .st-item{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;
-  font-size:13px;font-weight:400;color:#222;border-bottom:1px solid #000;white-space:nowrap}
+  font-size:13px;font-weight:400;color:#222;border-bottom:1.2px solid #000;white-space:nowrap}
 .rs-status .st-item:last-child{border-bottom:none}
 .rs-status .st-item .st-box{font-size:13px;color:#555;font-weight:400}
 
 /* ---- 下排：礼物（一排 3 个，6 个自动两排；每格都是独立小表格，全网格线） ---- */
 .rs-gifts{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
 .rs-gift{min-width:0;display:flex;flex-direction:column;background:#fff;
-  border-right:1px solid #000;border-bottom:1px solid #000}
+  border-right:1.2px solid #000;border-bottom:1.2px solid #000}
 /* 每排第 3 个去掉右线（避免和外框重叠）；最后一排去掉底线 */
 .rs-gift:nth-child(3n){border-right:none}
 .rs-gift .rg-nm{font-size:15px;font-weight:400;color:#1c1c1c;line-height:1.35;text-align:center;
   padding:6px 5px;height:2.9em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-  overflow:hidden;word-break:break-all;border-bottom:1px solid #000}
-.rs-gift .rg-img{width:100%;height:95px;background:#fff;display:flex;align-items:center;
+  overflow:hidden;word-break:break-all;border-bottom:1.2px solid #000}
+.rs-gift .rg-img{width:100%;height:85px;background:#fff;display:flex;align-items:center;
   justify-content:center;overflow:hidden}
 .rs-gift .rg-img img{max-width:96%;max-height:100%;object-fit:contain;display:block}
 .rs-gift .rg-img .rg-emoji{font-size:40px;color:#cbd1dd}
 .rs-gift .rg-pr{font-size:17px;font-weight:400;color:#d6302c;text-align:center;
-  padding:5px 3px;background:#fff;border-top:1px solid #000;white-space:nowrap}
+  padding:5px 3px;background:#fff;border-top:1.2px solid #000;white-space:nowrap}
 /* 占位格：保持网格完整，不显示内容 */
 .rs-gift.rg-pad{background:#fcfcfc}
 .rs-gift.rg-pad .rg-nm,.rs-gift.rg-pad .rg-pr{color:transparent}
@@ -195,8 +195,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
     scrollbar-color:#c9d0d8 transparent}
   .rs-gifts::-webkit-scrollbar{height:5px}
   .rs-gifts::-webkit-scrollbar-thumb{background:#c9d0d8;border-radius:9px}
-  .rs-gift{flex:0 0 160px;border-right:1px solid #000}
-  .rs-gift:nth-child(3n){border-right:1px solid #000}
+  .rs-gift{flex:0 0 160px;border-right:1.2px solid #000}
+  .rs-gift:nth-child(3n){border-right:1.2px solid #000}
   .rs-gift .rg-nm{font-size:15px;height:2.9em}
   .rs-gift .rg-img{height:132px}
   .rs-gift .rg-pr{font-size:17px}
@@ -207,7 +207,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
   /* 往年记录在手机上独占一整行（否则被姓名块和状态列挤没） */
   .rs-hrow{flex-wrap:wrap}
   .rs-hist{flex:1 1 100%;order:3;height:auto;min-height:96px;padding:0;
-    border-top:1px solid #000}
+    border-top:1.2px solid #000}
   .rs-hist .rh-t{font-size:12px}
 }
 
@@ -225,10 +225,10 @@ body.pdf-making .rs-hist{flex:1 1 auto !important;order:0 !important;height:126p
 body.pdf-making .rs-gifts{display:grid !important;grid-template-columns:repeat(3,1fr) !important;
   overflow:visible !important}
 body.pdf-making .rs-gift{flex:none !important;width:auto !important;
-  border-right:1px solid #000 !important;border-bottom:1px solid #000 !important}
+  border-right:1.2px solid #000 !important;border-bottom:1.2px solid #000 !important}
 body.pdf-making .rs-gift:nth-child(3n){border-right:none !important}
 body.pdf-making .rs-gift .rg-nm{height:2.9em !important}
-body.pdf-making .rs-gift .rg-img{height:95px !important}
+body.pdf-making .rs-gift .rg-img{height:85px !important}
 body.pdf-making .rs-gift .rg-pr{font-size:17px !important}
 body.pdf-making .rs-gift.rg-pad{display:flex !important}
 
@@ -257,11 +257,11 @@ body.pdf-making .rs-gift.rg-pad{display:flex !important}
   .rs-status .st-item{font-size:11pt;border-bottom-width:.8pt}
   /* 打印：一排 3 个，一页铺满展示全部礼物，网格线全保留 */
   .rs-gifts{grid-template-columns:repeat(3,1fr) !important}
-  .rs-gift{border-right:1px solid #000 !important;border-bottom:1px solid #000 !important}
+  .rs-gift{border-right:1.2px solid #000 !important;border-bottom:1.2px solid #000 !important}
   .rs-gift:nth-child(3n){border-right:none !important}
   .rs-gift .rg-nm{font-size:11pt;height:auto;min-height:2.9em;border-bottom-width:.8pt;
     border-bottom-color:#000 !important}
-  .rs-gift .rg-img{height:71pt}
+  .rs-gift .rg-img{height:64pt}
   .rs-gift .rg-pr{font-size:13pt;color:#d6302c !important;background:#fff !important;
     border-top-width:.8pt;border-top-color:#000 !important;
     -webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -780,8 +780,8 @@ async function _doExportPDF(){
     const ratio = usableWpx / (contentW * outScale);                   // 块像素 → 输出像素
 
     // 每块渲染成 canvas；一页最多 2 人，人与人之间空一行（GAP_PX）
-    const PER_PAGE = 2;                 // 每页最多人数
-    const GAP_PX = 48;                  // 人与人之间的空行高（屏幕像素）
+    const PER_PAGE = 3;                 // 每页最多人数（礼物多块太高时自然变 2 人）
+    const GAP_PX = 36;                  // 人与人之间的空行高（屏幕像素）
     const blockEnv = [];
     for (const el of blocks){
       const c = await _renderElToCanvas(el, outScale);
@@ -794,12 +794,12 @@ async function _doExportPDF(){
     const pages = [];
     let cur = [], curH = 0, curN = 0;
     for (const b of blockEnv){
-      const gap = cur.length ? GAP_OUT : 0;                 // 与上一块之间的空行
+      const gap = (cur.length && cur[cur.length-1].isPerson && b.isPerson) ? GAP_OUT : 0;  // 人与人之间才空行
       const full = b.isPerson && curN >= PER_PAGE;          // 人数已满 → 强制换页
       if ((curH + gap + b.outH > usableHpx || full) && cur.length){
         pages.push({ items: cur }); cur = []; curH = 0; curN = 0;
       }
-      const g2 = cur.length ? GAP_OUT : 0;
+      const g2 = (cur.length && cur[cur.length-1].isPerson && b.isPerson) ? GAP_OUT : 0;
       cur.push(b); curH += g2 + b.outH; if (b.isPerson) curN++;
       if (b.outH > usableHpx){ pages.push({ items: cur }); cur = []; curH = 0; curN = 0; }
     }
@@ -815,7 +815,7 @@ async function _doExportPDF(){
       let y = 0;
       for (let i = 0; i < pg.items.length; i++){
         const b = pg.items[i];
-        if (i > 0) y += GAP_OUT;                            // 人与人之间空一行
+        if (i > 0 && b.isPerson && pg.items[i-1].isPerson) y += GAP_OUT;   // 人与人之间空一行（标题后不加）
         const h = Math.min(b.outH, usableHpx - y);
         if (h <= 0) break;
         const w = (h === b.outH) ? b.outW : Math.round(b.outW * h / b.outH);
