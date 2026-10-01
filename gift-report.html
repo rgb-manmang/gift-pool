@@ -906,7 +906,15 @@ async function _paintEl(ctx, el, ox, oy, scale){
   if (el.tagName === 'IMG'){
     try {
       const ci = await _loadImgCORS(el.src);
-      const src = ci || el;
+      // CORS 版失败时：仅同源图可回退用页面元素画（不会污染 canvas）；
+      // 跨域图留白跳过，绝不能 drawImage 非 CORS 的跨域图（会把整个 canvas 污染，toDataURL 直接报错）
+      let src = ci;
+      if (!src){
+        try {
+          const iu = new URL(el.src, location.href);
+          if (iu.origin === location.origin) src = el;
+        } catch(_e){}
+      }
       const nw = src.naturalWidth, nh = src.naturalHeight;
       if (nw && nh){
         const ar = nw / nh;
