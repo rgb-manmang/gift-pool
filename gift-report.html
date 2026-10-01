@@ -151,7 +151,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 /* 每行第 4 格（行末）去右线；最后一行（末 4 格）去底线 */
 .rs-hist .rh-t:nth-child(4n){border-right:none}
 .rs-hist .rh-y:nth-last-child(-n+4),.rs-hist .rh-t:nth-last-child(-n+4){border-bottom:none}
-.rs-hist .rh-t.rh-none{color:#c0c6cc}
+/* 无记录（含手填「无」/空白）统一灰色，与年份格同色系但更清晰 */
+.rs-hist .rh-t.rh-none{color:#9aa0a8}
 /* 状态列：DJ自己准备 / 重新推荐 / 亲自送 / 寄送（打印后手勾，有提交状态黄底☑） */
 .rs-status{flex:none;width:118px;border-left:1.2px solid #000;display:flex;flex-direction:column}
 .rs-status .st-item{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;
@@ -1247,9 +1248,11 @@ function histCellsHTML(p){
     const v = String(g[y] || '').trim();
     ((i <= 3) ? left : right).push({ y: y, v: v });
   }
+  // 「无」/「没有」/「无记录」等手填占位词，统一按「无记录」处理（灰色显示）
+  const isBlank = (s) => !s || /^(无|没有|无记录|无记录。|—|-|－|\/|NA|N\/A|暂无)$/i.test(s);
   const cell = (c) =>
     `<div class="rh-y">${c.y}</div>` +
-    `<div class="rh-t${c.v ? '' : ' rh-none'}">${c.v ? esc(c.v) : '无记录'}</div>`;
+    `<div class="rh-t${isBlank(c.v) ? ' rh-none' : ''}">${isBlank(c.v) ? '无记录' : esc(c.v)}</div>`;
   let out = '';
   for (let i = 0; i < 3; i++) out += cell(left[i]) + cell(right[i]);
   return out;
