@@ -19,7 +19,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 
 /* ===== 顶部标题（明文无密码） ===== */
 .viewer-report-head{max-width:1080px;margin:0 auto;padding:12px 14px 8px;background:none;border:none}
-.viewer-report-head h1{font-size:30px;letter-spacing:.5px;color:#111;font-weight:800;text-align:left}
+.viewer-report-head h1{font-size:38px;letter-spacing:1px;color:#111;font-weight:800;text-align:center}
 .viewer-report-head h1 .ico{display:none}
 .viewer-report-head .meta{display:none}
 
@@ -165,6 +165,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
   border-right:1.2px solid #000;border-bottom:1.2px solid #000}
 /* 每排第 3 个去掉右线（避免和外框重叠）；最后一排去掉底线 */
 .rs-gift:nth-child(3n){border-right:none}
+/* 补位空格子：也要有完整黑线（行末那格保留右线会被外框盖住，所以不额外加） */
+.rs-gift.rg-pad{border-right:1.2px solid #000;border-bottom:1.2px solid #000}
+.rs-gift.rg-pad:nth-child(3n){border-right:none}
 .rs-gift .rg-nm{font-size:15px;font-weight:400;color:#1c1c1c;line-height:1.35;text-align:center;
   padding:6px 5px;height:2.9em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
   overflow:hidden;word-break:break-all;border-bottom:1.2px solid #000}
@@ -174,17 +177,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .rs-gift .rg-img .rg-emoji{font-size:40px;color:#cbd1dd}
 .rs-gift .rg-pr{font-size:17px;font-weight:400;color:#d6302c;text-align:center;
   padding:5px 3px;background:#fff;border-top:1.2px solid #000;white-space:nowrap}
-/* 占位格：保持网格完整，不显示内容 */
+/* 占位格：保持网格完整，不显示内容（黑线照画，表格不缺格） */
 .rs-gift.rg-pad{background:#fcfcfc}
 .rs-gift.rg-pad .rg-nm,.rs-gift.rg-pad .rg-pr{color:transparent}
 .rs-gift.rg-pad .rg-img{background:#fcfcfc}
+.rs-gift.rg-pad .rg-nm,.rs-gift.rg-pad .rg-pr{border-color:#000}
+.rs-gift.rg-pad .rg-pr{border-top:1.2px solid #000}
 /* 点击选中（仅屏幕） */
 @media (hover:hover) and (pointer:fine){
   .rs-gift{cursor:pointer;transition:.14s}
   .rs-gift:hover{background:#f6fcf8;box-shadow:inset 0 0 0 1.5px #5fb88e}
 }
 .rs-gift.is-picked{background:#e9f6ee;box-shadow:inset 0 0 0 2px #5fb88e}
-.rs-gift.rg-pad .rg-pr{background:transparent;border-top-color:#d9d9d9}
+.rs-gift.rg-pad .rg-pr{background:transparent}
 
 /* ============ 手机端：礼物格子放大、左右滑动看更多（导出 PDF 时自动切回完整网格） ============ */
 @media (max-width:820px){
@@ -238,8 +243,8 @@ body.pdf-making .rs-gift.rg-pad{display:flex !important}
   html,body{background:#fff !important}
   .print-fab,.viewer-foot-bar,.sync-stat,#toast,.viewer-foot{display:none !important}
   .report-sheet{max-width:none;padding:0;margin:0}
-  .viewer-report-head{padding:0 0 8px}
-  .viewer-report-head h1{font-size:20pt}
+  .viewer-report-head{padding:0 0 8px;text-align:center}
+  .viewer-report-head h1{font-size:26pt;text-align:center}
   .rs-person{margin:0 0 36pt}
   .rs-num{width:34px;font-size:26pt;color:#b9bdc4 !important;
     -webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -279,7 +284,7 @@ body.pdf-making .rs-gift.rg-pad{display:flex !important}
 <button class="print-fab" onclick="exportPDF()" title="生成 PDF 并分享"><span class="pf-ico">📄</span>转 PDF</button>
 
 <div class="viewer-report-head">
-  <h1><span id="vr-title">十月份</span></h1>
+  <h1><span id="vr-title">10月1号生日礼物推荐报告</span></h1>
   <div class="meta" id="vr-meta"></div>
 </div>
 
@@ -1156,7 +1161,7 @@ function renderList(){
     // 标题由用户自己填，没填才用月份兜底
     // 与参考 PDF 一致：「2026-9月 12人 生日礼物待确认」
     title = REPORT.title || (m ? (y + '-' + m + '月 ' + people.length + '人 生日礼物待确认') : '生日礼物待确认');
-    if (!title) title = '十月份';
+    if (!title) title = '10月1号生日礼物推荐报告';
     metaHTML = '';
   } else {
     // 没带 ?r= 参数 / 云端短链但报告已不存在
