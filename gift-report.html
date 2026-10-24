@@ -18,9 +18,8 @@ html,body{min-height:100vh}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 
 /* ===== 顶部标题（明文无密码） ===== */
-.viewer-report-head{max-width:1080px;margin:0 auto;padding:12px 14px 54px;background:none;border:none}
-.viewer-report-head h1{font-size:38px;letter-spacing:1px;color:#000;font-weight:900;text-align:center}
-.viewer-report-head h1 span{font-weight:900;text-shadow:0.35px 0 0 currentColor,-0.35px 0 0 currentColor}
+.viewer-report-head{max-width:1080px;margin:0 auto;padding:12px 14px 8px;background:none;border:none}
+.viewer-report-head h1{font-size:30px;letter-spacing:.5px;color:#111;font-weight:800;text-align:left}
 .viewer-report-head h1 .ico{display:none}
 .viewer-report-head .meta{display:none}
 
@@ -152,8 +151,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 /* 每行第 4 格（行末）去右线；最后一行（末 4 格）去底线 */
 .rs-hist .rh-t:nth-child(4n){border-right:none}
 .rs-hist .rh-y:nth-last-child(-n+4),.rs-hist .rh-t:nth-last-child(-n+4){border-bottom:none}
-/* 无记录（含手填「无」/空白）统一灰色，与年份格同色系但更清晰 */
-.rs-hist .rh-t.rh-none{color:#9aa0a8}
+.rs-hist .rh-t.rh-none{color:#c0c6cc}
 /* 状态列：DJ自己准备 / 重新推荐 / 亲自送 / 寄送（打印后手勾，有提交状态黄底☑） */
 .rs-status{flex:none;width:118px;border-left:1.2px solid #000;display:flex;flex-direction:column}
 .rs-status .st-item{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;
@@ -167,9 +165,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
   border-right:1.2px solid #000;border-bottom:1.2px solid #000}
 /* 每排第 3 个去掉右线（避免和外框重叠）；最后一排去掉底线 */
 .rs-gift:nth-child(3n){border-right:none}
-/* 补位空格子：也要有完整黑线（行末那格保留右线会被外框盖住，所以不额外加） */
-.rs-gift.rg-pad{border-right:1.2px solid #000;border-bottom:1.2px solid #000}
-.rs-gift.rg-pad:nth-child(3n){border-right:none}
 .rs-gift .rg-nm{font-size:15px;font-weight:400;color:#1c1c1c;line-height:1.35;text-align:center;
   padding:6px 5px;height:2.9em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
   overflow:hidden;word-break:break-all;border-bottom:1.2px solid #000}
@@ -179,19 +174,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .rs-gift .rg-img .rg-emoji{font-size:40px;color:#cbd1dd}
 .rs-gift .rg-pr{font-size:17px;font-weight:400;color:#d6302c;text-align:center;
   padding:5px 3px;background:#fff;border-top:1.2px solid #000;white-space:nowrap}
-/* 占位格：保持网格完整，不显示内容（黑线照画，表格不缺格） */
+/* 占位格：保持网格完整，不显示内容 */
 .rs-gift.rg-pad{background:#fcfcfc}
 .rs-gift.rg-pad .rg-nm,.rs-gift.rg-pad .rg-pr{color:transparent}
 .rs-gift.rg-pad .rg-img{background:#fcfcfc}
-.rs-gift.rg-pad .rg-nm,.rs-gift.rg-pad .rg-pr{border-color:#000}
-.rs-gift.rg-pad .rg-pr{border-top:1.2px solid #000}
 /* 点击选中（仅屏幕） */
 @media (hover:hover) and (pointer:fine){
   .rs-gift{cursor:pointer;transition:.14s}
   .rs-gift:hover{background:#f6fcf8;box-shadow:inset 0 0 0 1.5px #5fb88e}
 }
 .rs-gift.is-picked{background:#e9f6ee;box-shadow:inset 0 0 0 2px #5fb88e}
-.rs-gift.rg-pad .rg-pr{background:transparent}
+.rs-gift.rg-pad .rg-pr{background:transparent;border-top-color:#d9d9d9}
 
 /* ============ 手机端：礼物格子放大、左右滑动看更多（导出 PDF 时自动切回完整网格） ============ */
 @media (max-width:820px){
@@ -232,25 +225,12 @@ body.pdf-making .rs-hist{flex:1 1 auto !important;order:0 !important;height:126p
 body.pdf-making .rs-gifts{display:grid !important;grid-template-columns:repeat(3,1fr) !important;
   overflow:visible !important}
 body.pdf-making .rs-gift{flex:none !important;width:auto !important;
-  border-right:2px solid #000 !important;border-bottom:2px solid #000 !important}
+  border-right:1.2px solid #000 !important;border-bottom:1.2px solid #000 !important}
 body.pdf-making .rs-gift:nth-child(3n){border-right:none !important}
-body.pdf-making .rs-gift .rg-nm{height:2.9em !important;border-bottom-width:2px !important}
+body.pdf-making .rs-gift .rg-nm{height:2.9em !important}
 body.pdf-making .rs-gift .rg-img{height:85px !important}
-body.pdf-making .rs-gift .rg-pr{font-size:17px !important;border-top-width:2px !important}
+body.pdf-making .rs-gift .rg-pr{font-size:17px !important}
 body.pdf-making .rs-gift.rg-pad{display:flex !important}
-
-/* 【PDF 线条加粗】1.2px 细线经 PDF 缩放+JPEG 压缩后会发虚 → 导出时统一加粗到 2px（打印约0.39mm，清晰不粗糙） */
-body.pdf-making .rs-tbl{border-width:2.2px !important}
-body.pdf-making .rs-hrow{border-bottom-width:2px !important}
-body.pdf-making .rs-who{border-right-width:2px !important}
-body.pdf-making .rs-hist .rh-y,
-body.pdf-making .rs-hist .rh-t{border-width:2px !important}
-body.pdf-making .rs-hist .rh-t:nth-child(4n){border-right-width:0 !important}
-body.pdf-making .rs-hist .rh-y:nth-last-child(-n+4),
-body.pdf-making .rs-hist .rh-t:nth-last-child(-n+4){border-bottom-width:0 !important}
-body.pdf-making .rs-status{border-left-width:2px !important}
-body.pdf-making .rs-status .st-item{border-bottom-width:2px !important}
-body.pdf-making .rs-status .st-item:last-child{border-bottom-width:0 !important}
 
 /* ============ 打印 / A4 适配 ============ */
 @page{size:A4 portrait;margin:9mm 7mm}
@@ -258,8 +238,8 @@ body.pdf-making .rs-status .st-item:last-child{border-bottom-width:0 !important}
   html,body{background:#fff !important}
   .print-fab,.viewer-foot-bar,.sync-stat,#toast,.viewer-foot{display:none !important}
   .report-sheet{max-width:none;padding:0;margin:0}
-  .viewer-report-head{padding:0 0 46px;text-align:center}
-  .viewer-report-head h1{font-size:26pt;text-align:center}
+  .viewer-report-head{padding:0 0 8px}
+  .viewer-report-head h1{font-size:20pt}
   .rs-person{margin:0 0 36pt}
   .rs-num{width:34px;font-size:26pt;color:#b9bdc4 !important;
     -webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -296,10 +276,10 @@ body.pdf-making .rs-status .st-item:last-child{border-bottom-width:0 !important}
 
 <div class="sync-stat" id="sync-stat">☁️ 正在连接云端…</div>
 
-<button class="print-fab" onclick="exportPDF()" title="下载报告 PDF 到本地"><span class="pf-ico">⬇️</span>下载报告</button>
+<button class="print-fab" onclick="exportPDF()" title="生成 PDF 并分享"><span class="pf-ico">📄</span>转 PDF</button>
 
 <div class="viewer-report-head">
-  <h1><span id="vr-title">10月1日生日礼物推荐报告</span></h1>
+  <h1><span id="vr-title">十月份</span></h1>
   <div class="meta" id="vr-meta"></div>
 </div>
 
@@ -310,15 +290,15 @@ body.pdf-making .rs-status .st-item:last-child{border-bottom-width:0 !important}
 
 <div id="toast"></div>
 
-<!-- 下载兜底：若自动下载被拦，点此手动保存到本地 -->
+<!-- PDF 兜底：若系统分享/自动下载被拦，长按此按钮手动保存 -->
 <div id="pdf-fallback-bar" style="display:none;position:fixed;left:12px;right:12px;bottom:76px;z-index:80;
   background:#1f2733;color:#fff;border-radius:14px;padding:12px 14px;align-items:center;gap:10px;
   box-shadow:0 10px 30px -8px rgba(0,0,0,.5);font-size:13px;flex-wrap:wrap">
-  <span style="flex:1 1 100%;font-weight:700">📄 报告已生成</span>
-  <span class="pfb-tip" style="flex:1 1 100%;color:#cfd6dd;line-height:1.5;font-size:12.5px">正在保存到本地…</span>
-  <a style="background:#5fb88e;color:#fff;text-decoration:none;padding:9px 16px;border-radius:99px;font-weight:700;white-space:nowrap" download>⬇️ 保存到本地</a>
+  <span style="flex:1 1 100%;font-weight:700">📄 PDF 已生成</span>
+  <span class="pfb-tip" style="flex:1 1 100%;color:#cfd6dd;line-height:1.5;font-size:12.5px">保存或分享给好友</span>
+  <a style="background:#5fb88e;color:#fff;text-decoration:none;padding:9px 16px;border-radius:99px;font-weight:700;white-space:nowrap" download>保存到手机</a>
   <a class="pfb-open" target="_blank" rel="noopener"
-     style="background:#3d4a5c;color:#fff;text-decoration:none;padding:9px 16px;border-radius:99px;font-weight:700;white-space:nowrap">打开/预览</a>
+     style="background:#3d4a5c;color:#fff;text-decoration:none;padding:9px 16px;border-radius:99px;font-weight:700;white-space:nowrap">打开 PDF</a>
   <button onclick="document.getElementById('pdf-fallback-bar').style.display='none'"
     style="background:transparent;border:none;color:#98a2b3;font-size:18px;cursor:pointer;padding:0 4px">✕</button>
 </div>
@@ -543,14 +523,15 @@ function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.im
 function seededShuffle(arr, seed){ const rnd = mulberry32(seed); const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(rnd()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function norm(s){ return (s||'').toLowerCase().replace(/[\s\u3000]/g,''); }
 function priceText(g){
+  const c = GIFT_CURS[curOf(g)];
   if (g.price){
     const n = Number(g.price);
     if (n >= 10000){
       // 过万缩写：35600 → ¥3.56万（保留2位小数，1.5万 / 1万 自然去尾零）
       const w = Math.round(n / 100) / 100;
-      return '<span class="yen">¥</span>' + w + '万';
+      return '<span class="yen">' + c.sym + '</span>' + w + '万';
     }
-    return '<span class="yen">¥</span>' + n.toLocaleString();
+    return '<span class="yen">' + c.sym + '</span>' + n.toLocaleString();
   }
   return esc(g.priceRaw || '价格待询');
 }
@@ -648,10 +629,11 @@ function togglePick(pid, gid){
   const cur = picks[pid] || {};
   if (cur.gid === gid){
     // 再点一次：取消该选择
-    cur.gid = null; cur.gift = null; cur.price = null; cur.name = p ? p.name : '';
+    cur.gid = null; cur.gift = null; cur.price = null; cur.cur = null; cur.name = p ? p.name : '';
   } else {
     cur.gid = gid; cur.gift = g ? g.name : '';
     cur.price = g ? g.price : null;
+    cur.cur = g ? curOf(g) : 'cny';
     cur.name = p ? p.name : '';
   }
   cur.at = Date.now();
@@ -718,7 +700,7 @@ function resetPicks(){
 }
 
 /* ============================================================
-   一键「下载报告」：把报表渲染成真实 PDF 文件，直接下载到本机（手机/电脑均可）
+   一键「转 PDF」：把报表渲染成真实 PDF 文件，再调系统分享面板
    —— 不依赖浏览器打印对话框，手机上点一下就能发微信/存文件
    ============================================================ */
 let _pdfBusy = false;
@@ -810,19 +792,17 @@ async function _doExportPDF(){
     }
     const GAP_OUT = Math.round(GAP_PX * outScale * ratio);   // 间距 → 输出像素
 
-    // 分页：整块摆放；每页最多 PER_PAGE 人；相邻块之间预留 GAP_OUT 空行；页首若是寿星 → 顶部也空一行
+    // 分页：整块摆放；每页最多 PER_PAGE 人；相邻块之间预留 GAP_OUT 空行
     const pages = [];
     let cur = [], curH = 0, curN = 0;
     for (const b of blockEnv){
       const gap = (cur.length && cur[cur.length-1].isPerson && b.isPerson) ? GAP_OUT : 0;  // 人与人之间才空行
-      const topGap = (!cur.length && b.isPerson) ? GAP_OUT : 0;                            // 新页第一人是寿星 → 顶部空一行
       const full = b.isPerson && curN >= PER_PAGE;          // 人数已满 → 强制换页
-      if ((curH + topGap + gap + b.outH > usableHpx || full) && cur.length){
+      if ((curH + gap + b.outH > usableHpx || full) && cur.length){
         pages.push({ items: cur }); cur = []; curH = 0; curN = 0;
       }
       const g2 = (cur.length && cur[cur.length-1].isPerson && b.isPerson) ? GAP_OUT : 0;
-      const t2 = (!cur.length && b.isPerson) ? GAP_OUT : 0;
-      cur.push(b); curH += t2 + g2 + b.outH; if (b.isPerson) curN++;
+      cur.push(b); curH += g2 + b.outH; if (b.isPerson) curN++;
       if (b.outH > usableHpx){ pages.push({ items: cur }); cur = []; curH = 0; curN = 0; }
     }
     if (cur.length) pages.push({ items: cur });
@@ -837,8 +817,7 @@ async function _doExportPDF(){
       let y = 0;
       for (let i = 0; i < pg.items.length; i++){
         const b = pg.items[i];
-        if (i === 0 && b.isPerson) y += GAP_OUT;                            // 页面顶部空一行（页首是寿星时）
-        else if (i > 0 && b.isPerson && pg.items[i-1].isPerson) y += GAP_OUT; // 人与人之间空一行（标题后不加）
+        if (i > 0 && b.isPerson && pg.items[i-1].isPerson) y += GAP_OUT;   // 人与人之间空一行（标题后不加）
         const h = Math.min(b.outH, usableHpx - y);
         if (h <= 0) break;
         const w = (h === b.outH) ? b.outW : Math.round(b.outW * h / b.outH);
@@ -917,32 +896,13 @@ async function _paintEl(ctx, el, ox, oy, scale){
     _roundRect(ctx, x, y, r.width, r.height, parseFloat(cs.borderTopLeftRadius) || 0);
     ctx.fill();
   }
-  // 边框：逐边绘制（原来只画了 borderTop，导致表格的 border-right/bottom 在 PDF 里全部丢失）
-  const bwT = parseFloat(cs.borderTopWidth)    || 0;
-  const bwR = parseFloat(cs.borderRightWidth)  || 0;
-  const bwB = parseFloat(cs.borderBottomWidth) || 0;
-  const bwL = parseFloat(cs.borderLeftWidth)   || 0;
-  const stT = cs.borderTopStyle, stR = cs.borderRightStyle,
-        stB = cs.borderBottomStyle, stL = cs.borderLeftStyle;
-  if (bwT > 0 && stT !== 'none'){
+  // 边框
+  if (parseFloat(cs.borderTopWidth) > 0 && cs.borderTopStyle !== 'none'){
     ctx.strokeStyle = cs.borderTopColor;
-    ctx.lineWidth = bwT;
-    ctx.beginPath(); ctx.moveTo(x, y + bwT/2); ctx.lineTo(x + r.width, y + bwT/2); ctx.stroke();
-  }
-  if (bwR > 0 && stR !== 'none'){
-    ctx.strokeStyle = cs.borderRightColor;
-    ctx.lineWidth = bwR;
-    ctx.beginPath(); ctx.moveTo(x + r.width - bwR/2, y); ctx.lineTo(x + r.width - bwR/2, y + r.height); ctx.stroke();
-  }
-  if (bwB > 0 && stB !== 'none'){
-    ctx.strokeStyle = cs.borderBottomColor;
-    ctx.lineWidth = bwB;
-    ctx.beginPath(); ctx.moveTo(x, y + r.height - bwB/2); ctx.lineTo(x + r.width, y + r.height - bwB/2); ctx.stroke();
-  }
-  if (bwL > 0 && stL !== 'none'){
-    ctx.strokeStyle = cs.borderLeftColor;
-    ctx.lineWidth = bwL;
-    ctx.beginPath(); ctx.moveTo(x + bwL/2, y); ctx.lineTo(x + bwL/2, y + r.height); ctx.stroke();
+    ctx.lineWidth = parseFloat(cs.borderTopWidth);
+    _roundRect(ctx, x + ctx.lineWidth/2, y + ctx.lineWidth/2,
+      r.width - ctx.lineWidth, r.height - ctx.lineWidth, parseFloat(cs.borderTopLeftRadius) || 0);
+    ctx.stroke();
   }
   // 图片（用 CORS 版，避免污染 canvas）
   if (el.tagName === 'IMG'){
@@ -1052,16 +1012,28 @@ function _canShareFile(file){
   catch(e){ return false; }
 }
 async function _deliverPDF(blob, fname){
+  const file = new File([blob], fname, {type: 'application/pdf'});
   const inWX = _isWeChat();
 
-  // 【直接下载】不再弹系统分享面板：一路走下载，手机/电脑都存到本地
+  // 1) 非微信场景：直接调系统分享面板（可发微信/QQ/邮件等）
+  if (!inWX && _canShareFile(file)){
+    try {
+      await navigator.share({files: [file], title: fname});
+      return;
+    } catch(e){
+      if (e && e.name === 'AbortError') return;    // 用户主动取消
+      // 其他错误 → 走下面的兜底
+    }
+  }
+
+  // 2) 生成一个稳定的直链，供下载 / 长按保存 / 新窗口打开
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = fname; a.rel = 'noopener';
 
-  // 微信内置浏览器：不能下载 → 明确引导「用浏览器打开」
+  // 微信内置浏览器：不能分享文件、下载也常被拦 → 明确引导「用浏览器打开」
   if (inWX){
-    _pdfToast('📄 报告已生成，请按下方提示保存到本地', 6000);
+    _pdfToast('📄 PDF 已生成，请按下方提示保存后再发给好友', 6000);
     const bar = document.getElementById('pdf-fallback-bar');
     if (bar){
       bar.style.display = 'flex';
@@ -1071,19 +1043,19 @@ async function _deliverPDF(blob, fname){
       if (opn) opn.href = url;
       const tip = bar.querySelector('.pfb-tip');
       if (tip){
-        tip.innerHTML = '<b>微信内无法直接下载文件。</b>'
-          + '① 点右上角 <b>···</b> → <b>在浏览器打开</b>，再点「下载报告」即可存到本地；'
-          + '② 或先点「保存到本地」，再自己决定要不要发给别人。';
+        tip.innerHTML = '<b>微信内无法直接转发文件。</b>'
+          + '① 点右上角 <b>···</b> → <b>在浏览器打开</b>，再点「转 PDF」即可分享给微信好友；'
+          + '② 或先点「保存到手机」，再在微信里发文件。';
       }
     }
     return;
   }
 
-  // 普通浏览器 / iOS Safari：直接下载到本地
+  // 3) 普通浏览器 / iOS Safari：直接下载
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { a.remove(); }, 4000);
-  _pdfToast('📄 报告已开始下载，请到「下载/文件」里查看', 4500);
+  _pdfToast('📄 PDF 已生成，正在保存…', 4000);
   const bar = document.getElementById('pdf-fallback-bar');
   if (bar){
     bar.style.display = 'flex';
@@ -1094,8 +1066,8 @@ async function _deliverPDF(blob, fname){
     const tip = bar.querySelector('.pfb-tip');
     if (tip){
       tip.innerHTML = _isIOS()
-        ? '没开始下载？点「打开/预览」→ 右上角分享 → 存储到文件（即存入「文件」App）。'
-        : '没自动下载？点「保存到本地」把 PDF 存到本机。';
+        ? '没弹出保存？点「打开 PDF」→ 右上角分享 → 存储到文件 / 发给好友。'
+        : '没自动保存？点「打开 PDF」用新窗口打开，再另存或分享。';
     }
   }
 }
@@ -1163,9 +1135,9 @@ function refreshCard(pid){
   }
   const p = findPerson(pid);
   if (!p) return;
-  // 找到该人当前序号（与 renderList 的排序保持一致；已确定的人已从报告移除，不参与排序）
+  // 找到该人当前序号（与 renderList 的排序保持一致）
   const sorted = REPORT
-    ? REPORT.items.map(it => findPerson(it.pid)).filter(x => x && !(x.confirmed && Number(x.confirmed.year) === Number(REPORT.year || YEAR)))
+    ? REPORT.items.map(it => findPerson(it.pid)).filter(x => x)
         .sort((a,b) => {
           const ma = a.month || 13, mb = b.month || 13;
           if (ma !== mb) return ma - mb;
@@ -1180,31 +1152,22 @@ function refreshCard(pid){
 function renderList(){
   // 自定义报告：只渲染报告里挑好的人（顺序也按报告里的顺序）
   let people, title, metaHTML;
-  // 【礼物已确定 → 从报告中移除】后台点了「确定」（礼物已送/已定）的人，不再出现在报告和 PDF 里；
-  // 撤销确定后自动回到报告。按「报告年份」匹配，往年报告不受影响。
-  const _isConfirmed = (p) => p && p.confirmed && Number(p.confirmed.year) === Number((REPORT && REPORT.year) || YEAR);
   if (REPORT){
-    const ry = Number(REPORT.year || YEAR);
-    const all = REPORT.items.map(it => findPerson(it.pid)).filter(p => p);
-    const dropped = all.filter(_isConfirmed);
-    people = all.filter(p => !_isConfirmed(p));
-    window.__droppedConfirmed = dropped.map(p => p.name);
-    const m = REPORT.month;
+    people = REPORT.items.map(it => findPerson(it.pid)).filter(p => p);
+    const y = REPORT.year || YEAR, m = REPORT.month;
     // 标题由用户自己填，没填才用月份兜底
     // 与参考 PDF 一致：「2026-9月 12人 生日礼物待确认」
-    title = REPORT.title || (m ? (ry + '-' + m + '月 ' + people.length + '人 生日礼物待确认') : '生日礼物待确认');
-    if (!title) title = '10月1日生日礼物推荐报告';
-    metaHTML = dropped.length ? `<span>✅ ${dropped.length} 位礼物已确定，已从报告中移除</span>` : '';
+    title = REPORT.title || (m ? (y + '-' + m + '月 ' + people.length + '人 生日礼物待确认') : '生日礼物待确认');
+    if (!title) title = '十月份';
+    metaHTML = '';
   } else {
     // 没带 ?r= 参数 / 云端短链但报告已不存在
     if (window.__reportMissing){
       people = [];
-      window.__droppedConfirmed = [];
       title = '报告不存在';
       metaHTML = `<span style="color:#c14a4a">⚠️ 这份短链接的报告已过期或被覆盖</span>`;
     } else {
       people = [];
-      window.__droppedConfirmed = [];
       title = '尚未生成报告';
       metaHTML = `<span style="color:#c14a4a">⚠️ 未识别到报告参数</span>`;
     }
@@ -1213,11 +1176,9 @@ function renderList(){
   const mm = $('#vr-meta'); if (mm) mm.innerHTML = metaHTML;
   const sheet = $('#report-sheet');
   if (!people.length){
-    const droppedN = (window.__droppedConfirmed || []).length;
     sheet.innerHTML = `<div class="empty-state">
-      <div class="big">${droppedN ? '🎉' : (window.__reportMissing ? '🔗' : '🎂')}</div>
-      <p>${droppedN ? '本报告涉及人员的礼物已全部确定' : (window.__reportMissing ? '短链接对应的报告不在云端（可能后台生成了新报告，旧链接自动清理）' : (REPORT ? '这份报告里还没有人员' : '这份链接没有携带报告参数'))}</p>
-      ${droppedN ? `<p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">已移除：${(window.__droppedConfirmed||[]).join('、')}</p>` : ''}
+      <div class="big">${window.__reportMissing ? '🔗' : '🎂'}</div>
+      <p>${window.__reportMissing ? '短链接对应的报告不在云端（可能后台生成了新报告，旧链接自动清理）' : (REPORT ? '这份报告里还没有人员' : '这份链接没有携带报告参数')}</p>
       ${!REPORT && !window.__reportMissing ? '<p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">请回到后台 → 点「📝 新建报告」→ 勾选寿星 → 复制链接发过来</p>' : ''}
       ${window.__reportMissing ? '<p class="hint" style="font-size:13px;color:#98a2b3;margin-top:8px">请让对方重新复制一次最新链接</p>' : ''}
     </div>`;
@@ -1248,23 +1209,30 @@ function histCellsHTML(p){
     const v = String(g[y] || '').trim();
     ((i <= 3) ? left : right).push({ y: y, v: v });
   }
-  // 「无」/「没有」/「无记录」等手填占位词，统一按「无记录」处理（灰色显示）
-  const isBlank = (s) => !s || /^(无|没有|无记录|无记录。|—|-|－|\/|NA|N\/A|暂无)$/i.test(s);
   const cell = (c) =>
     `<div class="rh-y">${c.y}</div>` +
-    `<div class="rh-t${isBlank(c.v) ? ' rh-none' : ''}">${isBlank(c.v) ? '无记录' : esc(c.v)}</div>`;
+    `<div class="rh-t${c.v ? '' : ' rh-none'}">${c.v ? esc(c.v) : '无记录'}</div>`;
   let out = '';
   for (let i = 0; i < 3; i++) out += cell(left[i]) + cell(right[i]);
   return out;
 }
-// 礼物格：名字在上 + 图片 + 橙色价格条（6879元 / 2.15万元）
+// 礼物格：名字在上 + 图片 + 橙色价格条（6879元 / HK$6,879 / 2.15万元；勾了同学期待→加（同学期待））
+const GIFT_CURS = {
+  cny: { sym: '¥',   unit: '元'   },
+  hkd: { sym: 'HK$', unit: '港币' }
+};
+function curOf(g){ return (g && g.currency === 'hkd') ? 'hkd' : 'cny'; }
 function priceBarText(g){
+  const c = GIFT_CURS[curOf(g)];
+  let t;
   if (g.price){
     const n = Number(g.price);
-    if (n >= 10000) return (Math.round(n / 100) / 100) + '万元';
-    return n + '元';
+    t = (n >= 10000) ? (Math.round(n / 100) / 100) + '万' + c.unit : n.toLocaleString() + c.unit;
+  } else {
+    t = esc(g.priceRaw || '价格待询');
   }
-  return esc(g.priceRaw || '价格待询');
+  if (g.expect) t += '（同学期待）';
+  return t;
 }
 function giftCellHTML(g, pid){
   const cur = picks[pid] || {};
@@ -1377,6 +1345,7 @@ async function submitPicks(){
           gid: cur.gid || null,
           gift: cur.gift || null,
           price: cur.price || null,
+          cur: cur.cur || null,
           ask: !!cur.ask,
           bargain: !!cur.bargain,
           resetMark: !!cur.resetMark,
