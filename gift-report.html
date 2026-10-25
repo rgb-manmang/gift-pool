@@ -45,6 +45,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .picked-mini .pm-price{font-size:14px;font-weight:700;color:#d64545;margin-top:2px;letter-spacing:-.01em}
 .picked-mini .pm-price .yen{font-size:11px;font-weight:500;margin-right:1px}
 .picked-mini .pm-tag{font-size:11px;color:#1f6e3d;background:#dcf2e4;border-radius:99px;padding:3px 9px;flex:none;font-weight:600;white-space:nowrap}
+/* 礼物价位档小气泡：按价格自动归类（0.3万以下 / 0.3-0.6万 / 0.6-1.0万 / 1.0-2.0万 / 2.0万+ / 价位待定） */
+.lv-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;line-height:1;border-radius:99px;padding:3px 8px;white-space:nowrap;flex:none;pointer-events:none}
+.lv-badge.lv-na{background:#f3f4f6;color:#8a94a3;border:1px dashed #d3d9e2}
+.lv-badge.lv-b0{background:#eef4f8;color:#4a6b7d;border:1px solid #cfdde6}
+.lv-badge.lv-b1{background:#e8f4fb;color:#1c6da3;border:1px solid #bcd9ec}
+.lv-badge.lv-b2{background:#e9f6ee;color:#2d7d52;border:1px solid #bfe3cf}
+.lv-badge.lv-b3{background:#fff6dd;color:#8a5a00;border:1px solid #f0d49a;box-shadow:0 1px 4px rgba(160,110,20,.18)}
+.lv-badge.lv-b4{background:linear-gradient(135deg,#fff6dd,#ffe9b8);color:#7a4d00;border:1px solid #e8b959;box-shadow:0 1px 5px rgba(160,110,20,.28)}
+.lv-badge.lv-inline{margin-left:5px;vertical-align:middle;font-size:9.5px;padding:2px 7px}
 
 /* 留言输入（点💬留言气泡展开编辑，样式见后面 .msg-edit 区块） */
 .msg-input{width:100%;padding:11px 13px;border:1.5px solid #e6ece8;border-radius:12px;font-size:13.5px;font-family:inherit;outline:none;background:#fff;color:#1f2733;transition:.16s}
@@ -1222,6 +1231,31 @@ const GIFT_CURS = {
   hkd: { sym: 'HK$', unit: '港币' }
 };
 function curOf(g){ return (g && g.currency === 'hkd') ? 'hkd' : 'cny'; }
+// 礼物价位区间档（与后台一致）：按价格自动归类；无有效价格 → ''（价位待定）
+const PRICE_BANDS = [
+  {id:'b0',  label:'0.3万以下',   min:0,      max:3000},
+  {id:'b1',  label:'0.3万-0.6万', min:3000,   max:6000},
+  {id:'b2',  label:'0.6万-1.0万', min:6000,   max:10000},
+  {id:'b3',  label:'1.0万-2.0万', min:10000,  max:20000},
+  {id:'b4',  label:'2.0万+',      min:20000,  max:Infinity},
+];
+function bandMeta(id){ return PRICE_BANDS.find(b => b.id === id) || null; }
+function bandOf(g){
+  const n = Number(g && g.price);
+  if (g && g.price != null && g.price !== '' && isFinite(n) && n > 0){
+    for (const b of PRICE_BANDS){ if (n >= b.min && n < b.max) return b.id; }
+    return 'b4';
+  }
+  return '';
+}
+function bandBadgeHTML(g, style){
+  const id = bandOf(g);
+  const m = bandMeta(id);
+  const cls = 'lv-badge lv-' + (id || 'na') + (style ? ' ' + style : '');
+  const tip = m ? '价格区间：' + m.label : '价格待询';
+  const txt = m ? m.label : '价位待定';
+  return '<span class="' + cls + '" title="' + tip + '">' + esc(txt) + '</span>';
+}
 function priceBarText(g){
   const c = GIFT_CURS[curOf(g)];
   let t;
@@ -1240,7 +1274,7 @@ function giftCellHTML(g, pid){
   const s = imgSrc(g);
   const img = s ? `<img src="${esc(s)}" alt="" onerror="this.outerHTML='<span class=\\'rg-emoji\\'>🎁</span>'">` : '<span class="rg-emoji">🎁</span>';
   return `<div class="rs-gift${isPicked?' is-picked':''}" onclick="togglePick('${esc(pid)}','${esc(g.id)}')">
-    <div class="rg-nm">${esc(g.name)}</div>
+    <div class="rg-nm">${esc(g.name)}${bandBadgeHTML(g, 'lv-inline')}</div>
     <div class="rg-img">${img}</div>
     <div class="rg-pr">${priceBarText(g)}</div>
   </div>`;
