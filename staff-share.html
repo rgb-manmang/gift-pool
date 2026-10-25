@@ -38,14 +38,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .sp-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .sp-img .ph{font-size:44px;opacity:.5}
 .sp-cat{position:absolute;left:8px;top:8px;font-size:11px;font-weight:600;color:var(--green2);background:rgba(255,255,255,.92);border:1px solid var(--green-line);border-radius:99px;padding:2px 9px;backdrop-filter:blur(4px)}
-/* 礼物价位档小气泡：按价格自动归类（数据里只带 band 字段，不带价格） */
-.lv-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;line-height:1;border-radius:99px;padding:3px 8px;white-space:nowrap;flex:none;pointer-events:none;position:absolute;right:8px;bottom:8px;z-index:2;backdrop-filter:blur(6px)}
-.lv-badge.lv-na{background:rgba(243,244,246,.94);color:#8a94a3;border:1px dashed #d3d9e2}
-.lv-badge.lv-b0{background:rgba(238,244,248,.94);color:#4a6b7d;border:1px solid #cfdde6}
-.lv-badge.lv-b1{background:rgba(232,244,251,.94);color:#1c6da3;border:1px solid #bcd9ec}
-.lv-badge.lv-b2{background:rgba(233,246,238,.94);color:#2d7d52;border:1px solid #bfe3cf}
-.lv-badge.lv-b3{background:rgba(255,246,221,.94);color:#8a5a00;border:1px solid #f0d49a}
-.lv-badge.lv-b4{background:rgba(255,246,221,.94);color:#7a4d00;border:1px solid #e8b959;box-shadow:0 1px 5px rgba(160,110,20,.28)}
 .sp-name{padding:10px 12px 12px;font-size:14px;font-weight:700;color:var(--ink);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-all}
 
 /* ===== 状态页 ===== */
@@ -122,16 +114,12 @@ function renderChips(){
   chips.innerHTML = html;
 }
 function pickCat(name){ CUR = (CUR === name) ? '' : name; renderChips(); renderGrid(); }
-var BANDS = {b0:'0.3万以下', b1:'0.3万-0.6万', b2:'0.6万-1.0万', b3:'1.0万-2.0万', b4:'2.0万+'};
 function cardHTML(it, cat){
   var img = it.img
     ? '<img src="' + esc(it.img) + '" alt="" loading="lazy" onerror="this.remove()">'
     : '';
-  var lv = BANDS[it.band]
-    ? '<span class="lv-badge lv-' + it.band + '" title="价格区间：' + BANDS[it.band] + '">' + BANDS[it.band] + '</span>'
-    : '<span class="lv-badge lv-na" title="价格待询">价位待定</span>';
   return '<div class="sp-card" data-id="' + esc(it.id) + '" onclick="openLb(\'' + esc(it.id) + '\')">' +
-    '<div class="sp-img"><span class="ph">🎁</span>' + img + lv + '<span class="sp-cat">' + esc(cat) + '</span></div>' +
+    '<div class="sp-img"><span class="ph">🎁</span>' + img + '<span class="sp-cat">' + esc(cat) + '</span></div>' +
     '<div class="sp-name">' + esc(it.name) + '</div></div>';
 }
 function renderGrid(){
