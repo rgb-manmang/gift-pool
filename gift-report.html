@@ -584,6 +584,9 @@ async function ghFetch(path, opts){
         signal: ctrl.signal,
       });
       clearTimeout(timer);
+      // 代理限流（403/429）或网关错误（5xx）时，GET 请求自动回退到下一个通道
+      if (!r.ok && (opts.method || 'GET') === 'GET' && i < GH_SYNC.hosts.length - 1 &&
+          (r.status === 403 || r.status === 429 || r.status >= 500)) continue;
       _ghHost = idx;
       return r;
     } catch(e){ clearTimeout(timer); lastErr=e; }
