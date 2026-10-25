@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="referrer" content="no-referrer-when-downgrade">
+<title>🎁 员工礼物池</title>
+<style>
+:root{
+  --bg:#f4f7f5; --card:#ffffff; --ink:#1f2733; --ink2:#5b6675; --ink3:#98a2b3; --line:#e6ece8; --line2:#dde5e0;
+  --green:#5fb88e; --green2:#4ea87a; --green-bg:#e9f6ee; --green-bg2:#f2faf5; --green-line:#cfe8d8;
+  --shadow:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.04);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+
+/* ===== 头部 ===== */
+.sp-head{max-width:1080px;margin:0 auto;padding:22px 16px 10px}
+.sp-head h1{font-size:26px;font-weight:800;color:#111;letter-spacing:.5px}
+.sp-head .meta{margin-top:6px;font-size:13px;color:var(--ink2)}
+.sp-head .meta b{color:var(--green2);font-weight:700}
+
+/* ===== 分类筛选 ===== */
+.sp-chips{max-width:1080px;margin:0 auto;padding:6px 16px 14px;display:flex;gap:8px;flex-wrap:wrap}
+.sp-chip{padding:7px 14px;border:1.5px solid var(--line);background:#fff;border-radius:99px;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;font-family:inherit;transition:.16s;white-space:nowrap}
+.sp-chip:hover{border-color:var(--green-line)}
+.sp-chip.active{background:var(--green);border-color:var(--green);color:#fff}
+.sp-chip .n{opacity:.65;font-weight:500;margin-left:2px}
+
+/* ===== 礼物网格 ===== */
+.sp-grid{max-width:1080px;margin:0 auto;padding:0 16px 30px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.sp-card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .18s,box-shadow .18s;display:flex;flex-direction:column}
+.sp-card:active{transform:scale(.97)}
+@media (hover:hover){.sp-card:hover{transform:translateY(-3px);box-shadow:0 4px 10px rgba(0,0,0,.05),0 14px 34px rgba(0,0,0,.09)}}
+.sp-img{position:relative;width:100%;aspect-ratio:1/1;background:linear-gradient(135deg,#eef4f0,#e4ede8);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.sp-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.sp-img .ph{font-size:44px;opacity:.5}
+.sp-cat{position:absolute;left:8px;top:8px;font-size:11px;font-weight:600;color:var(--green2);background:rgba(255,255,255,.92);border:1px solid var(--green-line);border-radius:99px;padding:2px 9px;backdrop-filter:blur(4px)}
+.sp-name{padding:10px 12px 12px;font-size:14px;font-weight:700;color:var(--ink);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-all}
+
+/* ===== 状态页 ===== */
+.sp-state{max-width:480px;margin:60px auto;padding:0 20px;text-align:center;color:var(--ink2)}
+.sp-state .big{font-size:52px;margin-bottom:12px}
+.sp-state .t{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.sp-state .h{font-size:13px;line-height:1.6}
+.sp-state button{margin-top:14px;padding:9px 20px;border:none;border-radius:99px;background:var(--green);color:#fff;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
+
+/* ===== 大图预览 ===== */
+.sp-lb{position:fixed;inset:0;background:rgba(15,20,17,.88);display:flex;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out;animation:fadeIn .18s}
+.sp-lb img{max-width:100%;max-height:86vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:default}
+.sp-lb .cap{position:absolute;left:0;right:0;bottom:26px;text-align:center;color:#fff;font-size:14.5px;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.6);padding:0 30px}
+.sp-lb .x{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;border:none;background:rgba(255,255,255,.16);color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.sp-lb .x:hover{background:rgba(255,255,255,.28)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.sp-foot{max-width:1080px;margin:0 auto;padding:0 16px 34px;text-align:center;font-size:12px;color:var(--ink3)}
+</style>
+</head>
+<body>
+
+<header class="sp-head">
+  <h1>🎁 员工礼物池</h1>
+  <div class="meta" id="meta">加载中…</div>
+</header>
+
+<nav class="sp-chips" id="chips" hidden></nav>
+<main class="sp-grid" id="grid" hidden></main>
+
+<div class="sp-state" id="state-loading">
+  <div class="big">⏳</div>
+  <div class="t">正在加载礼物…</div>
+</div>
+<div class="sp-state" id="state-error" hidden>
+  <div class="big">😢</div>
+  <div class="t">加载失败</div>
+  <div class="h">网络不太顺畅，稍后再试试</div>
+  <button onclick="load()">重新加载</button>
+</div>
+<div class="sp-state" id="state-empty" hidden>
+  <div class="big">🎁</div>
+  <div class="t">暂时没有可分享的礼物</div>
+</div>
+
+<div class="sp-foot" id="foot" hidden>由「生日礼物管家」生成 · 照片与名称仅供参考</div>
+
+<script>
+var DATA_URL = 'staff-share.json';
+var ALL = null;      // [{name, items:[{id,name,img}]}]
+var CUR = '';        // 当前筛选分类（'' = 全部）
+
+function fmtTime(ts){
+  try{
+    var d = new Date(ts);
+    var p = n => (n < 10 ? '0' : '') + n;
+    return d.getFullYear() + '/' + p(d.getMonth() + 1) + '/' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }catch(e){ return ''; }
+}
+function totalCount(){
+  return ALL ? ALL.reduce((s, c) => s + c.items.length, 0) : 0;
+}
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function renderChips(){
+  var chips = document.getElementById('chips');
+  if (!ALL || ALL.length < 2){ chips.hidden = true; return; }
+  chips.hidden = false;
+  var html = '<button class="sp-chip' + (CUR === '' ? ' active' : '') + '" onclick="pickCat(\'\')">全部<span class="n">' + totalCount() + '</span></button>';
+  ALL.forEach(c => {
+    html += '<button class="sp-chip' + (CUR === c.name ? ' active' : '') + '" onclick="pickCat(\'' + esc(c.name) + '\')">' + esc(c.name) + '<span class="n">' + c.items.length + '</span></button>';
+  });
+  chips.innerHTML = html;
+}
+function pickCat(name){ CUR = (CUR === name) ? '' : name; renderChips(); renderGrid(); }
+function cardHTML(it, cat){
+  var img = it.img
+    ? '<img src="' + esc(it.img) + '" alt="" loading="lazy" onerror="this.remove()">'
+    : '';
+  return '<div class="sp-card" data-id="' + esc(it.id) + '" onclick="openLb(\'' + esc(it.id) + '\')">' +
+    '<div class="sp-img"><span class="ph">🎁</span>' + img + '<span class="sp-cat">' + esc(cat) + '</span></div>' +
+    '<div class="sp-name">' + esc(it.name) + '</div></div>';
+}
+function renderGrid(){
+  var grid = document.getElementById('grid');
+  var list = (ALL || []).filter(c => !CUR || c.name === CUR);
+  var html = '';
+  list.forEach(c => c.items.forEach(it => { html += cardHTML(it, c.name); }));
+  grid.innerHTML = html;
+  grid.hidden = !html;
+  document.getElementById('state-empty').hidden = !!html;
+}
+function findItem(id){
+  for (var i = 0; i < (ALL || []).length; i++){
+    for (var j = 0; j < ALL[i].items.length; j++){
+      if (ALL[i].items[j].id === id) return ALL[i].items[j];
+    }
+  }
+  return null;
+}
+function openLb(id){
+  var it = findItem(id);
+  if (!it || !it.img) return;
+  var lb = document.createElement('div');
+  lb.className = 'sp-lb';
+  lb.innerHTML = '<button class="x" onclick="event.stopPropagation();this.parentElement.remove()">✕</button>' +
+    '<img src="' + esc(it.img) + '" alt="" onclick="event.stopPropagation()">' +
+    '<div class="cap">' + esc(it.name) + '</div>';
+  lb.onclick = () => lb.remove();
+  document.body.appendChild(lb);
+}
+async function load(){
+  document.getElementById('state-loading').style.display = '';
+  document.getElementById('state-error').hidden = true;
+  try{
+    var r = await fetch(DATA_URL + '?probe=' + Date.now(), {cache: 'no-store'});
+    if (!r.ok) throw 0;
+    var d = await r.json();
+    ALL = (d && d.cats) ? d.cats.filter(c => c.items && c.items.length) : [];
+    document.getElementById('meta').innerHTML = '共 <b>' + totalCount() + '</b> 件礼物' + (d && d.at ? ' · 更新于 ' + fmtTime(d.at) : '');
+    renderChips();
+    renderGrid();
+    document.getElementById('foot').hidden = !totalCount();
+  }catch(e){
+    document.getElementById('state-error').hidden = false;
+    document.getElementById('grid').hidden = true;
+    document.getElementById('chips').hidden = true;
+  }finally{
+    document.getElementById('state-loading').style.display = 'none';
+  }
+}
+load();
+</script>
+</body>
+</html>
