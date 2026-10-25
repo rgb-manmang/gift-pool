@@ -45,15 +45,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .picked-mini .pm-price{font-size:14px;font-weight:700;color:#d64545;margin-top:2px;letter-spacing:-.01em}
 .picked-mini .pm-price .yen{font-size:11px;font-weight:500;margin-right:1px}
 .picked-mini .pm-tag{font-size:11px;color:#1f6e3d;background:#dcf2e4;border-radius:99px;padding:3px 9px;flex:none;font-weight:600;white-space:nowrap}
-/* 礼物价位档小气泡：按价格自动归类（0.3万以下 / 0.3-0.6万 / 0.6-1.0万 / 1.0-2.0万 / 2.0万+ / 价位待定） */
-.lv-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;line-height:1;border-radius:99px;padding:3px 8px;white-space:nowrap;flex:none;pointer-events:none}
-.lv-badge.lv-na{background:#f3f4f6;color:#8a94a3;border:1px dashed #d3d9e2}
-.lv-badge.lv-b0{background:#eef4f8;color:#4a6b7d;border:1px solid #cfdde6}
-.lv-badge.lv-b1{background:#e8f4fb;color:#1c6da3;border:1px solid #bcd9ec}
-.lv-badge.lv-b2{background:#e9f6ee;color:#2d7d52;border:1px solid #bfe3cf}
-.lv-badge.lv-b3{background:#fff6dd;color:#8a5a00;border:1px solid #f0d49a;box-shadow:0 1px 4px rgba(160,110,20,.18)}
-.lv-badge.lv-b4{background:linear-gradient(135deg,#fff6dd,#ffe9b8);color:#7a4d00;border:1px solid #e8b959;box-shadow:0 1px 5px rgba(160,110,20,.28)}
-.lv-badge.lv-inline{margin-left:5px;vertical-align:middle;font-size:9.5px;padding:2px 7px}
 
 /* 留言输入（点💬留言气泡展开编辑，样式见后面 .msg-edit 区块） */
 .msg-input{width:100%;padding:11px 13px;border:1.5px solid #e6ece8;border-radius:12px;font-size:13.5px;font-family:inherit;outline:none;background:#fff;color:#1f2733;transition:.16s}
@@ -131,20 +122,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 /* 报表容器 */
 .report-sheet{max-width:1080px;margin:0 auto;padding:0 14px 120px}
 
-/* ====== 每人一张表（Excel 风格：左侧大序号 + 黑框表格；一页约3人，字大清晰） ====== */
+/* ====== 每人一张表（Excel 风格：黑框表格，无左侧序号；一页约3人，字大清晰） ====== */
 .rs-person{display:flex;align-items:stretch;margin:0 auto 48px;break-inside:avoid;page-break-inside:avoid}
-/* 左侧大序号（表格外，灰色大字） */
-.rs-num{flex:none;width:52px;display:flex;align-items:center;justify-content:center;
-  font-size:42px;font-weight:400;color:#b9bdc4;font-family:Arial,'Helvetica Neue',sans-serif}
 /* 右侧黑框表格 */
 .rs-tbl{flex:1;min-width:0;border:1.5px solid #000;background:#fff;display:flex;flex-direction:column}
 
 /* ---- 上排：姓名+生日（高亮块）| 往年记录（细线表格）| 状态列4项 ---- */
 .rs-hrow{display:flex;align-items:stretch;border-bottom:1.2px solid #000;min-height:118px}
-/* 姓名 + 生日：黄色高亮，字体明显 */
+/* 姓名 + 生日：黄色高亮，字体明显（微软雅黑粗体，比例正常） */
 .rs-who{flex:none;width:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:5px;background:#fff176;border-right:1.2px solid #000;text-align:center;padding:10px 6px}
-.rs-who .rs-name{font-size:24px;font-weight:400;color:#111;line-height:1.25;word-break:break-all}
+.rs-who .rs-name{font-size:24px;font-weight:700;color:#111;line-height:1.25;word-break:break-all;
+  font-family:"Microsoft YaHei","微软雅黑","PingFang SC",sans-serif}
 .rs-who .bd-solar{font-size:16px;font-weight:400;color:#1c1c1c;white-space:nowrap}
 .rs-who .bd-lunar{font-size:13px;color:#6b6f5e;white-space:nowrap}
 /* 往年记录：合并为一个格，年+礼物连续一行流，小字体（不通表格线，视觉更协调） */
@@ -163,8 +152,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .rs-hist .rh-t.rh-none{color:#c0c6cc}
 /* 状态列：DJ自己准备 / 重新推荐 / 亲自送 / 寄送（打印后手勾，有提交状态黄底☑） */
 .rs-status{flex:none;width:118px;border-left:1.2px solid #000;display:flex;flex-direction:column}
-.rs-status .st-item{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;
-  font-size:13px;font-weight:400;color:#222;border-bottom:1.2px solid #000;white-space:nowrap}
+.rs-status .st-item{flex:1;display:flex;align-items:center;justify-content:flex-start;gap:5px;
+  font-size:13px;font-weight:400;color:#222;border-bottom:1.2px solid #000;white-space:nowrap;padding-left:9px}
 .rs-status .st-item:last-child{border-bottom:none}
 .rs-status .st-item .st-box{font-size:13px;color:#555;font-weight:400}
 
@@ -250,8 +239,6 @@ body.pdf-making .rs-gift.rg-pad{display:flex !important}
   .viewer-report-head{padding:0 0 8px}
   .viewer-report-head h1{font-size:20pt}
   .rs-person{margin:0 0 36pt}
-  .rs-num{width:34px;font-size:26pt;color:#b9bdc4 !important;
-    -webkit-print-color-adjust:exact;print-color-adjust:exact}
   .rs-tbl{border-width:1.2pt}
   .rs-hrow{border-bottom-width:1pt;min-height:95pt}
   .rs-who{width:120pt;background:#fff176 !important;border-right-width:1pt;
@@ -1234,31 +1221,6 @@ const GIFT_CURS = {
   hkd: { sym: 'HK$', unit: '港币' }
 };
 function curOf(g){ return (g && g.currency === 'hkd') ? 'hkd' : 'cny'; }
-// 礼物价位区间档（与后台一致）：按价格自动归类；无有效价格 → ''（价位待定）
-const PRICE_BANDS = [
-  {id:'b0',  label:'0.3万以下',   min:0,      max:3000},
-  {id:'b1',  label:'0.3万-0.6万', min:3000,   max:6000},
-  {id:'b2',  label:'0.6万-1.0万', min:6000,   max:10000},
-  {id:'b3',  label:'1.0万-2.0万', min:10000,  max:20000},
-  {id:'b4',  label:'2.0万+',      min:20000,  max:Infinity},
-];
-function bandMeta(id){ return PRICE_BANDS.find(b => b.id === id) || null; }
-function bandOf(g){
-  const n = Number(g && g.price);
-  if (g && g.price != null && g.price !== '' && isFinite(n) && n > 0){
-    for (const b of PRICE_BANDS){ if (n >= b.min && n < b.max) return b.id; }
-    return 'b4';
-  }
-  return '';
-}
-function bandBadgeHTML(g, style){
-  const id = bandOf(g);
-  const m = bandMeta(id);
-  const cls = 'lv-badge lv-' + (id || 'na') + (style ? ' ' + style : '');
-  const tip = m ? '价格区间：' + m.label : '价格待询';
-  const txt = m ? m.label : '价位待定';
-  return '<span class="' + cls + '" title="' + tip + '">' + esc(txt) + '</span>';
-}
 function priceBarText(g){
   const c = GIFT_CURS[curOf(g)];
   let t;
@@ -1277,17 +1239,17 @@ function giftCellHTML(g, pid){
   const s = imgSrc(g);
   const img = s ? `<img src="${esc(s)}" alt="" onerror="this.outerHTML='<span class=\\'rg-emoji\\'>🎁</span>'">` : '<span class="rg-emoji">🎁</span>';
   return `<div class="rs-gift${isPicked?' is-picked':''}" onclick="togglePick('${esc(pid)}','${esc(g.id)}')">
-    <div class="rg-nm">${esc(g.name)}${bandBadgeHTML(g, 'lv-inline')}</div>
+    <div class="rg-nm">${esc(g.name)}</div>
     <div class="rg-img">${img}</div>
     <div class="rg-pr">${priceBarText(g)}</div>
   </div>`;
 }
-// 状态列：固定四项「DJ自己准备 / 重新推荐 / 亲自送 / 寄送」；有提交状态黄底☑
+// 状态列：固定四项「DJ自己准备 / 重新推荐 / 亲自送 / 寄送」；有提交状态黄底☑；□ 在最左
 function statusColHTML(p){
   const cur = picks[p.id] || {};
   const row = (label, on) =>
     `<div class="st-item"${on ? ' style="background:#fff176"' : ''}>` +
-    `<span>${label}</span><span class="st-box">${on ? '☑' : '□'}</span></div>`;
+    `<span class="st-box">${on ? '☑' : '□'}</span><span>${label}</span></div>`;
   return row('DJ自己准备', !!cur.djSelf)
        + row('重新推荐', !!cur.resetMark)
        + row('亲自送', !!cur.ask)
@@ -1315,9 +1277,8 @@ function personTableHTML(p, idx){
   } else {
     solar = p.dateRaw || '';
   }
-  // 结构：左侧大序号（表格外）+ 黑框表格（上排信息 / 下排礼物）
+  // 结构：黑框表格（上排信息 / 下排礼物），无左侧序号
   return `<div class="rs-person" id="rp-${esc(p.id)}">
-    <div class="rs-num">${idx}</div>
     <div class="rs-tbl">
       <div class="rs-hrow">
         <div class="rs-who">
