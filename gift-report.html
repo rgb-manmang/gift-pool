@@ -1275,12 +1275,9 @@ function personTableHTML(p, idx){
   const PER_ROW = 3;                                   // 一排 3 个；6 个自动分两排
   // 【行高自适应】与 app 报告生成器同一套规则：礼物少 → 卡片放大；礼物多 → 紧凑，
   //   保证「姓名+全部礼物」视觉上连成一整块（打印时 break-inside:avoid 不断表）
-  const giftRows = Math.ceil(gifts.length / PER_ROW);
-  let fitCls = 'rs-fit-std';
-  if (giftRows <= 1) fitCls = 'rs-fit-roomy';
-  else if (giftRows <= 2) fitCls = 'rs-fit-roomy2';
-  else if (giftRows >= 5) fitCls = 'rs-fit-dense2';
-  else if (giftRows >= 4) fitCls = 'rs-fit-dense';
+  // 【全表统一大档】与 app 报告一致：不论礼物多少，卡片尺寸恒定（roomy 档），
+  //   每人表格一样大、打印一样清晰（礼物多时跨页，观阅页打印由 break-inside 保护整表）
+  const fitCls = 'rs-fit-roomy';
   const rows = [];
   // 只有一个 .rs-gifts 网格：CSS grid 3 列自动换行，补空格子保证每排线完整
   const cells = gifts.map(g => giftCellHTML(g, p.id)).join('');
