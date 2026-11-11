@@ -145,17 +145,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
 .rs-hist .rh-y{display:flex;align-items:center;justify-content:center;
   background:#f4f4f4;color:#5f666e;font-size:21px;font-weight:600;white-space:nowrap;
   border-right:1.2px solid #000;border-bottom:1.2px solid #000;padding:2px 7px}
-.rs-hist .rh-t{display:flex;align-items:center;color:#1c1c1c;font-size:20px;line-height:1.35;
+.rs-hist .rh-t{display:flex;align-items:center;justify-content:center;color:#1c1c1c;font-size:20px;line-height:1.35;text-align:center;
   border-right:1.2px solid #000;border-bottom:1.2px solid #000;padding:2px 7px;overflow:hidden}
 /* 每行第 4 格（行末）去右线；最后一行（末 4 格）去底线 */
 .rs-hist .rh-t:nth-child(4n){border-right:none}
 .rs-hist .rh-y:nth-last-child(-n+4),.rs-hist .rh-t:nth-last-child(-n+4){border-bottom:none}
 .rs-hist .rh-t.rh-none{color:#c0c6cc}
-/* 状态列：DJ自己准备 / 重新推荐 / 亲自送 / 寄送（打印后手勾，有提交状态黄底☑）；
-   字号 13 → 16.5px（用户要求再大点），列宽同步 118 → 148px 防溢出 */
+/* 状态列：DJ自己准备 / 重新推荐 / 亲自送 / 寄送（有提交状态黄底☑）；
+   字号 13 → 16.5px（用户要求再大点），列宽同步 118 → 148px 防溢出；第十五轮起全部居中 */
 .rs-status{flex:none;width:148px;border-left:1.2px solid #000;display:flex;flex-direction:column}
-.rs-status .st-item{flex:1;display:flex;align-items:center;justify-content:flex-start;gap:5px;
-  font-size:16.5px;font-weight:400;color:#222;border-bottom:1.2px solid #000;white-space:nowrap;padding-left:9px}
+.rs-status .st-item{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  font-size:16.5px;font-weight:400;color:#222;border-bottom:1.2px solid #000;white-space:nowrap;text-align:center}
 .rs-status .st-item:last-child{border-bottom:none}
 .rs-status .st-item .st-box{font-size:16.5px;color:#555;font-weight:400}
 
@@ -237,6 +237,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Mic
    覆盖手机端的横滑与窄版心 —— 保证任何设备导出的 PDF 都是：
    一排 3 个礼物、1080px 版心、一页 3 人、所有礼物完整不缺 */
 body.pdf-making #report-sheet{width:1080px !important;max-width:1080px !important;padding:0 !important}
+/* 【第十五轮：统一微软雅黑】打印/导出时所有文字用微软雅黑 —— 笔画更实，扫描后更清楚 */
+body.pdf-making,body.pdf-making *{font-family:"Microsoft YaHei","微软雅黑","PingFang SC",sans-serif !important}
+@media print{ #report-sheet,#report-sheet *{font-family:"Microsoft YaHei","微软雅黑","PingFang SC",sans-serif !important} }
 body.pdf-making .rs-person{margin:0 auto 48px !important}
 body.pdf-making .rs-who{width:210px !important}
 body.pdf-making .rs-status{width:148px !important}
