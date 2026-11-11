@@ -637,7 +637,8 @@ function findPerson(id){ return (state.people||[]).find(p => p.id === id); }
 function findGiftById(id){
   if (state.vip)   { const v = state.vip.find(g=>g.id===id);   if (v) return v; }
   if (state.staff) { const s = state.staff.find(g=>g.id===id); if (s) return s; }
-  return null;
+  // 【池删不波及本月】礼物从 VIP/员工池删除后，本月报告里已引用的照常显示（墓碑快照回查）
+  return (state.giftTomb && state.giftTomb[id]) || null;
 }
 
 /* ====== 观阅版选礼物（本地 + 可提交到云端） ====== */
